@@ -1,0 +1,141 @@
+### macOS
+# Finder metadata
+.DS_Store
+
+# Thumbnails
+._*
+
+# Custom folder icons
+Icon
+
+# Volume root files
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+### JetBrains
+# JetBrains IDE directory
+.idea/
+
+# CMake build directories
+cmake-build-*/
+
+# File-based project format
+*.iws
+*.iml
+
+# IntelliJ build output
+out/
+
+### C++
+# Object files
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Static libraries
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Debug files
+*.dSYM/
+*.idb
+*.pdb
+
+### Node
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Runtime data
+*.pid
+*.pid.lock
+
+# Coverage
+coverage/
+*.lcov
+.nyc_output
+
+# Build output
+dist/
+build/Release
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Framework build output and caches
+.cache
+.parcel-cache
+.next
+out/
+.nuxt
+
+# dotenv environment variable files
+.env
+.env.local
+.env.*.local
+
+# npm cache directory
+.npm
+*.tgz
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+.pnp.*
+
+### Qt
+
+# Qt Creator user-specific files
+*.pro.user
+*.pro.user.*
+*.qbs.user
+
+# Qt Creator CMake user files
+CMakeLists.txt.user*
+
+# Qt generated files (if using qmake or older setups)
+Makefile*
+*.qmake.stash
+*.qmake.cache
+
+# Qt UI generated headers (ако ползваш uic)
+ui_*.h
+
+# Qt Meta-Object Compiler
+moc_*.cpp
+moc_*.h
+
+# Qt resource compiler
+qrc_*.cpp
+
+# Qt translations
+*.qm
+
+# Qt temporary files
+*.autosave
+build/Qt_6_11_0_for_macOS-Debug
