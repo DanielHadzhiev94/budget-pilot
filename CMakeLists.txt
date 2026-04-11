@@ -11,6 +11,8 @@ qt_standard_project_setup(REQUIRES 6.10)
 
 qt_add_executable(appBudgetPilot
         main.cpp
+        "infrastructure/persistence /dbcontext.hpp"
+        "infrastructure/persistence /dbcontext.cpp"
 )
 
 qt_add_qml_module(appBudgetPilot
@@ -28,6 +30,7 @@ set_target_properties(appBudgetPilot PROPERTIES
 
 target_link_libraries(appBudgetPilot
         PRIVATE Qt6::Quick
+        sqlite3
 )
 
 install(TARGETS appBudgetPilot
