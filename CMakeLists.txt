@@ -14,6 +14,7 @@ qt_add_executable(appBudgetPilot
         "infrastructure/persistence /dbcontext.hpp"
         "infrastructure/persistence /dbcontext.cpp"
         domain/model/transaction.hpp
+        domain/model/category.hpp
 )
 
 qt_add_qml_module(appBudgetPilot

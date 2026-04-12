@@ -1,5 +1,8 @@
 #include "dbcontext.hpp"
 
+#include <filesystem>
+#include <iostream>
+
 namespace budgetpilot::infrastructure::persistence {
     DbContext::DbContext(const std::string &db_path)
         : db_path_(db_path) {
@@ -12,6 +15,7 @@ namespace budgetpilot::infrastructure::persistence {
     void DbContext::initialize() {
         open();
         createTable();
+        seedCategories();
     }
 
     void DbContext::open() {
@@ -40,7 +44,6 @@ namespace budgetpilot::infrastructure::persistence {
     }
 
     void DbContext::createTable() const {
-
         const char *transaction_query = R"(
         CREATE TABLE IF NOT EXISTS transactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,18 +51,30 @@ namespace budgetpilot::infrastructure::persistence {
             type TEXT NOT NULL,
             source TEXT,
             category_id INTEGER NOT NULL,
-            FOREIGN KEY (category_id) REFERENCE category(id)
+            FOREIGN KEY (category_id) REFERENCES categories(id)
         );
     )";
         const char *category_query = R"(
         CREATE TABLE IF NOT EXISTS categories(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
+        name TEXT NOT NULL UNIQUE
         );
     )";
 
+
         execute(transaction_query);
         execute(category_query);
+        execute("PRAGMA foreign_keys = ON;");
+    }
+
+    void DbContext::seedCategories() const {
+        const char *category_seed = R"(
+        INSERT OR IGNORE INTO categories (name) VALUES ('Salary');
+        INSERT OR IGNORE INTO categories (name) VALUES ('Food');
+        INSERT OR IGNORE INTO categories (name) VALUES ('Apartment');
+    )";
+
+        execute(category_seed);
     }
 
     void DbContext::execute(const char *query) const {
