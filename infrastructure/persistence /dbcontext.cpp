@@ -1,8 +1,8 @@
 #include "dbcontext.hpp"
 
 namespace budgetpilot::infrastructure::persistence {
-    DbContext::DbContext(const std::string &dbPath)
-        : dbPath_(dbPath) {
+    DbContext::DbContext(const std::string &db_path)
+        : db_path_(db_path) {
     }
 
     DbContext::~DbContext() {
@@ -19,7 +19,7 @@ namespace budgetpilot::infrastructure::persistence {
             return;
         }
 
-        std::int32_t result = sqlite3_open(dbPath_.c_str(), &connection_);
+        std::int32_t result = sqlite3_open(db_path_.c_str(), &connection_);
         if (result != SQLITE_OK) {
             std::string errorMessage = connection_ != nullptr
                                            ? sqlite3_errmsg(connection_)

@@ -6,7 +6,7 @@
 namespace budgetpilot::infrastructure::persistence {
     class DbContext {
     public:
-        explicit DbContext(const std::string &dbPath);
+        explicit DbContext(const std::string &db_path);
 
         ~DbContext();
 
@@ -23,7 +23,7 @@ namespace budgetpilot::infrastructure::persistence {
         [[nodiscard]] sqlite3 *getConnection() const;
 
     private :
-        std::string dbPath_;
+        std::string db_path_;
         sqlite3 *connection_ = nullptr;
 
         void open();
