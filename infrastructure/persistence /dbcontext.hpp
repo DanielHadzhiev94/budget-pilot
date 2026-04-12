@@ -31,5 +31,7 @@ namespace budgetpilot::infrastructure::persistence {
         void close();
 
         void createTable() const;
+
+        void execute(const char* query) const;
     };
 }

@@ -40,21 +40,35 @@ namespace budgetpilot::infrastructure::persistence {
     }
 
     void DbContext::createTable() const {
-        if (connection_ == nullptr) {
-            throw std::runtime_error("Database connection is not open.");
-        }
 
-        char *errMsg = nullptr;
-
-        int result = sqlite3_exec(connection_, R"(
+        const char *transaction_query = R"(
         CREATE TABLE IF NOT EXISTS transactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             amount REAL NOT NULL,
             type TEXT NOT NULL,
-            source TEXT
+            source TEXT,
+            category_id INTEGER NOT NULL,
+            FOREIGN KEY (category_id) REFERENCE category(id)
         );
-    )", nullptr, nullptr, &errMsg);
+    )";
+        const char *category_query = R"(
+        CREATE TABLE IF NOT EXISTS categories(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        );
+    )";
 
+        execute(transaction_query);
+        execute(category_query);
+    }
+
+    void DbContext::execute(const char *query) const {
+        if (connection_ == nullptr) {
+            throw std::runtime_error("Database connection is not open.");
+        }
+        char *errMsg = nullptr;
+
+        int result = sqlite3_exec(connection_, query, nullptr, nullptr, &errMsg);
         if (result != SQLITE_OK) {
             std::string error = errMsg ? errMsg : "Unknown SQL error";
             sqlite3_free(errMsg);
