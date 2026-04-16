@@ -11,11 +11,9 @@ namespace budgetpilot::infrastructure::persistence {
         ~DbContext();
 
         DbContext(const DbContext &) = delete;
-
         DbContext &operator =(const DbContext &) = delete;
 
         DbContext(const DbContext &&) = delete;
-
         DbContext &operator =(const DbContext &&) = delete;
 
         void initialize();
@@ -27,13 +25,9 @@ namespace budgetpilot::infrastructure::persistence {
         sqlite3 *connection_ = nullptr;
 
         void open();
-
         void close();
-
         void createTable() const;
-
         void seedCategories() const;
-
-        void execute(const char* query) const;
+        void execute(const char *query) const;
     };
 }
