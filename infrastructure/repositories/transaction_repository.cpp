@@ -3,6 +3,8 @@
 #include "domain/model/transaction.hpp"
 #include "infrastructure/persistence /statement.hpp"
 
+using namespace budgetpilot::domain::model;
+
 namespace budgetpilot::infrastructure::repositories {
     TransactionRepository::TransactionRepository(sqlite3 *connection)
         : connection_(connection) {
@@ -11,7 +13,7 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    void TransactionRepository::add(const domain::model::Transaction &transaction) {
+    void TransactionRepository::add(const Transaction &transaction) {
         const char *sql = R"(
             INSERT INTO transactions (amount, type, source, category_id)
             VALUES (?, ? ,? ,?))";
@@ -30,7 +32,7 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    void TransactionRepository::update(const domain::model::Transaction &transaction) {
+    void TransactionRepository::update(const Transaction &transaction) {
         const char *sql = R"(
         UPDATE transactions
         SET amount = ?, type = ?, source = ?, category_id = ?
@@ -65,5 +67,61 @@ namespace budgetpilot::infrastructure::repositories {
         if (result != SQLITE_DONE) {
             throw std::runtime_error(sqlite3_errmsg(connection_));
         }
+    }
+
+    std::vector<Transaction> TransactionRepository::getAll() const {
+        char *sql = R"(
+                    SELECT id, source, type, amount, category_id
+                    FROM transactions
+                    )";
+
+        const persistence::Statement stmt(connection_, sql);
+        std::vector<Transaction> transactions{};
+        while (sqlite3_step(stmt.get()) != SQLITE_DONE) {
+            Transaction t{};
+            t.id = sqlite3_column_int64(stmt.get(), 0);
+            const unsigned char *source = sqlite3_column_text(stmt.get(), 1);
+            t.source = source ? reinterpret_cast<const char *>(source) : "";
+            t.type = static_cast<Type>(sqlite3_column_int(stmt.get(), 2));
+            t.amount = static_cast<float>(sqlite3_column_double(stmt.get(), 3));
+            t.category_id = sqlite3_column_int64(stmt.get(), 4);
+            transactions.push_back(std::move(t));
+        }
+
+        return transactions;
+    }
+
+    std::optional<Transaction> TransactionRepository::getOne(std::uint64_t id) const {
+        char *sql = R"(
+                    SELECT id, source, type, amount, category_id
+                    FROM transactions
+                    WHERE id = ?
+                    )";
+
+        const persistence::Statement stmt(connection_, sql);
+        sqlite3_bind_int64(stmt.get(), 1, static_cast<sqlite3_int64>(id));
+
+        int result = sqlite3_step(stmt.get());
+
+        if (result == SQLITE_ROW) {
+            Transaction t{};
+
+            t.id = sqlite3_column_int64(stmt.get(), 0);
+
+            const unsigned char *source = sqlite3_column_text(stmt.get(), 1);
+            t.source = source ? reinterpret_cast<const char *>(source) : "";
+
+            t.type = static_cast<Type>(sqlite3_column_int(stmt.get(), 2));
+            t.amount = static_cast<float>(sqlite3_column_double(stmt.get(), 3));
+            t.category_id = sqlite3_column_int64(stmt.get(), 4);
+
+            return t;
+        }
+
+        if (result == SQLITE_DONE) {
+            return std::nullopt;
+        }
+
+        throw std::runtime_error(sqlite3_errmsg(connection_));
     }
 }
