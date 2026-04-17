@@ -8,7 +8,6 @@ namespace budgetpilot::domain::model {
     };
 
     struct Transaction {
-        std::int64_t id;
         std::string source = "-";
         Type type = Type::INCOME;
         float amount;
