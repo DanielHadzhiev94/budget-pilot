@@ -14,9 +14,9 @@ namespace budgetpilot {
         public:
             explicit TransactionRepository(sqlite3 *connection);
 
-            void add(const domain::model::Transaction &transaction);
+            void add(const domain::model::Transaction &transaction) ;
             void update(const domain::model::Transaction &transaction);
-            void remove(std::uint64_t);
+            void remove(std::uint64_t id);
 
             [[nodiscard]] std::vector<domain::model::Transaction> getAll() const;
             [[nodiscard]] std::optional<domain::model::Transaction> getOne(std::uint64_t id) const;

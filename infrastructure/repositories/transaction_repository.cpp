@@ -1,6 +1,7 @@
 #include "transaction_repository.hpp"
 
 #include "domain/model/transaction.hpp"
+#include "infrastructure/persistence /statement.hpp"
 
 namespace budgetpilot::infrastructure::repositories {
     TransactionRepository::TransactionRepository(sqlite3 *connection)
@@ -15,25 +16,33 @@ namespace budgetpilot::infrastructure::repositories {
             INSERT INTO transactions (amount, type, source, category_id)
             VALUES (?, ? ,? ,?))";
 
-        sqlite3_stmt *stmt = nullptr;
-        int result = sqlite3_prepare_v2(connection_, sql, -1, &stmt, nullptr);
-        if (result != SQLITE_OK) {
-            throw std::runtime_error(sqlite3_errmsg(connection_));
-        }
+        const persistence::Statement stmt(connection_, sql);
 
         // Bind parameters
-        sqlite3_bind_double(stmt, 1, transaction.amount);
-        sqlite3_bind_int(stmt, 2, static_cast<int>(transaction.type));
-        sqlite3_bind_text(stmt, 3, transaction.source.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int(stmt, 4, static_cast<int>(transaction.category_id));
+        sqlite3_bind_double(stmt.get(), 1, transaction.amount);
+        sqlite3_bind_int(stmt.get(), 2, static_cast<int>(transaction.type));
+        sqlite3_bind_text(stmt.get(), 3, transaction.source.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt.get(), 4, static_cast<int>(transaction.category_id));
 
-        result = sqlite3_step(stmt);
+        const int result = sqlite3_step(stmt.get());
         if (result != SQLITE_DONE) {
-            sqlite3_finalize(stmt);
             throw std::runtime_error(sqlite3_errmsg(connection_));
         }
+    }
 
+    void TransactionRepository::remove(std::uint64_t id) {
+        const char *sql = R"(
+                             DELETE FROM transactions
+                             WHERE id = ?
+                            )";
 
-        sqlite3_finalize(stmt);
+        const persistence::Statement stmt(connection_, sql);
+
+        sqlite3_bind_int64(stmt.get(), 1, id);
+
+        const int result = sqlite3_step(stmt.get());
+        if (result != SQLITE_DONE) {
+            throw std::runtime_error(sqlite3_errmsg(connection_));
+        }
     }
 }
