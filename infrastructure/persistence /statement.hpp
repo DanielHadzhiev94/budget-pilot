@@ -1,0 +1,8 @@
+//
+// Created by Daniel Hadzhiev on 17.04.26.
+//
+
+#ifndef BUDGETPILOT_STATEMENT_HPP
+#define BUDGETPILOT_STATEMENT_HPP
+
+#endif //BUDGETPILOT_STATEMENT_HPP
