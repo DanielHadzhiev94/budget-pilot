@@ -19,6 +19,7 @@ qt_add_executable(appBudgetPilot
         infrastructure/repositories/transaction_repository.cpp
         "infrastructure/persistence /statement.hpp"
         "infrastructure/persistence /statement.cpp"
+        domain/model/account.hpp
 )
 
 qt_add_qml_module(appBudgetPilot
