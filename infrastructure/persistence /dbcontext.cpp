@@ -1,7 +1,6 @@
 #include "dbcontext.hpp"
 
 #include <filesystem>
-#include <iostream>
 
 namespace budgetpilot::infrastructure::persistence {
     DbContext::DbContext(const std::string &db_path)
@@ -44,26 +43,43 @@ namespace budgetpilot::infrastructure::persistence {
     }
 
     void DbContext::createTable() const {
+        const char *account_query = R"(
+                CREATE TABLE IF NOT EXISTS accounts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE,
+                initial_balance REAL NOT NULL DEFAULT 0,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        )";
+
+        const char *category_query = R"(
+        CREATE TABLE IF NOT EXISTS categories (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        )";
+
         const char *transaction_query = R"(
         CREATE TABLE IF NOT EXISTS transactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            amount REAL NOT NULL,
-            type TEXT NOT NULL,
-            source TEXT,
+            account_id INTEGER NOT NULL,
             category_id INTEGER NOT NULL,
+            type INTEGER NOT NULL CHECK(type IN (1, 2)),
+            amount REAL NOT NULL CHECK(amount > 0),
+            source TEXT,
+            note TEXT,
+            transaction_date INTEGER NOT NULL,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY (account_id) REFERENCES accounts(id),
             FOREIGN KEY (category_id) REFERENCES categories(id)
-        );
-    )";
-        const char *category_query = R"(
-        CREATE TABLE IF NOT EXISTS categories(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL UNIQUE
-        );
-    )";
+           );
+        )";
 
-
-        execute(transaction_query);
+        execute(account_query);
         execute(category_query);
+        execute(transaction_query);
         execute("PRAGMA foreign_keys = ON;");
     }
 
@@ -74,7 +90,12 @@ namespace budgetpilot::infrastructure::persistence {
         INSERT OR IGNORE INTO categories (name) VALUES ('Apartment');
     )";
 
+        const char *acc_seed = R"(
+        INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('Bank', 1234);
+)";
+
         execute(category_seed);
+        execute(acc_seed);
     }
 
     void DbContext::execute(const char *query) const {

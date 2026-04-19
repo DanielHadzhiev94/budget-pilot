@@ -3,6 +3,8 @@
 #include <sqlite3.h>
 #include <vector>
 
+using TimePoint = std::chrono::system_clock::time_point;
+
 namespace budgetpilot {
     namespace domain::model {
         struct Transaction;
@@ -14,7 +16,7 @@ namespace budgetpilot {
         public:
             explicit TransactionRepository(sqlite3 *connection);
 
-            void add(const domain::model::Transaction &transaction) ;
+            void add(const domain::model::Transaction &transaction);
             void update(const domain::model::Transaction &transaction);
             void remove(std::uint64_t id);
 
@@ -23,6 +25,8 @@ namespace budgetpilot {
 
         private:
             sqlite3 *connection_;
+            static std::int64_t convert_to_seconds(TimePoint time_point);
+            static std::chrono::system_clock::time_point from_unix(std::int64_t value);
         };
     }
 }
