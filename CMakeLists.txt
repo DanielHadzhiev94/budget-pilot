@@ -22,6 +22,8 @@ qt_add_executable(appBudgetPilot
         domain/model/account.hpp
         infrastructure/repositories/account_repository.hpp
         infrastructure/repositories/account_repository.cpp
+        domain/interface/repository.hpp
+        infrastructure/repositories/category_repository.hpp
 )
 
 qt_add_qml_module(appBudgetPilot
