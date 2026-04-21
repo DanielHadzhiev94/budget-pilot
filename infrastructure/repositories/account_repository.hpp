@@ -21,7 +21,7 @@ namespace budgetpilot {
 
             void add(Account account) override;
             void update(Account account) override;
-            void remove(Account account) override;
+            void remove(std::uint64_t id) override;
 
             std::vector<Account> getAll() override;
             Account getOne(std::uint64_t id) override;

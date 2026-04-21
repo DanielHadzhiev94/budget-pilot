@@ -40,6 +40,7 @@ namespace budgetpilot::infrastructure::repositories {
         const persistence::Statement stmt(connection_, sql);
         sqlite3_bind_text(stmt.get(), 1, account.name.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_double(stmt.get(), 2, account.amount);
+        sqlite3_bind_int64(stmt.get(), 3, account.id);
 
         const int result = sqlite3_step(stmt.get());
         if (result != SQLITE_DONE) {
@@ -47,14 +48,14 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    void AccountRepository::remove(Account account) {
+    void AccountRepository::remove(std::uint64_t id) {
         auto sql = R"(
                       DELETE account
                       WHERE id = ?
                      )";
 
         const persistence::Statement stmt(connection_, sql);
-        sqlite3_bind_int64(stmt.get(), 1, account.id);
+        sqlite3_bind_int64(stmt.get(), 1, id);
 
         const int result = sqlite3_step(stmt.get());
         if (result != SQLITE_DONE) {

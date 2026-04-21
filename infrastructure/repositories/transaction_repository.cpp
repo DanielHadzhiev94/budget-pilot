@@ -8,10 +8,10 @@ using namespace budgetpilot::domain::model;
 
 namespace budgetpilot::infrastructure::repositories {
     TransactionRepository::TransactionRepository(sqlite3 *connection)
-        : connection_(connection) {
-        if (!connection_) {
-            throw std::invalid_argument("Database connection cannot be null.");
-        }
+            : connection_(connection) {
+            if (!connection_) {
+                throw std::invalid_argument("Database connection cannot be null.");
+            }
     }
 
     void TransactionRepository::update(const Transaction &transaction) {
