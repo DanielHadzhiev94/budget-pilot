@@ -1,7 +1,7 @@
 #pragma once
 #include <sqlite3.h>
 
-#include "domain/interface/repository.hpp"
+#include "../../domain/interfaces/repository.hpp"
 
 namespace budgetpilot {
     namespace domain::model {

@@ -1,8 +1,7 @@
 #include "account_repository.hpp"
+#include "../../domain/model/account.hpp"
+#include "src/infrastructure/persistence/statement.hpp"
 
-#include "domain/model/account.hpp"
-#include "infrastructure/persistence /dbcontext.hpp"
-#include "infrastructure/persistence /statement.hpp"
 
 using namespace budgetpilot::domain::model;
 

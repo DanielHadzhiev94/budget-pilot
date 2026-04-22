@@ -1,6 +1,5 @@
-#include "statement.hpp"
-
 #include <stdexcept>
+#include "statement.hpp"
 
 namespace budgetpilot::infrastructure::persistence {
     Statement::Statement(sqlite3 *db, const char *sql)

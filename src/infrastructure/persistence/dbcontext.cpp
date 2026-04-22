@@ -1,6 +1,5 @@
-#include "dbcontext.hpp"
-
 #include <filesystem>
+#include "dbcontext.hpp"
 
 namespace budgetpilot::infrastructure::persistence {
     DbContext::DbContext(const std::string &db_path)
