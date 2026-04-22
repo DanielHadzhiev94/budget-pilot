@@ -5,6 +5,8 @@ namespace budgetpilot::domain::interface {
     template<typename T>
     class IRepository {
     public:
+        virtual ~IRepository() = default;
+        
         virtual void add(T entity) = 0;
         virtual void update(T entity) = 0;
         virtual void remove(std::uint64_t id) = 0;
