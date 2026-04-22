@@ -25,6 +25,9 @@ qt_add_executable(appBudgetPilot
         src/domain/interfaces/repository.hpp
         src/infrastructure/repositories/category_repository.hpp
         src/infrastructure/repositories/category_repository.cpp
+        src/presentation/themes/themes.cpp
+        src/presentation/themes/themes.hpp
+        src/presentation/themes/themes.ui
 )
 
 qt_add_qml_module(appBudgetPilot
