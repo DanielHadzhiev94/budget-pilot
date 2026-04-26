@@ -25,15 +25,20 @@ qt_add_executable(appBudgetPilot
         src/domain/interfaces/repository.hpp
         src/infrastructure/repositories/category_repository.hpp
         src/infrastructure/repositories/category_repository.cpp
-        src/presentation/themes/themes.cpp
-        src/presentation/themes/themes.hpp
-        src/presentation/themes/themes.ui
+
+)
+
+set_source_files_properties(src/presentation/themes/AppTheme.qml
+        PROPERTIES QT_QML_SINGLETON_TYPE TRUE
 )
 
 qt_add_qml_module(appBudgetPilot
         URI BudgetPilot
         QML_FILES
-        src/presentation/Main.qml
+            src/presentation/Main.qml
+            src/presentation/themes/AppTheme.qml
+            src/presentation/components/Sidebar.qml
+            src/presentation/components/SidebarItem.qml
 )
 
 set_target_properties(appBudgetPilot PROPERTIES
