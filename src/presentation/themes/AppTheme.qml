@@ -3,8 +3,8 @@ import QtQuick
 
 QtObject {
     // === BACKGROUNDS ===
-    readonly property color background: "#0B111A"        // main app background
-    readonly property color backgroundAlt: "#0F1722"     // slightly lighter bg
+    readonly property color background: "#090c12"        // main app background
+    readonly property color backgroundAlt: "#101319"     // slightly lighter bg
     readonly property color surface: "#121A27"           // cards / panels
     readonly property color surfaceLight: "#182334"      // hover / secondary panels
     readonly property color surfaceElevated: "#1B2638"   // inputs / raised cards
@@ -39,7 +39,6 @@ QtObject {
     readonly property color divider: "#1F2937"
 
     // === SIDEBAR ===
-    readonly property color sidebar: "#090F18"
     readonly property color sidebarBorder: "#1F2937"
     readonly property color sidebarItemHover: "#111827"
     readonly property color sidebarItemActive: "#132B4F"
