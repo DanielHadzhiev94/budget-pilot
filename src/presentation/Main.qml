@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import BudgetPilot
 
+
 ApplicationWindow {
     visible: true
     width: 1440
@@ -18,57 +19,7 @@ ApplicationWindow {
             spacing: 0
 
             // Header
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 50
-
-                color: AppTheme.background
-
-                // Botton border
-                Rectangle {
-                    height: 1
-                    color: AppTheme.border
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                }
-
-                // Left Elements
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.leftMargin: 16
-                    anchors.rightMargin: 16
-
-                    RowLayout {
-                        spacing: 8
-
-                        Image {
-                            source: "images/rico_robot.png"
-                            Layout.preferredWidth: 35
-                            Layout.preferredHeight: 35
-
-                            fillMode: Image.PreserveAspectFit
-                        }
-
-                        Text {
-                            text: "BudgetPilot"
-                            color: AppTheme.textPrimary
-                            font.pixelSize: 18
-                            font.bold: true
-
-                            Layout.alignment: Qt.AlignVCenter
-                        }
-                    }
-
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    // RIGHT SIDE
-
-                }
-            }
+            Header{}
 
             // Main
             RowLayout {
@@ -93,9 +44,25 @@ ApplicationWindow {
 
                 // Content
                 Rectangle {
+                    color: AppTheme.backgroundAlt
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    color: AppTheme.backgroundAlt
+                    Layout.alignment: Qt.AlignTop
+
+                    ColumnLayout {
+                        anchors.fill: parent
+
+                        Rectangle {
+                            radius: 12
+                            color: AppTheme.surface
+                            border.color: AppTheme.border
+
+
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 60
+                            Layout.margins: 20
+                        }
+                    }
                 }
             }
         }

@@ -35,10 +35,11 @@ set_source_files_properties(src/presentation/themes/AppTheme.qml
 qt_add_qml_module(appBudgetPilot
         URI BudgetPilot
         QML_FILES
-            src/presentation/Main.qml
-            src/presentation/themes/AppTheme.qml
-            src/presentation/components/Sidebar.qml
-            src/presentation/components/SidebarItem.qml
+        src/presentation/Main.qml
+        src/presentation/themes/AppTheme.qml
+        src/presentation/components/Sidebar.qml
+        src/presentation/components/SidebarItem.qml
+        src/presentation/components/Header.qml
 
         RESOURCES
         src/presentation/images/rico_robot.png
