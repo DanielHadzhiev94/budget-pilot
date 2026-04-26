@@ -39,6 +39,9 @@ qt_add_qml_module(appBudgetPilot
             src/presentation/themes/AppTheme.qml
             src/presentation/components/Sidebar.qml
             src/presentation/components/SidebarItem.qml
+
+        RESOURCES
+        src/presentation/images/rico_robot.png
 )
 
 set_target_properties(appBudgetPilot PROPERTIES
