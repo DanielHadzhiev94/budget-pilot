@@ -1,4 +1,7 @@
 #include "category_repository.hpp"
+
+#include <stdexcept>
+
 #include "../../domain/model/category.hpp"
 #include "src/infrastructure/persistence/statement.hpp"
 

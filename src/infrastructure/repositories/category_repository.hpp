@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include <sqlite3.h>
 
 #include "../../domain/interfaces/repository.hpp"

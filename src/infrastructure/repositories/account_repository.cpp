@@ -1,4 +1,9 @@
+#include <stdexcept>
+
 #include "account_repository.hpp"
+
+#include <cstdint>
+
 #include "../../domain/model/account.hpp"
 #include "src/infrastructure/persistence/statement.hpp"
 

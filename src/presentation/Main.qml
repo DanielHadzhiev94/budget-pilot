@@ -12,14 +12,4 @@ ApplicationWindow {
 
     title: "BudgetPilot"
 
-    RowLayout {
-        anchors.fill: parent
-        spacing: 0
-
-        Sidebar {
-            Layout.preferredWidth: 240
-            Layout.fillHeight: true
-        }
-    }
-
 }
