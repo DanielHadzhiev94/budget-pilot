@@ -40,6 +40,9 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/Sidebar.qml
         src/presentation/components/SidebarItem.qml
         src/presentation/components/Header.qml
+        src/presentation/components/CustomButton.qml
+        src/presentation/components/DatePicker.qml
+        src/presentation/components/BudgetCard.qml
 
         RESOURCES
         src/presentation/images/rico_robot.png

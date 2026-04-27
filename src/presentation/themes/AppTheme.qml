@@ -5,6 +5,7 @@ QtObject {
     // === BACKGROUNDS ===
     readonly property color background: "#090c12"        // main app background
     readonly property color backgroundAlt: "#101319"     // slightly lighter bg
+    readonly property color backgroundMainCard: "#12171f"
     readonly property color surface: "#121A27"           // cards / panels
     readonly property color surfaceLight: "#182334"      // hover / secondary panels
     readonly property color surfaceElevated: "#1B2638"   // inputs / raised cards

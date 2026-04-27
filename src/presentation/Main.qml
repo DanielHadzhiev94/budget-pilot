@@ -19,7 +19,8 @@ ApplicationWindow {
             spacing: 0
 
             // Header
-            Header{}
+            Header {
+            }
 
             // Main
             RowLayout {
@@ -51,16 +52,72 @@ ApplicationWindow {
 
                     ColumnLayout {
                         anchors.fill: parent
+                        spacing: 12
 
                         Rectangle {
                             radius: 12
-                            color: AppTheme.surface
+                            color: AppTheme.backgroundMainCard
                             border.color: AppTheme.border
-
 
                             Layout.fillWidth: true
                             Layout.preferredHeight: 60
-                            Layout.margins: 20
+                            Layout.leftMargin: 20
+                            Layout.rightMargin: 20
+                            Layout.topMargin: 20
+
+                            RowLayout {
+
+                                anchors.fill: parent
+
+                                DatePicker {
+                                }
+
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                                CustomButton {
+                                    text: "Add Transaction"
+                                }
+                            }
+
+                        }
+
+                        // Current budget
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 140
+                            Layout.leftMargin: 20
+                            Layout.rightMargin: 20
+                            spacing: 12
+
+                            BudgetCard{
+                                title: "Current Balance"
+                                main_value: "€ 3458"
+                                subtitle: "Available funds"
+                            }
+
+                            BudgetCard{
+                                title: "Income This Month"
+                                main_value: "€ 3000"
+                                subtitle: "vs last month"
+                            }
+
+                            BudgetCard{
+                                title: "Expense This Month"
+                                main_value: "€ 1458"
+                                subtitle: "vs last month"
+                            }
+
+                            BudgetCard{
+                                title: "Saving Rates"
+                                main_value: "€ 258"
+                                subtitle: "300 € saved"
+                            }
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
                         }
                     }
                 }
