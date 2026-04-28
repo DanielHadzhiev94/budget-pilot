@@ -58,15 +58,16 @@ Rectangle {
             }
         }
 
-        Item {
-            Layout.preferredHeight: 18
-        }
 
         Text {
             text: root.mainValue
             color: root.mainValueColor
             font.pixelSize: 28
             font.bold: true
+        }
+
+        Item {
+            Layout.preferredHeight: 12
         }
 
         Text {

@@ -28,8 +28,8 @@ Rectangle {
             currentIndex: new Date().getMonth()
 
             background: Rectangle {
-                radius: 12
-                color: monthBox.hovered ? AppTheme.surfaceLight : "transparent"
+                radius: 8
+                color: monthBox.hovered ? AppTheme.purple : "transparent"
             }
 
             contentItem: Text {
@@ -67,8 +67,8 @@ Rectangle {
             currentIndex: model.indexOf(new Date().getFullYear())
 
             background: Rectangle {
-                radius: 12
-                color: yearBox.hovered ? AppTheme.surfaceLight : "transparent"
+                radius: 8
+                color: yearBox.hovered ? AppTheme.purple : "transparent"
             }
 
             contentItem: Text {

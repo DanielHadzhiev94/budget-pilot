@@ -3,7 +3,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import BudgetPilot
 
-
 ApplicationWindow {
     visible: true
     width: 1440
@@ -19,8 +18,7 @@ ApplicationWindow {
             spacing: 0
 
             // Header
-            Header {
-            }
+            Header {}
 
             // Main
             RowLayout {
@@ -79,6 +77,7 @@ ApplicationWindow {
 
                                 CustomButton {
                                     text: "Add Transaction"
+
                                 }
                             }
                         }
@@ -91,23 +90,22 @@ ApplicationWindow {
                             Layout.rightMargin: 20
                             spacing: 12
 
-                            BudgetCard{
+                            BudgetCard {
                                 title: "Current Balance"
                                 mainValue: "€ 3458"
                                 mainValueColor: AppTheme.primaryDark
                                 subtitle: "Available funds"
                                 iconSize: 60
-
                             }
 
-                            BudgetCard{
+                            BudgetCard {
                                 title: "Income This Month"
                                 mainValue: "€ 3000"
                                 subtitle: "vs last month"
                                 iconSource: AppTheme.incomeIcon
                             }
 
-                            BudgetCard{
+                            BudgetCard {
                                 title: "Expense This Month"
                                 mainValue: "€ 1458"
                                 mainValueColor: AppTheme.warning
@@ -116,13 +114,13 @@ ApplicationWindow {
                                 iconSize: 30
                             }
 
-                            BudgetCard{
+                            BudgetCard {
                                 title: "Saving Rates"
                                 mainValue: "€ 258"
                                 mainValueColor: AppTheme.chartPurple
                                 subtitle: "300 € saved"
                                 iconSource: AppTheme.rateIcon
-                                iconSize:30
+                                iconSize: 30
                             }
                         }
 

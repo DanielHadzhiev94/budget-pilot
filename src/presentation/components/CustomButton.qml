@@ -6,7 +6,7 @@ import BudgetPilot
 Button {
 
     property string title: "Default text"
-    property int custom_height: 35
+    property int custom_height: 40
     property int custom_width: 160
 
     id: btn
@@ -20,6 +20,7 @@ Button {
 
     Layout.preferredHeight: custom_height
     Layout.preferredWidth: custom_width
+
 
     scale: btn.hovered ? 1.05 : 1.0
 
