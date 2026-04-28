@@ -1,4 +1,7 @@
 #include "transaction_repository.hpp"
+
+#include <stdexcept>
+
 #include "../../domain/model/transaction.hpp"
 #include "src/infrastructure/persistence/statement.hpp"
 
