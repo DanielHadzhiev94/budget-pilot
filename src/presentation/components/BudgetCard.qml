@@ -20,7 +20,7 @@ Rectangle {
     border.color: AppTheme.border
     border.width: 1
 
-    implicitWidth: 260
+    implicitWidth: 282
     implicitHeight: 160
 
     ColumnLayout {
@@ -30,7 +30,6 @@ Rectangle {
 
         RowLayout {
             Layout.fillWidth: true
-            spacing: 12
 
             Item {
                 Layout.preferredWidth: root.iconBoxSize
@@ -57,7 +56,6 @@ Rectangle {
                 Layout.alignment: Qt.AlignVCenter
             }
         }
-
 
         Text {
             text: root.mainValue
