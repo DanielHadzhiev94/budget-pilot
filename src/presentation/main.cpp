@@ -2,6 +2,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QStandardPaths>
+#include <QQuickStyle>
 #include <QDir>
 
 #include "../infrastructure/persistence/dbcontext.hpp"
@@ -56,6 +57,7 @@ int main(int argc, char *argv[]) {
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
+    QQuickStyle::setStyle("Basic");
     engine.loadFromModule("BudgetPilot", "Main");
 
     return QCoreApplication::exec();

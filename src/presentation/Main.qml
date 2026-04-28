@@ -70,6 +70,7 @@ ApplicationWindow {
                                 anchors.fill: parent
 
                                 DatePicker {
+                                    Layout.leftMargin: 12
                                 }
 
                                 Item {
