@@ -139,3 +139,5 @@ qrc_*.cpp
 # Qt temporary files
 *.autosave
 build/Qt_6_11_0_for_macOS-Debug
+build
+.qtcreator

@@ -80,7 +80,6 @@ ApplicationWindow {
                                     text: "Add Transaction"
                                 }
                             }
-
                         }
 
                         // Current budget
@@ -93,26 +92,36 @@ ApplicationWindow {
 
                             BudgetCard{
                                 title: "Current Balance"
-                                main_value: "€ 3458"
+                                mainValue: "€ 3458"
+                                mainValueColor: AppTheme.primaryDark
                                 subtitle: "Available funds"
+                                iconSize: 60
+
                             }
 
                             BudgetCard{
                                 title: "Income This Month"
-                                main_value: "€ 3000"
+                                mainValue: "€ 3000"
                                 subtitle: "vs last month"
+                                iconSource: AppTheme.incomeIcon
                             }
 
                             BudgetCard{
                                 title: "Expense This Month"
-                                main_value: "€ 1458"
+                                mainValue: "€ 1458"
+                                mainValueColor: AppTheme.warning
                                 subtitle: "vs last month"
+                                iconSource: AppTheme.expenseIcon
+                                iconSize: 30
                             }
 
                             BudgetCard{
                                 title: "Saving Rates"
-                                main_value: "€ 258"
+                                mainValue: "€ 258"
+                                mainValueColor: AppTheme.chartPurple
                                 subtitle: "300 € saved"
+                                iconSource: AppTheme.rateIcon
+                                iconSize:30
                             }
                         }
 

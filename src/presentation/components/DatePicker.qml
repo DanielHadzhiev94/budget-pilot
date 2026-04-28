@@ -9,6 +9,7 @@ RowLayout {
 
     width: 190
     height: 65
+
     spacing: 8
 
     ComboBox {

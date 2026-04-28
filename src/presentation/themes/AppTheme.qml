@@ -82,4 +82,10 @@ QtObject {
     readonly property int fontTitle: 20
     readonly property int fontHeading: 26
     readonly property int fontDisplay: 38
+
+    // === ICONS ===
+    property string balanceIcon: "../images/balance.png"
+    property string incomeIcon: "../images/income.png"
+    property string expenseIcon: "../images/expense.png"
+    property string rateIcon: "../images/rate.png"
 }
