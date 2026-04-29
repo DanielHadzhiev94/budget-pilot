@@ -1,0 +1,20 @@
+#pragma once
+#include <qobject.h>
+
+class DashboardViewModel : public QObject {
+    Q_OBJECT
+    Q_PROPERTY(double current_balance READ current_balance NOTIFY current_balance_changed);
+
+public:
+    explicit DashboardViewModel(QObject *parent = nullptr);
+
+    double current_balance() const;
+
+    Q_INVOKABLE void add_income();
+
+signals:
+    void current_balance_changed();
+
+private:
+    double current_balance_ = 0.0;
+};

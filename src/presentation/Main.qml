@@ -30,6 +30,7 @@ ApplicationWindow {
                 }
 
                 DashboardPage {
+                    viewModel: dashboardVM
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                 }

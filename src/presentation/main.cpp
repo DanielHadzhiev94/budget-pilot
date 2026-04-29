@@ -4,12 +4,11 @@
 #include <QStandardPaths>
 #include <QQuickStyle>
 #include <QDir>
+#include <qqmlcontext.h>
 
 #include "../infrastructure/persistence/dbcontext.hpp"
-#include "../domain/model/account.hpp"
 #include "../infrastructure/repositories/account_repository.hpp"
-#include "../infrastructure/repositories/category_repository.hpp"
-#include "../infrastructure/repositories/transaction_repository.hpp"
+#include "viewmodels/DashboardViewModel.hpp"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
@@ -25,27 +24,7 @@ int main(int argc, char *argv[]) {
 
         budgetpilot::infrastructure::persistence::DbContext dbContext(dbPath);
         dbContext.initialize();
-
-        // Test adding a trascation};
-        TransactionRepository repo{dbContext.getConnection()};
-        CategoryRepository cat_repo{dbContext.getConnection()};
-
-
-        // repo.add(budgetpilot::domain::model::Transaction{
-        //     1,
-        //     1,
-        //     budgetpilot::domain::model::Type::Income,
-        //     234.0,
-        //     now,
-        //     "Source",
-        //     "This is note"
-        // });
-
-        AccountRepository acc_repo{dbContext.getConnection()};
-
-        auto a = acc_repo.getOne(1);
-        auto b = a;
-    } catch (const std::exception &ex) {
+        } catch (const std::exception &ex) {
         std::cout << "Error opening database connection: " << ex.what() << "\n";
         return -1;
     }
@@ -57,7 +36,13 @@ int main(int argc, char *argv[]) {
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
+
     QQuickStyle::setStyle("Basic");
+
+
+    DashboardViewModel viewModel;
+    engine.rootContext()->setContextProperty("dashboardVM", &viewModel);
+
     engine.loadFromModule("BudgetPilot", "Main");
 
     return QCoreApplication::exec();

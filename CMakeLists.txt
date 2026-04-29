@@ -34,6 +34,8 @@ qt_add_executable(appBudgetPilot
 
     src/infrastructure/repositories/category_repository.hpp
     src/infrastructure/repositories/category_repository.cpp
+    src/presentation/viewmodels/DashboardViewModel.hpp
+    src/presentation/viewmodels/DashboardViewModel.cpp
 )
 
 # QML Singleton

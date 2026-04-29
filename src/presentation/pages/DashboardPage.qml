@@ -4,6 +4,9 @@ import QtQuick.Layouts
 import BudgetPilot
 
 Rectangle {
+
+    required property var viewModel
+
     id: root
 
     color: AppTheme.backgroundAlt
@@ -36,6 +39,7 @@ Rectangle {
 
                 CustomButton {
                     text: "Add Transaction"
+                    onClicked: viewModel.add_income()
                 }
             }
         }
@@ -49,7 +53,7 @@ Rectangle {
 
             BudgetCard {
                 title: "Current Balance"
-                mainValue: "€ 3458"
+                mainValue: "€ " + viewModel.current_balance
                 mainValueColor: AppTheme.primaryDark
                 subtitle: "Available funds"
                 iconSize: 60
