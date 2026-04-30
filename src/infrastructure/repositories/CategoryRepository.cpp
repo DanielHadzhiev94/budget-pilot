@@ -1,9 +1,9 @@
-#include "category_repository.hpp"
+#include "CategoryRepository.hpp"
 
 #include <stdexcept>
 
-#include "../../domain/model/category.hpp"
-#include "src/infrastructure/persistence/statement.hpp"
+#include "../../domain/model/Category.hpp"
+#include "src/infrastructure/persistence/Statement.hpp"
 
 namespace budgetpilot::infrastructure::repositories {
     CategoryRepository::CategoryRepository(sqlite3 *db)

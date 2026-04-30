@@ -6,29 +6,32 @@
 #include <QDir>
 #include <qqmlcontext.h>
 
-#include "../infrastructure/persistence/dbcontext.hpp"
-#include "../infrastructure/repositories/account_repository.hpp"
+#include "../infrastructure/persistence/DbContext.hpp"
+#include "../infrastructure/repositories/AccountRepository.hpp"
 #include "viewmodels/DashboardViewModel.hpp"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
     using namespace budgetpilot::infrastructure::repositories;
+    using namespace budgetpilot::infrastructure::persistence;
 
-    // DB connection
+    // Initialization of the database
     try {
         QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-        QDir().mkpath(appDataPath);
-
-        std::string dbPath = (appDataPath + "/budgetpilot.db").toStdString();
-
-        budgetpilot::infrastructure::persistence::DbContext dbContext(dbPath);
-        dbContext.initialize();
-        } catch (const std::exception &ex) {
+        QString dbFilePath = QDir(appDataPath).filePath("budgetpilot.db");
+        std::string dbPath = dbFilePath.toStdString();
+        const auto dbContext = std::make_unique<DbContext>(dbPath);
+        dbContext->initialize();
+    } catch (const std::exception &ex) {
         std::cout << "Error opening database connection: " << ex.what() << "\n";
         return -1;
     }
 
+    // Services initialization
+
+
+    // Starting Qt engine
     QQmlApplicationEngine engine;
     QObject::connect(
         &engine,
@@ -39,9 +42,10 @@ int main(int argc, char *argv[]) {
 
     QQuickStyle::setStyle("Basic");
 
-
+    // Initializing of the viewmodels
     DashboardViewModel viewModel;
     engine.rootContext()->setContextProperty("dashboardVM", &viewModel);
+
 
     engine.loadFromModule("BudgetPilot", "Main");
 

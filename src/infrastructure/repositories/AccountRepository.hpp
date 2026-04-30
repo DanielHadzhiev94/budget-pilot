@@ -4,7 +4,7 @@
 #include <sqlite3.h>
 #include <vector>
 
-#include "../../domain/interfaces/repository.hpp"
+#include "../../domain/interfaces/IRepository.hpp"
 
 
 namespace budgetpilot {

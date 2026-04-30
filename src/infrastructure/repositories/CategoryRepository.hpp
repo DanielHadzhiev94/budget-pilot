@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <sqlite3.h>
 
-#include "../../domain/interfaces/repository.hpp"
+#include "../../domain/interfaces/IRepository.hpp"
 
 namespace budgetpilot {
     namespace domain::model {

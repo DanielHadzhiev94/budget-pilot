@@ -1,11 +1,11 @@
 #include <stdexcept>
 
-#include "account_repository.hpp"
+#include "AccountRepository.hpp"
 
 #include <cstdint>
 
-#include "../../domain/model/account.hpp"
-#include "src/infrastructure/persistence/statement.hpp"
+#include "../../domain/model/Account.hpp"
+#include "src/infrastructure/persistence/Statement.hpp"
 
 
 using namespace budgetpilot::domain::model;

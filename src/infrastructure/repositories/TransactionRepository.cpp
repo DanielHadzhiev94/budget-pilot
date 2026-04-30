@@ -1,9 +1,9 @@
-#include "transaction_repository.hpp"
+#include "TransactionRepository.hpp"
 
 #include <stdexcept>
 
-#include "../../domain/model/transaction.hpp"
-#include "src/infrastructure/persistence/statement.hpp"
+#include "../../domain/model/Transaction.hpp"
+#include "src/infrastructure/persistence/Statement.hpp"
 
 using namespace budgetpilot::domain::model;
 

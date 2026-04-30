@@ -14,28 +14,29 @@ qt_standard_project_setup(REQUIRES 6.10)
 qt_add_executable(appBudgetPilot
     src/presentation/main.cpp
 
-    src/infrastructure/persistence/dbcontext.hpp
-    src/infrastructure/persistence/dbcontext.cpp
+        src/infrastructure/persistence/dbcontext.hpp
+        src/infrastructure/persistence/dbcontext.cpp
 
-    src/domain/model/transaction.hpp
-    src/domain/model/category.hpp
-    src/domain/model/account.hpp
+        src/domain/model/transaction.hpp
+        src/domain/model/category.hpp
+        src/domain/model/account.hpp
 
-    src/domain/interfaces/repository.hpp
+        src/domain/interfaces/IRepository.hpp
 
-    src/infrastructure/persistence/statement.hpp
-    src/infrastructure/persistence/statement.cpp
+        src/infrastructure/persistence/statement.hpp
+        src/infrastructure/persistence/statement.cpp
 
-    src/infrastructure/repositories/transaction_repository.hpp
-    src/infrastructure/repositories/transaction_repository.cpp
+        src/infrastructure/repositories/TransactionRepository.hpp
+        src/infrastructure/repositories/TransactionRepository.cpp
 
-    src/infrastructure/repositories/account_repository.hpp
-    src/infrastructure/repositories/account_repository.cpp
+        src/infrastructure/repositories/AccountRepository.hpp
+        src/infrastructure/repositories/AccountRepository.cpp
 
-    src/infrastructure/repositories/category_repository.hpp
-    src/infrastructure/repositories/category_repository.cpp
+        src/infrastructure/repositories/CategoryRepository.hpp
+        src/infrastructure/repositories/CategoryRepository.cpp
     src/presentation/viewmodels/DashboardViewModel.hpp
     src/presentation/viewmodels/DashboardViewModel.cpp
+        src/application/transaction/transaction_service.hpp
 )
 
 # QML Singleton
