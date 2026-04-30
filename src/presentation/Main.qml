@@ -33,8 +33,13 @@ ApplicationWindow {
                     viewModel: dashboardVM
                     Layout.fillWidth: true
                     Layout.fillHeight: true
+                    onAddTransactionClicked: addTransactionDialog.open()
                 }
             }
         }
+    }
+
+    AddTransactionDialog {
+        id: addTransactionDialog
     }
 }

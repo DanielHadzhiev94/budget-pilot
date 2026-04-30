@@ -4,10 +4,10 @@ import QtQuick.Layouts
 import BudgetPilot
 
 Rectangle {
+    id: root
 
     required property var viewModel
-
-    id: root
+    signal  addTransactionClicked()
 
     color: AppTheme.backgroundAlt
 
@@ -39,7 +39,8 @@ Rectangle {
 
                 CustomButton {
                     text: "Add Transaction"
-                    onClicked: viewModel.add_income()
+                    Layout.rightMargin: 12
+                    onClicked: root.addTransactionClicked()
                 }
             }
         }

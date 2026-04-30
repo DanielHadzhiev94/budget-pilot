@@ -60,6 +60,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/CustomButton.qml
         src/presentation/components/DatePicker.qml
         src/presentation/components/BudgetCard.qml
+        src/presentation/components/AddTransactionDialog.qml
         src/presentation/pages/DashboardPage.qml
 
     RESOURCES
@@ -68,7 +69,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/images/income.png
         src/presentation/images/expense.png
         src/presentation/images/rate.png
-)
+        )
 
 # Qt Creator
 set(QML_IMPORT_PATH

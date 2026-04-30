@@ -1,8 +1,1 @@
-//
-// Created by Daniel Hadzhiev on 30.04.26.
-//
-
-#ifndef BUDGETPILOT_TRANSACTION_SERVICE_HPP
-#define BUDGETPILOT_TRANSACTION_SERVICE_HPP
-
-#endif //BUDGETPILOT_TRANSACTION_SERVICE_HPP
+#pragma once
