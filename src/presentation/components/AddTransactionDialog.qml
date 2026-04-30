@@ -38,7 +38,7 @@ Dialog {
             currentIndex: 0
 
             onCurrentTextChanged: {
-                root.transactionType = currentText
+                root.transactionType = currentText;
             }
         }
 
@@ -46,6 +46,24 @@ Dialog {
             id: categoryInput
             Layout.fillWidth: true
             model: ["Food", "Salary", "Transport", "Shopping", "Other"]
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 10
+            visible: root.transactionType == "Income"
+
+            Text {
+                id: accountTitle
+                text: "Account"
+                color:AppTheme.textPrimary
+            }
+
+            ComboBox {
+                id: accountInput
+                Layout.fillWidth: true
+                model: ["Sparkasse", "Paypal"]
+            }
         }
 
         TextField {
@@ -78,13 +96,13 @@ Dialog {
                 text: "Save"
 
                 onClicked: {
-                    console.log("Amount:", amountInput.text)
-                    console.log("Type:", typeInput.currentText)
-                    console.log("Category:", categoryInput.currentText)
-                    console.log("Source:", sourceInput.text)
-                    console.log("Note:", noteInput.text)
+                    console.log("Amount:", amountInput.text);
+                    console.log("Type:", typeInput.currentText);
+                    console.log("Category:", categoryInput.currentText);
+                    console.log("Source:", sourceInput.text);
+                    console.log("Note:", noteInput.text);
 
-                    root.close()
+                    root.close();
                 }
             }
         }
