@@ -8,7 +8,7 @@
 
 #include "../infrastructure/persistence/DbContext.hpp"
 #include "../infrastructure/repositories/AccountRepository.hpp"
-#include "viewmodels/DashboardViewModel.hpp"
+#include "viewmodels/FinancialSummaryVm.hpp"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     QQuickStyle::setStyle("Basic");
 
     // Initializing of the viewmodels
-    DashboardViewModel viewModel;
+    FinancialSummaryVm viewModel;
     engine.rootContext()->setContextProperty("dashboardVM", &viewModel);
 
 

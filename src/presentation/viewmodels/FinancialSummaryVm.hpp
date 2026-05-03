@@ -1,12 +1,12 @@
 #pragma once
 #include <qobject.h>
 
-class DashboardViewModel : public QObject {
+class FinancialSummaryVm : public QObject {
     Q_OBJECT
     Q_PROPERTY(double current_balance READ current_balance NOTIFY current_balance_changed);
 
 public:
-    explicit DashboardViewModel(QObject *parent = nullptr);
+    explicit FinancialSummaryVm(QObject *parent = nullptr, TransactionService);
 
     double current_balance() const;
 

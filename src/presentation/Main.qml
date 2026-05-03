@@ -29,7 +29,7 @@ ApplicationWindow {
                     Layout.fillHeight: true
                 }
 
-                DashboardPage {
+                FinancialSummarySection {
                     viewModel: dashboardVM
                     Layout.fillWidth: true
                     Layout.fillHeight: true

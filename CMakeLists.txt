@@ -34,9 +34,10 @@ qt_add_executable(appBudgetPilot
 
         src/infrastructure/repositories/CategoryRepository.hpp
         src/infrastructure/repositories/CategoryRepository.cpp
-    src/presentation/viewmodels/DashboardViewModel.hpp
-    src/presentation/viewmodels/DashboardViewModel.cpp
-        src/application/transaction/transaction_service.hpp
+        src/presentation/viewmodels/FinancialSummaryVM.hpp
+        src/presentation/viewmodels/FinancialSummaryVM.cpp
+        src/application/transaction/TransactionService.hpp
+        src/domain/utilities/Reponse.hpp
 )
 
 # QML Singleton
@@ -61,7 +62,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/DatePicker.qml
         src/presentation/components/BudgetCard.qml
         src/presentation/components/AddTransactionDialog.qml
-        src/presentation/pages/DashboardPage.qml
+        src/presentation/sections/FinancialSummarySection.qml
 
     RESOURCES
         src/presentation/images/rico_robot.png
