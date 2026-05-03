@@ -26,6 +26,6 @@ namespace budgetpilot::presentation::viewmodels {
     }
 
     void FinancialSummaryVm::load_data(int month, int year) {
-        std::cout << month << year << "\n";
+        std::cout << month << "-" << year << "\n";
     }
 }

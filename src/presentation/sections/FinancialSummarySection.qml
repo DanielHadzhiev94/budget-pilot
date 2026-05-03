@@ -32,7 +32,7 @@ Rectangle {
 
                 DatePicker {
                     Layout.leftMargin: 12
-                    dateChanged: function (month, year) {
+                    onDateChanged: function (month, year) {
                         viewModel.load_data(month, year);
                     }
                 }
