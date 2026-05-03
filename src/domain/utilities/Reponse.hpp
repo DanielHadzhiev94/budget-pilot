@@ -17,7 +17,7 @@ namespace budgetpilot::domain::utilities {
 
         [[nodiscard]] bool is_successful() const { return is_successful_; }
 
-        const std::string message() const { return message_; }
+        std::string message() const { return message_; } // NOLINT(*-const-return-type, *-use-nodiscard)
 
         const T &data() const {
             if (!data_.has_value) {

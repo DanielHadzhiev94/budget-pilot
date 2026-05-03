@@ -7,6 +7,7 @@ Rectangle {
     id: root
 
     required property var viewModel
+
     signal  addTransactionClicked()
 
     color: AppTheme.backgroundAlt
@@ -31,6 +32,9 @@ Rectangle {
 
                 DatePicker {
                     Layout.leftMargin: 12
+                    dateChanged: function (month, year) {
+                        viewModel.load_data(month, year);
+                    }
                 }
 
                 Item {

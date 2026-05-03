@@ -6,6 +6,11 @@ import BudgetPilot
 Rectangle {
     id: root
 
+    signal dateChanged(int month, int year)
+
+    readonly property int selectedMonth: monthBox.currentIndex + 1
+    readonly property int selectedYear: yearBox.currentText
+
     color: AppTheme.purpleSoft
     radius: 8
     border.color: AppTheme.border
@@ -26,6 +31,11 @@ Rectangle {
             Layout.fillHeight: true
             model: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
             currentIndex: new Date().getMonth()
+
+            onCurrentIndexChanged: {
+                root.dateChanged(root.selectedMonth, root.selectedYear)
+            }
+
 
             background: Rectangle {
                 radius: 8
@@ -65,6 +75,10 @@ Rectangle {
             model: [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029]
 
             currentIndex: model.indexOf(new Date().getFullYear())
+
+            onCurrentIndexChanged: {
+                root.dateChanged(root.selectedMonth, root.selectedYear)
+            }
 
             background: Rectangle {
                 radius: 8
