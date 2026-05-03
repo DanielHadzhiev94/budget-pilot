@@ -38,6 +38,7 @@ qt_add_executable(appBudgetPilot
         src/presentation/viewmodels/FinancialSummaryVM.cpp
         src/application/transaction/TransactionService.hpp
         src/domain/utilities/Reponse.hpp
+        src/application/transaction/TransactionService.cpp
 )
 
 # QML Singleton

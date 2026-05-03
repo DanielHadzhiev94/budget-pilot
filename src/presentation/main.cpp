@@ -8,28 +8,34 @@
 
 #include "../infrastructure/persistence/DbContext.hpp"
 #include "../infrastructure/repositories/AccountRepository.hpp"
+#include "src/application/transaction/TransactionService.hpp"
+#include "src/infrastructure/repositories/TransactionRepository.hpp"
 #include "viewmodels/FinancialSummaryVm.hpp"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
+    using namespace budgetpilot::application::transaction;
     using namespace budgetpilot::infrastructure::repositories;
     using namespace budgetpilot::infrastructure::persistence;
+    using namespace budgetpilot::presentation::viewmodels;
 
     // Initialization of the database
-    try {
-        QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-        QString dbFilePath = QDir(appDataPath).filePath("budgetpilot.db");
-        std::string dbPath = dbFilePath.toStdString();
-        const auto dbContext = std::make_unique<DbContext>(dbPath);
-        dbContext->initialize();
-    } catch (const std::exception &ex) {
-        std::cout << "Error opening database connection: " << ex.what() << "\n";
-        return -1;
-    }
+    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString dbFilePath = QDir(appDataPath).filePath("budgetpilot.db");
+    std::string dbPath = dbFilePath.toStdString();
+    const auto dbContext = std::make_unique<DbContext>(dbPath);
+    dbContext->initialize();
 
-    // Services initialization
+    //Repositories
+    AccountRepository account_repository{dbContext->getConnection()};
+    TransactionRepository transaction_repository{dbContext->getConnection()};
 
+    // Services
+    TransactionService transaction_service{
+        &account_repository,
+        &transaction_repository
+    };
 
     // Starting Qt engine
     QQmlApplicationEngine engine;
@@ -42,11 +48,12 @@ int main(int argc, char *argv[]) {
 
     QQuickStyle::setStyle("Basic");
 
-    // Initializing of the viewmodels
-    FinancialSummaryVm viewModel;
+    // Initializing of the ViewModels
+    FinancialSummaryVm viewModel{
+        &transaction_service
+    };
+
     engine.rootContext()->setContextProperty("dashboardVM", &viewModel);
-
-
     engine.loadFromModule("BudgetPilot", "Main");
 
     return QCoreApplication::exec();
