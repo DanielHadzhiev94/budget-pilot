@@ -6,6 +6,8 @@ import BudgetPilot
 Dialog {
     id: root
 
+    required property var viewModel
+
     title: "Add Transaction"
     modal: true
 
@@ -96,13 +98,17 @@ Dialog {
                 text: "Save"
 
                 onClicked: {
-                    console.log("Amount:", amountInput.text);
-                    console.log("Type:", typeInput.currentText);
-                    console.log("Category:", categoryInput.currentText);
-                    console.log("Source:", sourceInput.text);
-                    console.log("Note:", noteInput.text);
+                    const success = viewModel.saveTransaction(
+                        Number(amountInput.text),
+                        typeInput.currentText,
+                        categoryInput.currentText,
+                        sourceInput.text,
+                        noteInput.text
+                    )
 
-                    root.close();
+                    if (success) {
+                        root.close()
+                    }
                 }
             }
         }

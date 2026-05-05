@@ -17,7 +17,8 @@ ApplicationWindow {
             anchors.fill: parent
             spacing: 0
 
-            Header {}
+            Header {
+            }
 
             RowLayout {
                 Layout.fillWidth: true
@@ -41,5 +42,6 @@ ApplicationWindow {
 
     AddTransactionDialog {
         id: addTransactionDialog
+        viewModel: addtransactionVM
     }
 }

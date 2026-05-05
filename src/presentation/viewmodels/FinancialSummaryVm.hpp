@@ -6,6 +6,10 @@ namespace budgetpilot {
         class TransactionService;
     }
 
+    namespace domain::model {
+        class Transaction;
+    }
+
     namespace presentation::viewmodels {
         class FinancialSummaryVm : public QObject {
             Q_OBJECT
@@ -22,8 +26,8 @@ namespace budgetpilot {
             [[nodiscard]] double income() const;
             [[nodiscard]] double expense() const;
 
-            Q_INVOKABLE void add_income();
-            Q_INVOKABLE void load_data(int month, int year);
+            Q_INVOKABLE void create_transaction(const domain::model::Transaction& transaction) const;
+            Q_INVOKABLE static void load_data(int month, int year);
 
         signals:
             void current_balance_changed();

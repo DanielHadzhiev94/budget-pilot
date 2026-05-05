@@ -10,6 +10,7 @@
 #include "../infrastructure/repositories/AccountRepository.hpp"
 #include "src/application/transaction/TransactionService.hpp"
 #include "src/infrastructure/repositories/TransactionRepository.hpp"
+#include "viewmodels/AddTransactionDialogVm.hpp"
 #include "viewmodels/FinancialSummaryVm.hpp"
 
 int main(int argc, char *argv[]) {
@@ -49,11 +50,16 @@ int main(int argc, char *argv[]) {
     QQuickStyle::setStyle("Basic");
 
     // Initializing of the ViewModels
-    FinancialSummaryVm viewModel{
+    FinancialSummaryVm financialSummaryViewModel{
         &transaction_service
     };
 
-    engine.rootContext()->setContextProperty("dashboardVM", &viewModel);
+    AddTransactionDialogVm addDialogViewModel{
+        &transaction_service
+    };
+
+    engine.rootContext()->setContextProperty("dashboardVM", &financialSummaryViewModel);
+    engine.rootContext()->setContextProperty("addtransactionVM", &addDialogViewModel);
     engine.loadFromModule("BudgetPilot", "Main");
 
     return QCoreApplication::exec();
