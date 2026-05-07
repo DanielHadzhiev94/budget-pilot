@@ -58,7 +58,7 @@ Dialog {
             Text {
                 id: accountTitle
                 text: "Account"
-                color:AppTheme.textPrimary
+                color: AppTheme.textPrimary
             }
 
             ComboBox {
@@ -74,11 +74,46 @@ Dialog {
             Layout.fillWidth: true
         }
 
-        TextArea {
-            id: noteInput
-            placeholderText: "Note"
+        Rectangle {
+            radius: 8
             Layout.fillWidth: true
             Layout.preferredHeight: 90
+            border.color: AppTheme.border
+            color: AppTheme.backgroundMainCard
+
+            TextArea {
+                id: noteInput
+                placeholderText: "Note"
+                Layout.fillWidth: true
+            }
+        }
+
+
+        Rectangle {
+            id: errorBox
+
+            Layout.fillWidth: true
+            Layout.preferredHeight: errorText.implicitHeight + 20
+
+            visible: viewModel.errorMessage.length > 0
+
+            radius: 8
+            color: "#2A1215"
+            border.color: AppTheme.danger
+            border.width: 1
+
+            Text {
+                id: errorText
+
+                anchors.fill: parent
+                anchors.margins: 10
+
+                text: viewModel.errorMessage
+                color: AppTheme.danger
+                font.pixelSize: 13
+                wrapMode: Text.WordWrap
+                verticalAlignment: Text.AlignVCenter
+            }
         }
 
         RowLayout {
