@@ -27,6 +27,7 @@ namespace budgetpilot::presentation::viewmodels {
             const QString &type,
             const QString &category,
             const QString &source,
+            const QDate &date,
             const QString &note
         );
 

@@ -74,8 +74,12 @@ Dialog {
             Layout.fillWidth: true
         }
 
+        DatePicker {
+            id: datePicker
+        }
+
         Rectangle {
-            radius: 8
+            radius: 6
             Layout.fillWidth: true
             Layout.preferredHeight: 90
             border.color: AppTheme.border
@@ -84,7 +88,7 @@ Dialog {
             TextArea {
                 id: noteInput
                 placeholderText: "Note"
-                Layout.fillWidth: true
+                anchors.fill: parent;
             }
         }
 
@@ -133,11 +137,16 @@ Dialog {
                 text: "Save"
 
                 onClicked: {
+                    let month = datePicker.selectedMonth;
+                    let year = datePicker.selectedYear;
+                    let date = new Date(month, year);
+
                     const success = viewModel.saveTransaction(
                         Number(amountInput.text),
                         typeInput.currentText,
                         categoryInput.currentText,
                         sourceInput.text,
+                        date,
                         noteInput.text
                     )
 

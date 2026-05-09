@@ -41,6 +41,7 @@ qt_add_executable(appBudgetPilot
         src/application/transaction/TransactionService.cpp
         src/presentation/viewmodels/AddTransactionDialogVm.hpp
         src/presentation/viewmodels/AddTransactionDialogVm.cpp
+        src/domain/utilities/Mapper.hpp
 )
 
 # QML Singleton

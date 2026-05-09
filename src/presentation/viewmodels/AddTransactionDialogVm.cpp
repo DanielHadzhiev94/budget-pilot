@@ -1,5 +1,6 @@
 #include "AddTransactionDialogVm.hpp"
 #include "src/domain/model/Transaction.hpp"
+#include "src/domain/utilities/Mapper.hpp"
 
 namespace budgetpilot::presentation::viewmodels {
     using domain::model::Transaction;
@@ -23,6 +24,7 @@ namespace budgetpilot::presentation::viewmodels {
         const QString &type,
         const QString &category,
         const QString &source,
+        const QDate &date,
         const QString &note
     ) {
         setErrorMessage("");
@@ -38,6 +40,7 @@ namespace budgetpilot::presentation::viewmodels {
         transaction.amount = static_cast<float>(amount);
         transaction.source = source.toStdString();
         transaction.note = note.toStdString();
+        transaction.transaction_date = Mapper::qdate_to_timepoint(date);
 
         transaction.account_id = 1;
 
