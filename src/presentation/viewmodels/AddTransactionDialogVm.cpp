@@ -22,8 +22,8 @@ namespace budgetpilot::presentation::viewmodels {
     bool AddTransactionDialogVm::saveTransaction(
         double amount,
         const QString &type,
-        const QString &account_id,
-        const QString &category_id,
+        const std::int64_t &account_id,
+        const std::int64_t &category_id,
         const QString &source,
         const QDate &date,
         const QString &note
@@ -43,7 +43,7 @@ namespace budgetpilot::presentation::viewmodels {
         transaction.note = note.toStdString();
         transaction.transaction_date = Mapper::qdate_to_timepoint(date);
 
-        transaction.account_id = 1;
+        transaction.account_id = account_id;
 
         // Temporary until you have proper category lookup.
         transaction.category_id = 1;

@@ -12,6 +12,7 @@ namespace budgetpilot::presentation::viewmodels {
 
         Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
         Q_PROPERTY(bool isSaving READ isSaving NOTIFY isSavingChanged)
+        Q_PROPERTY(QVariantList accounts READ accounts NOTIFY accountsChanged);
 
     public:
         explicit AddTransactionDialogVm(
@@ -25,8 +26,8 @@ namespace budgetpilot::presentation::viewmodels {
         Q_INVOKABLE bool saveTransaction(
             double amount,
             const QString &type,
-            const QString &account,
-            const QString &category,
+            const std::int64_t &account_id,
+            const std::int64_t &category_id,
             const QString &source,
             const QDate &date,
             const QString &note

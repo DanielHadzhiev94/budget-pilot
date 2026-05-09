@@ -64,7 +64,10 @@ Dialog {
             ComboBox {
                 id: accountInput
                 Layout.fillWidth: true
-                model: ["Sparkasse", "Paypal"]
+
+                model: root.viewModel.accounts
+                textRole: "name"
+                valueRole: "accountId"
             }
         }
 
@@ -144,7 +147,7 @@ Dialog {
                     const success = viewModel.saveTransaction(
                         Number(amountInput.text),
                         typeInput.currentText,
-                        accountInput.currentIndex,
+                        accountInput.accountInput.valueRole,
                         categoryInput.currentText,
                         sourceInput.text,
                         date,
