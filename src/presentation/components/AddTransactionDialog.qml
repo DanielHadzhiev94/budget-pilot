@@ -12,7 +12,7 @@ Dialog {
     modal: true
 
     width: 420
-    height: 520
+    height: 560
 
     anchors.centerIn: parent
 
@@ -67,7 +67,16 @@ Dialog {
 
                 model: root.viewModel.accounts
                 textRole: "name"
-                valueRole: "accountId"
+                valueRole: "id"
+
+                contentItem: Text {
+                    text: accountInput.displayText
+                    color: AppTheme.textPrimary
+                    verticalAlignment: Text.AlignVCenter
+                    leftPadding: 10
+                    rightPadding: accountInput.indicator.width + 10
+                    elide: Text.ElideRight
+                }
             }
         }
 
@@ -124,6 +133,7 @@ Dialog {
         }
 
         RowLayout {
+            Layout.margins: 5
             Layout.fillWidth: true
             spacing: 10
 
@@ -140,14 +150,14 @@ Dialog {
                 text: "Save"
 
                 onClicked: {
-                    let month = datePicker.selectedMonth;
-                    let year = datePicker.selectedYear;
-                    let date = new Date(month, year);
+                    let month = datePicker.selectedMonth
+                    let year = datePicker.selectedYear
+                    let date = new Date(year, month, 1)
 
-                    const success = viewModel.saveTransaction(
+                    const success = root.viewModel.saveTransaction(
                         Number(amountInput.text),
                         typeInput.currentText,
-                        accountInput.accountInput.valueRole,
+                        accountInput.currentValue,
                         categoryInput.currentText,
                         sourceInput.text,
                         date,

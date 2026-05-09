@@ -11,6 +11,7 @@ namespace budgetpilot::presentation::viewmodels {
                                                    QObject *parent)
         : transaction_service_(transactionService),
           account_service_(account_service) {
+        loadAccounts();
     }
 
     QVariantList AddTransactionDialogVm::accounts() const {
@@ -26,6 +27,20 @@ namespace budgetpilot::presentation::viewmodels {
     }
 
     void AddTransactionDialogVm::loadAccounts() {
+        accounts_.clear();
+
+        const auto accounts_response = account_service_.load_accounts();
+
+        if (accounts_response.is_successful()) {
+            for (auto &account: accounts_response.data()) {
+                QVariantMap item;
+                item["name"] = QString::fromStdString(account.name);
+                item["id"] = static_cast<qlonglong>(account.id);
+                accounts_.append(item);
+            }
+        }
+
+        emit accountsChanged();
     }
 
     bool AddTransactionDialogVm::saveTransaction(
