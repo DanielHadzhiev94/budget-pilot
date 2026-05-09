@@ -44,6 +44,8 @@ qt_add_executable(appBudgetPilot
         src/domain/utilities/Mapper.hpp
         src/application/account/AccountsService.hpp
         src/application/account/AccountService.cpp
+        src/application/category/CategoryService.hpp
+        src/application/category/CategoryService.cpp
 )
 
 # QML Singleton
