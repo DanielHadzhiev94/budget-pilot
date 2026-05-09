@@ -25,6 +25,7 @@ namespace budgetpilot::presentation::viewmodels {
         Q_INVOKABLE bool saveTransaction(
             double amount,
             const QString &type,
+            const QString &account,
             const QString &category,
             const QString &source,
             const QDate &date,

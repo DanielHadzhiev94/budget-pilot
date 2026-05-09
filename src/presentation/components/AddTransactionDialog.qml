@@ -144,6 +144,7 @@ Dialog {
                     const success = viewModel.saveTransaction(
                         Number(amountInput.text),
                         typeInput.currentText,
+                        accountInput.currentIndex,
                         categoryInput.currentText,
                         sourceInput.text,
                         date,

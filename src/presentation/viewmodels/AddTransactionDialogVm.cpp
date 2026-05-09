@@ -22,7 +22,8 @@ namespace budgetpilot::presentation::viewmodels {
     bool AddTransactionDialogVm::saveTransaction(
         double amount,
         const QString &type,
-        const QString &category,
+        const QString &account_id,
+        const QString &category_id,
         const QString &source,
         const QDate &date,
         const QString &note
