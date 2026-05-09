@@ -4,7 +4,7 @@
 #include <sqlite3.h>
 #include <vector>
 
-#include "../../domain/interfaces/IRepository.hpp"
+#include "../../domain/contracts/IRepository.hpp"
 
 
 namespace budgetpilot {
@@ -15,7 +15,7 @@ namespace budgetpilot {
     using namespace domain::model;
 
     namespace infrastructure::repositories {
-        class AccountRepository : public domain::interface::IRepository<Account> {
+        class AccountRepository : public domain::contracts::IRepository<Account> {
 
         public:
             explicit AccountRepository(sqlite3 *connection);

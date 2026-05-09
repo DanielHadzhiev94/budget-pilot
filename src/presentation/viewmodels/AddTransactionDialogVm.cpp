@@ -19,6 +19,10 @@ namespace budgetpilot::presentation::viewmodels {
         return is_saving_;
     }
 
+    void AddTransactionDialogVm::loadAccounts() {
+
+    }
+
     bool AddTransactionDialogVm::saveTransaction(
         double amount,
         const QString &type,

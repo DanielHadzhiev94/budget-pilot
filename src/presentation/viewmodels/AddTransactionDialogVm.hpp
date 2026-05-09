@@ -17,6 +17,7 @@ namespace budgetpilot::presentation::viewmodels {
     public:
         explicit AddTransactionDialogVm(
             application::transaction::TransactionService *transactionService,
+            application::account
             QObject *parent = nullptr
         );
 
@@ -37,14 +38,17 @@ namespace budgetpilot::presentation::viewmodels {
         void errorMessageChanged();
         void isSavingChanged();
         void transactionCreated();
+        void accountsChanged();
 
     private:
         void setErrorMessage(const QString &message);
         void setIsSaving(bool isSaving);
+        void loadAccounts();
 
         application::transaction::TransactionService *transaction_service_;
 
         QString error_message_;
+        QVariantList accounts_;
         bool is_saving_ = false;
     };
 }

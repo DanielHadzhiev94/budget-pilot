@@ -21,7 +21,7 @@ qt_add_executable(appBudgetPilot
         src/domain/model/category.hpp
         src/domain/model/account.hpp
 
-        src/domain/interfaces/IRepository.hpp
+        src/domain/contracts/IRepository.hpp
 
         src/infrastructure/persistence/statement.hpp
         src/infrastructure/persistence/statement.cpp
@@ -37,11 +37,13 @@ qt_add_executable(appBudgetPilot
         src/presentation/viewmodels/FinancialSummaryVM.hpp
         src/presentation/viewmodels/FinancialSummaryVM.cpp
         src/application/transaction/TransactionService.hpp
-        src/domain/utilities/Reponse.hpp
+        src/domain/utilities/Response.hpp
         src/application/transaction/TransactionService.cpp
         src/presentation/viewmodels/AddTransactionDialogVm.hpp
         src/presentation/viewmodels/AddTransactionDialogVm.cpp
         src/domain/utilities/Mapper.hpp
+        src/application/accounts/AccountsService.hpp
+        src/application/accounts/AccountService.cpp
 )
 
 # QML Singleton

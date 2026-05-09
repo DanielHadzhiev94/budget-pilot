@@ -1,5 +1,5 @@
 #pragma once
-#include "src/domain/utilities/Reponse.hpp"
+#include "src/domain/utilities/Response.hpp"
 
 namespace budgetpilot {
     namespace infrastructure::repositories {

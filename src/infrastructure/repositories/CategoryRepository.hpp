@@ -2,14 +2,14 @@
 #include <cstdint>
 #include <sqlite3.h>
 
-#include "../../domain/interfaces/IRepository.hpp"
+#include "../../domain/contracts/IRepository.hpp"
 
 namespace budgetpilot {
     namespace domain::model {
         struct Category;
     }
 
-    using namespace domain::interface;
+    using namespace domain::contracts;
     using namespace domain::model;
 
     namespace infrastructure::repositories {
