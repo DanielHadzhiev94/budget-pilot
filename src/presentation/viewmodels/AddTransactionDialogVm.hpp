@@ -3,7 +3,9 @@
 #include <QDebug>
 #include <QObject>
 #include <QString>
+#include <QVariantList>
 
+#include "src/application/account/AccountsService.hpp"
 #include "src/application/transaction/TransactionService.hpp"
 
 namespace budgetpilot::presentation::viewmodels {
@@ -16,11 +18,12 @@ namespace budgetpilot::presentation::viewmodels {
 
     public:
         explicit AddTransactionDialogVm(
-            application::transaction::TransactionService *transactionService,
-            application::account
+            application::transaction::TransactionService &transactionService,
+            application::account::AccountService &account_service,
             QObject *parent = nullptr
         );
 
+        [[nodiscard]] QVariantList accounts() const;
         [[nodiscard]] QString errorMessage() const;
         [[nodiscard]] bool isSaving() const;
 
@@ -45,10 +48,12 @@ namespace budgetpilot::presentation::viewmodels {
         void setIsSaving(bool isSaving);
         void loadAccounts();
 
-        application::transaction::TransactionService *transaction_service_;
+        application::transaction::TransactionService &transaction_service_;
+        application::account::AccountService &account_service_;
 
         QString error_message_;
         QVariantList accounts_;
+
         bool is_saving_ = false;
     };
 }

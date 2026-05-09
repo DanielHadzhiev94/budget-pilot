@@ -3,6 +3,10 @@
 #include <string>
 #include <chrono>
 #include <optional>
+#include <cstdint>
+#include <stdexcept>
+#include <string>
+
 
 namespace budgetpilot::domain::model {
     enum class Type : std::uint8_t {
@@ -46,7 +50,6 @@ namespace budgetpilot::domain::model {
               source(std::move(src)),
               note(std::move(n)),
               transaction_date(txDate) {
-
             // basic invariant
             if (amount <= 0.0) {
                 throw std::invalid_argument("Transaction amount must be > 0");

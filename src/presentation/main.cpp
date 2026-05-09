@@ -8,34 +8,42 @@
 
 #include "../infrastructure/persistence/DbContext.hpp"
 #include "../infrastructure/repositories/AccountRepository.hpp"
+#include "src/application/account/AccountsService.hpp"
 #include "src/application/transaction/TransactionService.hpp"
 #include "src/infrastructure/repositories/TransactionRepository.hpp"
 #include "viewmodels/AddTransactionDialogVm.hpp"
 #include "viewmodels/FinancialSummaryVm.hpp"
 
+namespace account = budgetpilot::application::account;
+namespace transaction = budgetpilot::application::transaction;
+namespace repository = budgetpilot::infrastructure::repositories;
+namespace persistence = budgetpilot::infrastructure::persistence;
+namespace viewmodels = budgetpilot::presentation::viewmodels;
+
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
-    using namespace budgetpilot::application::transaction;
-    using namespace budgetpilot::infrastructure::repositories;
-    using namespace budgetpilot::infrastructure::persistence;
-    using namespace budgetpilot::presentation::viewmodels;
 
     // Initialization of the database
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QString dbFilePath = QDir(appDataPath).filePath("budgetpilot.db");
     std::string dbPath = dbFilePath.toStdString();
-    const auto dbContext = std::make_unique<DbContext>(dbPath);
+    const auto dbContext = std::make_unique<persistence::DbContext>(dbPath);
     dbContext->initialize();
 
     //Repositories
-    AccountRepository account_repository{dbContext->getConnection()};
-    TransactionRepository transaction_repository{dbContext->getConnection()};
+    repository::AccountRepository account_repository{dbContext->getConnection()};
+    repository::TransactionRepository transaction_repository{dbContext->getConnection()};
 
     // Services
-    TransactionService transaction_service{
+    transaction::TransactionService transaction_service{
         &account_repository,
         &transaction_repository
+    };
+
+    account::AccountService account_service
+    {
+        account_repository,
     };
 
     // Starting Qt engine
@@ -50,12 +58,13 @@ int main(int argc, char *argv[]) {
     QQuickStyle::setStyle("Basic");
 
     // Initializing of the ViewModels
-    FinancialSummaryVm financialSummaryViewModel{
+    viewmodels::FinancialSummaryVm financialSummaryViewModel{
         &transaction_service
     };
 
-    AddTransactionDialogVm addDialogViewModel{
-        &transaction_service
+    viewmodels::AddTransactionDialogVm addDialogViewModel{
+        transaction_service,
+        account_service,
     };
 
     engine.rootContext()->setContextProperty("dashboardVM", &financialSummaryViewModel);

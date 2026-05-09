@@ -6,9 +6,15 @@ namespace budgetpilot::presentation::viewmodels {
     using domain::model::Transaction;
     using domain::model::Type;
 
-    AddTransactionDialogVm::AddTransactionDialogVm(application::transaction::TransactionService *transactionService,
+    AddTransactionDialogVm::AddTransactionDialogVm(application::transaction::TransactionService &transactionService,
+                                                   application::account::AccountService &account_service,
                                                    QObject *parent)
-        : transaction_service_(transactionService) {
+        : transaction_service_(transactionService),
+          account_service_(account_service) {
+    }
+
+    QVariantList AddTransactionDialogVm::accounts() const {
+        return accounts_;
     }
 
     QString AddTransactionDialogVm::errorMessage() const {
@@ -20,11 +26,10 @@ namespace budgetpilot::presentation::viewmodels {
     }
 
     void AddTransactionDialogVm::loadAccounts() {
-
     }
 
     bool AddTransactionDialogVm::saveTransaction(
-        double amount,
+        const double amount,
         const QString &type,
         const std::int64_t &account_id,
         const std::int64_t &category_id,
@@ -58,7 +63,7 @@ namespace budgetpilot::presentation::viewmodels {
             transaction.type = Type::Expense;
         }
 
-        const auto response = transaction_service_->create_transaction(transaction);
+        const auto response = transaction_service_.create_transaction(transaction);
 
         setIsSaving(false);
 

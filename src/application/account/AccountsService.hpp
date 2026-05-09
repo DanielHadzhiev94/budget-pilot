@@ -6,14 +6,12 @@
 #include "src/domain/utilities/Response.hpp"
 
 namespace budgetpilot {
-    namespace domain {
-        namespace contracts {
-            template<typename T>
-            class IRepository;
-        }
+    namespace domain::contracts {
+        template<typename T>
+        class IRepository;
     }
 
-    namespace application::accounts {
+    namespace application::account {
         class AccountService {
         public:
             explicit AccountService(domain::contracts::IRepository<domain::model::Account> &account_repository);
