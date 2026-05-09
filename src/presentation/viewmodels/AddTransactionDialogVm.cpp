@@ -2,19 +2,25 @@
 #include "src/domain/model/Transaction.hpp"
 #include "src/domain/utilities/Mapper.hpp"
 
-namespace budgetpilot::presentation::viewmodels {
-    using domain::model::Transaction;
-    using domain::model::Type;
+namespace transaction = budgetpilot::application::transaction;
+namespace account = budgetpilot::application::account;
 
-    AddTransactionDialogVm::AddTransactionDialogVm(application::transaction::TransactionService &transactionService,
-                                                   application::account::AccountService &account_service,
+namespace budgetpilot::presentation::viewmodels {
+    AddTransactionDialogVm::AddTransactionDialogVm(transaction::TransactionService &transactionService,
+                                                   account::AccountService &account_service,
+                                                   category::CategoryService &category_service,
                                                    QObject *parent)
         : transaction_service_(transactionService),
-          account_service_(account_service) {
+          account_service_(account_service),
+          category_service_(category_service) {
     }
 
     QVariantList AddTransactionDialogVm::accounts() const {
         return accounts_;
+    }
+
+    QVariantList AddTransactionDialogVm::categories() const {
+        return categories_;
     }
 
     QString AddTransactionDialogVm::errorMessage() const {
@@ -40,6 +46,22 @@ namespace budgetpilot::presentation::viewmodels {
         }
 
         emit accountsChanged();
+    }
+
+    void AddTransactionDialogVm::loadCategories() {
+        categories_.clear();
+
+        const auto categories_response = category_service_.load_category();
+        if (categories_response.is_successful()) {
+            for (auto &category: categories_response.data()) {
+                QVariantMap item;
+                item["name"] = QString::fromStdString(category.name);
+                item["id"] = static_cast<qlonglong>(category.id);
+                categories_.append(item);
+            }
+        }
+
+        emit categoriesChanged();
     }
 
     bool AddTransactionDialogVm::saveTransaction(
@@ -92,6 +114,7 @@ namespace budgetpilot::presentation::viewmodels {
 
     void AddTransactionDialogVm::loadInitialData() {
         loadAccounts();
+        loadCategories();
     }
 
     void AddTransactionDialogVm::setErrorMessage(const QString &message) {

@@ -6,7 +6,12 @@
 #include <QVariantList>
 
 #include "src/application/account/AccountsService.hpp"
+#include "src/application/category/CategoryService.hpp"
 #include "src/application/transaction/TransactionService.hpp"
+
+namespace transaction = budgetpilot::application::transaction;
+namespace account = budgetpilot::application::account;
+namespace category = budgetpilot::application::category;
 
 namespace budgetpilot::presentation::viewmodels {
     class AddTransactionDialogVm : public QObject {
@@ -15,17 +20,27 @@ namespace budgetpilot::presentation::viewmodels {
         Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
         Q_PROPERTY(bool isSaving READ isSaving NOTIFY isSavingChanged)
         Q_PROPERTY(QVariantList accounts READ accounts NOTIFY accountsChanged);
+        Q_PROPERTY(QVariantList categories READ categories NOTIFY categoriesChanged);
 
     public:
         explicit AddTransactionDialogVm(
-            application::transaction::TransactionService &transactionService,
-            application::account::AccountService &account_service,
+            transaction::TransactionService &transactionService,
+            account::AccountService &account_service,
+            category::CategoryService &category_service,
             QObject *parent = nullptr
         );
 
-        [[nodiscard]] QVariantList accounts() const;
-        [[nodiscard]] QString errorMessage() const;
-        [[nodiscard]] bool isSaving() const;
+        [[nodiscard]]
+        QVariantList accounts() const;
+
+        [[nodiscard]]
+        QVariantList categories() const;
+
+        [[nodiscard]]
+        QString errorMessage() const;
+
+        [[nodiscard]]
+        bool isSaving() const;
 
         Q_INVOKABLE bool saveTransaction(
             double amount,
@@ -44,17 +59,21 @@ namespace budgetpilot::presentation::viewmodels {
         void isSavingChanged();
         void transactionCreated();
         void accountsChanged();
+        void categoriesChanged();
 
     private:
         void setErrorMessage(const QString &message);
         void setIsSaving(bool isSaving);
         void loadAccounts();
+        void loadCategories();
 
-        application::transaction::TransactionService &transaction_service_;
-        application::account::AccountService &account_service_;
+        transaction::TransactionService &transaction_service_;
+        account::AccountService &account_service_;
+        category::CategoryService &category_service_;
 
         QString error_message_;
         QVariantList accounts_;
+        QVariantList categories_;
 
         bool is_saving_ = false;
     };

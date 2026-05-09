@@ -8,14 +8,17 @@
 
 #include "../infrastructure/persistence/DbContext.hpp"
 #include "../infrastructure/repositories/AccountRepository.hpp"
-#include "src/application/account/AccountsService.hpp"
-#include "src/application/transaction/TransactionService.hpp"
 #include "src/infrastructure/repositories/TransactionRepository.hpp"
+#include "src/infrastructure/repositories/CategoryRepository.hpp"
+#include "src/application/account/AccountsService.hpp"
+#include "src/application/category/CategoryService.hpp"
+#include "src/application/transaction/TransactionService.hpp"
 #include "viewmodels/AddTransactionDialogVm.hpp"
 #include "viewmodels/FinancialSummaryVm.hpp"
 
 namespace account = budgetpilot::application::account;
 namespace transaction = budgetpilot::application::transaction;
+namespace category = budgetpilot::application::category;
 namespace repository = budgetpilot::infrastructure::repositories;
 namespace persistence = budgetpilot::infrastructure::persistence;
 namespace viewmodels = budgetpilot::presentation::viewmodels;
@@ -34,6 +37,7 @@ int main(int argc, char *argv[]) {
     //Repositories
     repository::AccountRepository account_repository{dbContext->getConnection()};
     repository::TransactionRepository transaction_repository{dbContext->getConnection()};
+    repository::CategoryRepository category_repository{dbContext->getConnection()};
 
     // Services
     transaction::TransactionService transaction_service{
@@ -44,6 +48,10 @@ int main(int argc, char *argv[]) {
     account::AccountService account_service
     {
         account_repository,
+    };
+
+    category::CategoryService category_service{
+        category_repository,
     };
 
     // Starting Qt engine
@@ -65,10 +73,11 @@ int main(int argc, char *argv[]) {
     viewmodels::AddTransactionDialogVm addDialogViewModel{
         transaction_service,
         account_service,
+        category_service,
     };
 
     engine.rootContext()->setContextProperty("dashboardVM", &financialSummaryViewModel);
-    engine.rootContext()->setContextProperty("addtransactionVM", &addDialogViewModel);
+    engine.rootContext()->setContextProperty("addTransactionVM", &addDialogViewModel);
     engine.loadFromModule("BudgetPilot", "Main");
 
     return QCoreApplication::exec();

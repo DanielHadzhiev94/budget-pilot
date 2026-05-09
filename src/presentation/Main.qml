@@ -42,6 +42,6 @@ ApplicationWindow {
 
     AddTransactionDialog {
         id: addTransactionDialog
-        viewModel: addtransactionVM
+        viewModel: addTransactionVM
     }
 }

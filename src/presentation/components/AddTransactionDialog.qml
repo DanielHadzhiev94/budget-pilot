@@ -50,7 +50,19 @@ Dialog {
         ComboBox {
             id: categoryInput
             Layout.fillWidth: true
-            model: ["Food", "Salary", "Transport", "Shopping", "Other"]
+
+            model: root.viewModel.categories
+            textRole: "name"
+            valueRole: "id"
+
+            contentItem: Text {
+                text: categoryInput.displayText
+                color: AppTheme.textPrimary
+                verticalAlignment: Text.AlignVCenter
+                leftPadding: 10
+                rightPadding: categoryInput.indicator.width + 10
+                elide: Text.ElideRight
+            }
         }
 
         RowLayout {
