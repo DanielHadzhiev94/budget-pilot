@@ -37,6 +37,8 @@ namespace budgetpilot::presentation::viewmodels {
             const QString &note
         );
 
+        Q_INVOKABLE void loadInitialData();
+
     signals:
         void errorMessageChanged();
         void isSavingChanged();

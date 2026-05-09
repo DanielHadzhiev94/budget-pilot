@@ -11,7 +11,6 @@ namespace budgetpilot::presentation::viewmodels {
                                                    QObject *parent)
         : transaction_service_(transactionService),
           account_service_(account_service) {
-        loadAccounts();
     }
 
     QVariantList AddTransactionDialogVm::accounts() const {
@@ -89,6 +88,10 @@ namespace budgetpilot::presentation::viewmodels {
 
         emit transactionCreated();
         return true;
+    }
+
+    void AddTransactionDialogVm::loadInitialData() {
+        loadAccounts();
     }
 
     void AddTransactionDialogVm::setErrorMessage(const QString &message) {

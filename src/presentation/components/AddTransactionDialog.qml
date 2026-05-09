@@ -7,6 +7,7 @@ Dialog {
     id: root
 
     required property var viewModel
+    property string transactionType: "Expense"
 
     title: "Add Transaction"
     modal: true
@@ -16,7 +17,9 @@ Dialog {
 
     anchors.centerIn: parent
 
-    property string transactionType: "Expense"
+    onOpened:{
+        root.viewModel.loadInitialData()
+    }
 
     background: Rectangle {
         radius: 14
