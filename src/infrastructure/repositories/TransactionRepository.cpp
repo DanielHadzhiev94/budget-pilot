@@ -9,11 +9,8 @@ using namespace budgetpilot::domain::model;
 
 
 namespace budgetpilot::infrastructure::repositories {
-    TransactionRepository::TransactionRepository(sqlite3 *connection)
-            : connection_(connection) {
-            if (!connection_) {
-                throw std::invalid_argument("Database connection cannot be null.");
-            }
+    TransactionRepository::TransactionRepository(sqlite3 &connection)
+        : connection_(connection) {
     }
 
     void TransactionRepository::add(const Transaction &transaction) {
@@ -22,7 +19,7 @@ namespace budgetpilot::infrastructure::repositories {
             VALUES (?, ? ,? ,?, ?, ?, ?)
         )";
 
-        const persistence::Statement stmt(connection_, sql);
+        const persistence::Statement stmt(&connection_, sql);
 
         // Bind parameters
         sqlite3_bind_int(stmt.get(), 1, static_cast<int>(transaction.account_id));
@@ -37,7 +34,7 @@ namespace budgetpilot::infrastructure::repositories {
 
         const int result = sqlite3_step(stmt.get());
         if (result != SQLITE_DONE) {
-            throw std::runtime_error(sqlite3_errmsg(connection_));
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
     }
 
@@ -48,7 +45,7 @@ namespace budgetpilot::infrastructure::repositories {
         WHERE id = ?
     )";
 
-        persistence::Statement stmt(connection_, sql);
+        persistence::Statement stmt(&connection_, sql);
 
         sqlite3_bind_int(stmt.get(), 1, static_cast<int>(transaction.account_id));
         sqlite3_bind_int(stmt.get(), 2, static_cast<int>(transaction.category_id));
@@ -59,7 +56,7 @@ namespace budgetpilot::infrastructure::repositories {
 
         int result = sqlite3_step(stmt.get());
         if (result != SQLITE_DONE) {
-            throw std::runtime_error(sqlite3_errmsg(connection_));
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
     }
 
@@ -69,13 +66,13 @@ namespace budgetpilot::infrastructure::repositories {
                              WHERE id = ?
                             )";
 
-        const persistence::Statement stmt(connection_, sql);
+        const persistence::Statement stmt(&connection_, sql);
 
         sqlite3_bind_int64(stmt.get(), 1, id);
 
         const int result = sqlite3_step(stmt.get());
         if (result != SQLITE_DONE) {
-            throw std::runtime_error(sqlite3_errmsg(connection_));
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
     }
 
@@ -85,7 +82,7 @@ namespace budgetpilot::infrastructure::repositories {
                     FROM transactions
                     )";
 
-        const persistence::Statement stmt(connection_, sql);
+        const persistence::Statement stmt(&connection_, sql);
         std::vector<Transaction> transactions{};
         while (sqlite3_step(stmt.get()) != SQLITE_DONE) {
             Transaction t{};
@@ -119,7 +116,7 @@ namespace budgetpilot::infrastructure::repositories {
                     WHERE id = ?
                     )";
 
-        const persistence::Statement stmt(connection_, sql);
+        const persistence::Statement stmt(&connection_, sql);
         sqlite3_bind_int64(stmt.get(), 1, static_cast<sqlite3_int64>(id));
 
         const int result = sqlite3_step(stmt.get());
@@ -151,7 +148,7 @@ namespace budgetpilot::infrastructure::repositories {
             return std::nullopt;
         }
 
-        throw std::runtime_error(sqlite3_errmsg(connection_));
+        throw std::runtime_error(sqlite3_errmsg(&connection_));
     }
 
     std::int64_t TransactionRepository::convert_to_seconds(TimePoint time_point) {

@@ -15,7 +15,7 @@ namespace budgetpilot {
     namespace infrastructure::repositories {
         class CategoryRepository : public IRepository<Category> {
         public:
-            explicit CategoryRepository(sqlite3 *db);
+            explicit CategoryRepository(sqlite3 &db);
 
             void add(Category entity) override;
             void update(Category entity) override;
@@ -25,7 +25,7 @@ namespace budgetpilot {
             Category getOne(std::uint64_t id) override;
 
         private:
-            sqlite3 *connection_;
+            sqlite3 &connection_;
         };
     }
 }

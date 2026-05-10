@@ -31,13 +31,13 @@ int main(int argc, char *argv[]) {
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QString dbFilePath = QDir(appDataPath).filePath("budgetpilot.db");
     std::string dbPath = dbFilePath.toStdString();
-    const auto dbContext = std::make_unique<persistence::DbContext>(dbPath);
-    dbContext->initialize();
+    persistence::DbContext dbContext{dbPath};
+    dbContext.initialize();
 
     //Repositories
-    repository::AccountRepository account_repository{dbContext->getConnection()};
-    repository::TransactionRepository transaction_repository{dbContext->getConnection()};
-    repository::CategoryRepository category_repository{dbContext->getConnection()};
+    repository::AccountRepository account_repository{*dbContext.getConnection()};
+    repository::TransactionRepository transaction_repository{*dbContext.getConnection()};
+    repository::CategoryRepository category_repository{*dbContext.getConnection()};
 
     // Services
     transaction::TransactionService transaction_service{
@@ -67,7 +67,8 @@ int main(int argc, char *argv[]) {
 
     // Initializing of the ViewModels
     viewmodels::FinancialSummaryVm financialSummaryViewModel{
-        &transaction_service
+        transaction_service,
+        account_service
     };
 
     viewmodels::AddTransactionDialogVm addDialogViewModel{
@@ -76,7 +77,7 @@ int main(int argc, char *argv[]) {
         category_service,
     };
 
-    engine.rootContext()->setContextProperty("dashboardVM", &financialSummaryViewModel);
+    engine.rootContext()->setContextProperty("financialSummaryVM", &financialSummaryViewModel);
     engine.rootContext()->setContextProperty("addTransactionVM", &addDialogViewModel);
     engine.loadFromModule("BudgetPilot", "Main");
 

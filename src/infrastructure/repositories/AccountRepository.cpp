@@ -11,11 +11,8 @@
 using namespace budgetpilot::domain::model;
 
 namespace budgetpilot::infrastructure::repositories {
-    AccountRepository::AccountRepository(sqlite3 *connection)
+    AccountRepository::AccountRepository(sqlite3 &connection)
         : connection_(connection) {
-        if (!connection_) {
-            throw std::invalid_argument("Database connection cannot be null.");
-        }
     }
 
     void AccountRepository::add(Account account) {
@@ -24,13 +21,13 @@ namespace budgetpilot::infrastructure::repositories {
                     VALUES(?,?)
                     )";
 
-        const persistence::Statement stmt(connection_, sql);
+        const persistence::Statement stmt(&connection_, sql);
         sqlite3_bind_text(stmt.get(), 1, account.name.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_double(stmt.get(), 2, account.amount);
 
         const int result = sqlite3_step(stmt.get());
         if (result != SQLITE_DONE) {
-            throw std::runtime_error(sqlite3_errmsg(connection_));
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
     }
 
@@ -41,14 +38,14 @@ namespace budgetpilot::infrastructure::repositories {
                     WHERE id = ?
                     )";
 
-        const persistence::Statement stmt(connection_, sql);
+        const persistence::Statement stmt(&connection_, sql);
         sqlite3_bind_text(stmt.get(), 1, account.name.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_double(stmt.get(), 2, account.amount);
         sqlite3_bind_int64(stmt.get(), 3, account.id);
 
         const int result = sqlite3_step(stmt.get());
         if (result != SQLITE_DONE) {
-            throw std::runtime_error(sqlite3_errmsg(connection_));
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
     }
 
@@ -58,12 +55,12 @@ namespace budgetpilot::infrastructure::repositories {
                       WHERE id = ?
                      )";
 
-        const persistence::Statement stmt(connection_, sql);
+        const persistence::Statement stmt(&connection_, sql);
         sqlite3_bind_int64(stmt.get(), 1, id);
 
         const int result = sqlite3_step(stmt.get());
         if (result != SQLITE_DONE) {
-            throw std::runtime_error(sqlite3_errmsg(connection_));
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
     }
 
@@ -73,7 +70,7 @@ namespace budgetpilot::infrastructure::repositories {
                     FROM accounts
                     )";
 
-        const persistence::Statement stmt(connection_, sql);
+        const persistence::Statement stmt(&connection_, sql);
         std::vector<Account> accounts{};
 
         while (sqlite3_step(stmt.get()) == SQLITE_ROW) {
@@ -102,7 +99,7 @@ namespace budgetpilot::infrastructure::repositories {
         WHERE id = ?
     )";
 
-        persistence::Statement stmt(connection_, sql);
+        persistence::Statement stmt(&connection_, sql);
         sqlite3_bind_int64(stmt.get(), 1, static_cast<sqlite3_int64>(id));
 
         const int result = sqlite3_step(stmt.get());
@@ -112,7 +109,7 @@ namespace budgetpilot::infrastructure::repositories {
         }
 
         if (result != SQLITE_ROW) {
-            throw std::runtime_error(sqlite3_errmsg(connection_));
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
 
         Account account{};

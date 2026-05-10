@@ -18,7 +18,7 @@ namespace budgetpilot {
         class AccountRepository : public domain::contracts::IRepository<Account> {
 
         public:
-            explicit AccountRepository(sqlite3 *connection);
+            explicit AccountRepository(sqlite3 &connection);
 
             void add(Account account) override;
             void update(Account account) override;
@@ -28,7 +28,7 @@ namespace budgetpilot {
             Account getOne(std::uint64_t id) override;
 
         private:
-            sqlite3 *connection_;
+            sqlite3 &connection_;
         };
     }
 }

@@ -1,49 +1,61 @@
 #pragma once
-#include <qobject.h>
 
-namespace budgetpilot {
-    namespace application::transaction {
-        class TransactionService;
-    }
+#include <QObject>
 
-    namespace domain::model {
-        class Transaction;
-    }
+namespace budgetpilot::application::transaction {
+    class TransactionService;
+}
 
-    namespace presentation::viewmodels {
-        class FinancialSummaryVm : public QObject {
-            Q_OBJECT
+namespace budgetpilot::application::account {
+    class AccountService;
+}
 
-            Q_PROPERTY(double current_balance READ current_balance NOTIFY current_balance_changed);
-            Q_PROPERTY(double income READ income NOTIFY income_changed);
-            Q_PROPERTY(double expense READ expense NOTIFY expense_changed);
+namespace budgetpilot::domain::model {
+    class Transaction;
+}
 
-        public:
-            explicit FinancialSummaryVm(application::transaction::TransactionService *transaction_service,
-                                        QObject *parent = nullptr);
+namespace budgetpilot::presentation::viewmodels {
+    class FinancialSummaryVm final : public QObject {
+        Q_OBJECT
 
-            [[nodiscard]] double current_balance() const;
-            [[nodiscard]] double income() const;
-            [[nodiscard]] double expense() const;
+        Q_PROPERTY(double current_balance READ current_balance NOTIFY current_balance_changed)
+        Q_PROPERTY(double income READ income NOTIFY income_changed)
+        Q_PROPERTY(double expense READ expense NOTIFY expense_changed)
 
-            Q_INVOKABLE void create_transaction(const domain::model::Transaction& transaction) const;
-            Q_INVOKABLE static void load_data(int month, int year);
+    public:
+        explicit FinancialSummaryVm(
+            application::transaction::TransactionService &transaction_service,
+            application::account::AccountService &account_service,
+            QObject *parent = nullptr
+        );
 
-        signals:
-            void current_balance_changed();
-            void income_changed();
-            void expense_changed();
+        [[nodiscard]]
+        double current_balance() const;
 
-        private:
-            application::transaction::TransactionService *transaction_service_;
+        [[nodiscard]]
+        double income() const;
 
-            double current_balance_ = 0.0;
-            double income_ = 0.0;
-            double expense_ = 0.0;
+        [[nodiscard]]
+        double expense() const;
 
-            void set_current_balance();
-            void set_income();
-            void set_expense();
-        };
-    }
+        Q_INVOKABLE void create_transaction(const domain::model::Transaction &transaction);
+        Q_INVOKABLE void load_data(int month, int year);
+
+    signals:
+        void current_balance_changed();
+        void income_changed();
+        void expense_changed();
+
+    private:
+        application::transaction::TransactionService &transaction_service_;
+        application::account::AccountService &account_service_;
+
+        double current_balance_{0.0};
+        double income_{0.0};
+        double expense_{0.0};
+
+        void set_current_balance(double value);
+        void set_income(double value);
+        void set_expense(double value);
+    };
 }
