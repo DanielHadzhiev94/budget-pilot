@@ -1,5 +1,7 @@
 #pragma once
+
 #include <string>
+#include <cstdint>
 
 namespace budgetpilot::domain::model {
     struct Category {

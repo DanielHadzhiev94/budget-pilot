@@ -17,7 +17,8 @@ ApplicationWindow {
             anchors.fill: parent
             spacing: 0
 
-            Header {}
+            Header {
+            }
 
             RowLayout {
                 Layout.fillWidth: true
@@ -29,12 +30,18 @@ ApplicationWindow {
                     Layout.fillHeight: true
                 }
 
-                DashboardPage {
+                FinancialSummarySection {
                     viewModel: dashboardVM
                     Layout.fillWidth: true
                     Layout.fillHeight: true
+                    onAddTransactionClicked: addTransactionDialog.open()
                 }
             }
         }
+    }
+
+    AddTransactionDialog {
+        id: addTransactionDialog
+        viewModel: addTransactionVM
     }
 }

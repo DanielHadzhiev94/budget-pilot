@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-namespace budgetpilot::domain::interface {
+namespace budgetpilot::domain::contracts {
     template<typename T>
     class IRepository {
     public:

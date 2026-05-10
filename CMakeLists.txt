@@ -21,7 +21,7 @@ qt_add_executable(appBudgetPilot
         src/domain/model/category.hpp
         src/domain/model/account.hpp
 
-        src/domain/interfaces/IRepository.hpp
+        src/domain/contracts/IRepository.hpp
 
         src/infrastructure/persistence/statement.hpp
         src/infrastructure/persistence/statement.cpp
@@ -34,9 +34,18 @@ qt_add_executable(appBudgetPilot
 
         src/infrastructure/repositories/CategoryRepository.hpp
         src/infrastructure/repositories/CategoryRepository.cpp
-    src/presentation/viewmodels/DashboardViewModel.hpp
-    src/presentation/viewmodels/DashboardViewModel.cpp
-        src/application/transaction/transaction_service.hpp
+        src/presentation/viewmodels/FinancialSummaryVM.hpp
+        src/presentation/viewmodels/FinancialSummaryVM.cpp
+        src/application/transaction/TransactionService.hpp
+        src/domain/utilities/Response.hpp
+        src/application/transaction/TransactionService.cpp
+        src/presentation/viewmodels/AddTransactionDialogVm.hpp
+        src/presentation/viewmodels/AddTransactionDialogVm.cpp
+        src/domain/utilities/Mapper.hpp
+        src/application/account/AccountsService.hpp
+        src/application/account/AccountService.cpp
+        src/application/category/CategoryService.hpp
+        src/application/category/CategoryService.cpp
 )
 
 # QML Singleton
@@ -60,7 +69,8 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/CustomButton.qml
         src/presentation/components/DatePicker.qml
         src/presentation/components/BudgetCard.qml
-        src/presentation/pages/DashboardPage.qml
+        src/presentation/components/AddTransactionDialog.qml
+        src/presentation/sections/FinancialSummarySection.qml
 
     RESOURCES
         src/presentation/images/rico_robot.png
@@ -68,7 +78,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/images/income.png
         src/presentation/images/expense.png
         src/presentation/images/rate.png
-)
+        )
 
 # Qt Creator
 set(QML_IMPORT_PATH

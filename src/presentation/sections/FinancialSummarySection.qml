@@ -4,10 +4,11 @@ import QtQuick.Layouts
 import BudgetPilot
 
 Rectangle {
+    id: root
 
     required property var viewModel
 
-    id: root
+    signal  addTransactionClicked()
 
     color: AppTheme.backgroundAlt
 
@@ -31,6 +32,9 @@ Rectangle {
 
                 DatePicker {
                     Layout.leftMargin: 12
+                    onDateChanged: function (month, year) {
+                        viewModel.load_data(month, year);
+                    }
                 }
 
                 Item {
@@ -39,7 +43,8 @@ Rectangle {
 
                 CustomButton {
                     text: "Add Transaction"
-                    onClicked: viewModel.add_income()
+                    Layout.rightMargin: 12
+                    onClicked: root.addTransactionClicked()
                 }
             }
         }
@@ -61,14 +66,14 @@ Rectangle {
 
             BudgetCard {
                 title: "Income This Month"
-                mainValue: "€ 3000"
+                mainValue: "€ " + viewModel.income
                 subtitle: "vs last month"
                 iconSource: AppTheme.incomeIcon
             }
 
             BudgetCard {
                 title: "Expense This Month"
-                mainValue: "€ 1458"
+                mainValue: "€ " + viewModel.expense
                 mainValueColor: AppTheme.warning
                 subtitle: "vs last month"
                 iconSource: AppTheme.expenseIcon

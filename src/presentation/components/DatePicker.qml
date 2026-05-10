@@ -6,6 +6,22 @@ import BudgetPilot
 Rectangle {
     id: root
 
+    signal dateChanged(int month, int year)
+
+    readonly property int selectedMonth: monthBox.currentIndex + 1
+    readonly property int selectedYear: root.years[yearBox.currentIndex]
+
+    readonly property var months: [
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+    ]
+
+    readonly property var years: [
+        2022, 2023, 2024, 2025,
+        2026, 2027, 2028, 2029
+    ]
+
     color: AppTheme.purpleSoft
     radius: 8
     border.color: AppTheme.border
@@ -14,40 +30,31 @@ Rectangle {
     Layout.preferredWidth: 285
     Layout.preferredHeight: 40
 
+    function emitDateChanged() {
+        root.dateChanged(root.selectedMonth, root.selectedYear)
+    }
+
+    Component.onCompleted: {
+        root.emitDateChanged()
+    }
+
     RowLayout {
         anchors.fill: parent
         anchors.margins: 5
         spacing: 0
 
-        ComboBox {
+        StyledComboBox {
             id: monthBox
 
             Layout.preferredWidth: 140
             Layout.fillHeight: true
-            model: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+            model: root.months
             currentIndex: new Date().getMonth()
 
-            background: Rectangle {
-                radius: 8
-                color: monthBox.hovered ? AppTheme.purple : "transparent"
-            }
+            textLeftPadding: 16
 
-            contentItem: Text {
-                text: monthBox.displayText
-                color: AppTheme.textPrimary
-                font.pixelSize: 14
-                verticalAlignment: Text.AlignVCenter
-                leftPadding: 16
-            }
-
-            indicator: Text {
-                text: "▾"
-                color: AppTheme.textSecondary
-                font.pixelSize: 14
-                anchors.right: parent.right
-                anchors.rightMargin: 18
-                anchors.verticalCenter: parent.verticalCenter
-            }
+            onActivated: root.emitDateChanged()
         }
 
         Rectangle {
@@ -56,37 +63,47 @@ Rectangle {
             color: AppTheme.border
         }
 
-        ComboBox {
+        StyledComboBox {
             id: yearBox
 
             Layout.preferredWidth: 140
             Layout.fillHeight: true
 
-            model: [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029]
+            model: root.years
+            currentIndex: Math.max(0, root.years.indexOf(new Date().getFullYear()))
 
-            currentIndex: model.indexOf(new Date().getFullYear())
+            textLeftPadding: 26
 
-            background: Rectangle {
-                radius: 8
-                color: yearBox.hovered ? AppTheme.purple : "transparent"
-            }
+            onActivated: root.emitDateChanged()
+        }
+    }
 
-            contentItem: Text {
-                text: yearBox.displayText
-                color: AppTheme.textPrimary
-                font.pixelSize: 14
-                verticalAlignment: Text.AlignVCenter
-                leftPadding: 26
-            }
+    component StyledComboBox: ComboBox {
+        id: control
 
-            indicator: Text {
-                text: "▾"
-                color: AppTheme.textSecondary
-                font.pixelSize: 14
-                anchors.right: parent.right
-                anchors.rightMargin: 18
-                anchors.verticalCenter: parent.verticalCenter
-            }
+        property int textLeftPadding: 16
+
+        background: Rectangle {
+            radius: 8
+            color: control.hovered ? AppTheme.purple : "transparent"
+        }
+
+        contentItem: Text {
+            text: control.displayText
+            color: AppTheme.textPrimary
+            font.pixelSize: 14
+            verticalAlignment: Text.AlignVCenter
+            leftPadding: control.textLeftPadding
+        }
+
+        indicator: Text {
+            text: "▾"
+            color: AppTheme.textSecondary
+            font.pixelSize: 14
+
+            anchors.right: parent.right
+            anchors.rightMargin: 18
+            anchors.verticalCenter: parent.verticalCenter
         }
     }
 }
