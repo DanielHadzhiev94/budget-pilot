@@ -4,28 +4,30 @@
 #include <optional>
 #include <vector>
 
+#include "src/domain/contracts/Irepository.hpp"
+
 struct sqlite3;
 
-namespace budgetpilot::domain::model {
+namespace budgetpilot::domain::models {
     struct Transaction;
     struct Category;
 }
 
 
 namespace budgetpilot::infrastructure::repositories {
-    class TransactionRepository final {
+    class TransactionRepository final : public domain::contracts::IRepository<domain::models::Transaction> {
     public:
         explicit TransactionRepository(sqlite3 &connection);
 
-        void add(const domain::model::Transaction &transaction);
-        void update(const domain::model::Transaction &transaction);
-        void remove(std::uint64_t id);
+        void add(const domain::models::Transaction &transaction) override;
+        void update(const domain::models::Transaction &transaction) override;
+        void remove(const std::uint64_t &id) override;
 
         [[nodiscard]]
-        std::vector<domain::model::Transaction> getAll() const;
+        std::vector<domain::models::Transaction> getAll() override;
 
         [[nodiscard]]
-        std::optional<domain::model::Transaction> getOne(std::uint64_t id) const;
+        std::optional<domain::models::Transaction> getOne(const std::uint64_t &id) override;
 
     private:
         using TimePoint = std::chrono::system_clock::time_point;

@@ -5,7 +5,7 @@
 #include "../../domain/model/Transaction.hpp"
 #include "src/infrastructure/persistence/Statement.hpp"
 
-using namespace budgetpilot::domain::model;
+using namespace budgetpilot::domain::models;
 
 
 namespace budgetpilot::infrastructure::repositories {
@@ -60,7 +60,7 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    void TransactionRepository::remove(std::uint64_t id) {
+    void TransactionRepository::remove(const std::uint64_t &id) {
         const auto *sql = R"(
                              DELETE FROM transactions
                              WHERE id = ?
@@ -76,7 +76,7 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    std::vector<Transaction> TransactionRepository::getAll() const {
+    std::vector<Transaction> TransactionRepository::getAll()  {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
@@ -109,7 +109,7 @@ namespace budgetpilot::infrastructure::repositories {
         return transactions;
     }
 
-    std::optional<Transaction> TransactionRepository::getOne(std::uint64_t id) const {
+    std::optional<Transaction> TransactionRepository::getOne(const std::uint64_t &id) {
         const auto sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions

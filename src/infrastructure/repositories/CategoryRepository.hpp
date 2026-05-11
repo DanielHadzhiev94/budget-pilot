@@ -1,31 +1,31 @@
 #pragma once
+
 #include <cstdint>
 #include <sqlite3.h>
+#include <optional>
 
 #include "../../domain/contracts/IRepository.hpp"
 
-namespace budgetpilot {
-    namespace domain::model {
-        struct Category;
-    }
+namespace budgetpilot::domain::models {
+    struct Category;
+}
 
-    using namespace domain::contracts;
-    using namespace domain::model;
+namespace budgetpilot::infrastructure::repositories {
+    class CategoryRepository : public domain::contracts::IRepository<domain::models::Category> {
+    public:
+        explicit CategoryRepository(sqlite3 &db);
 
-    namespace infrastructure::repositories {
-        class CategoryRepository : public IRepository<Category> {
-        public:
-            explicit CategoryRepository(sqlite3 &db);
+        void add(const domain::models::Category &entity) override;
+        void update(const domain::models::Category &entity) override;
+        void remove(const std::uint64_t &id) override;
 
-            void add(Category entity) override;
-            void update(Category entity) override;
-            void remove(std::uint64_t id) override;
+        [[nodiscard]]
+        std::vector<domain::models::Category> getAll() override;
 
-            std::vector<Category> getAll() override;
-            Category getOne(std::uint64_t id) override;
+        [[nodiscard]]
+        std::optional<domain::models::Category> getOne(const std::uint64_t &id) override;
 
-        private:
-            sqlite3 &connection_;
-        };
-    }
+    private:
+        sqlite3 &connection_;
+    };
 }

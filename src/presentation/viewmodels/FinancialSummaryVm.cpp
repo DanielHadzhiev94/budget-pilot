@@ -4,9 +4,12 @@
 #include "src/application/transaction/TransactionService.hpp"
 #include "src/application/account/AccountsService.hpp"
 
+namespace services = budgetpilot::application::services;
+namespace models = budgetpilot::domain::models;
+
 namespace budgetpilot::presentation::viewmodels {
-    FinancialSummaryVm::FinancialSummaryVm(application::transaction::TransactionService &transaction_service,
-                                           application::account::AccountService &account_service,
+    FinancialSummaryVm::FinancialSummaryVm(services::TransactionService &transaction_service,
+                                           services::AccountService &account_service,
                                            QObject *parent)
         : transaction_service_(transaction_service),
           account_service_(account_service) {
@@ -26,7 +29,7 @@ namespace budgetpilot::presentation::viewmodels {
         return expense_;
     }
 
-    void FinancialSummaryVm::create_transaction(const Transaction &transaction) {
+    void FinancialSummaryVm::create_transaction(const models::Transaction &transaction) {
         const auto response = transaction_service_.create_transaction(transaction);
         // TODO: Add Toast to show the response on the UI
         std::cout << response.message() << std::endl;

@@ -16,9 +16,7 @@
 #include "viewmodels/AddTransactionDialogVm.hpp"
 #include "viewmodels/FinancialSummaryVm.hpp"
 
-namespace account = budgetpilot::application::account;
-namespace transaction = budgetpilot::application::transaction;
-namespace category = budgetpilot::application::category;
+namespace services = budgetpilot::application::services;
 namespace repository = budgetpilot::infrastructure::repositories;
 namespace persistence = budgetpilot::infrastructure::persistence;
 namespace viewmodels = budgetpilot::presentation::viewmodels;
@@ -40,17 +38,17 @@ int main(int argc, char *argv[]) {
     repository::CategoryRepository category_repository{*dbContext.getConnection()};
 
     // Services
-    transaction::TransactionService transaction_service{
-        &account_repository,
-        &transaction_repository
+    services::TransactionService transaction_service{
+        account_repository,
+        transaction_repository
     };
 
-    account::AccountService account_service
+    services::AccountService account_service
     {
         account_repository,
     };
 
-    category::CategoryService category_service{
+    services::CategoryService category_service{
         category_repository,
     };
 

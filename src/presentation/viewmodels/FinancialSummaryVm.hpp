@@ -2,15 +2,12 @@
 
 #include <QObject>
 
-namespace budgetpilot::application::transaction {
+namespace budgetpilot::application::services {
     class TransactionService;
-}
-
-namespace budgetpilot::application::account {
     class AccountService;
 }
 
-namespace budgetpilot::domain::model {
+namespace budgetpilot::domain::models {
     class Transaction;
 }
 
@@ -24,8 +21,8 @@ namespace budgetpilot::presentation::viewmodels {
 
     public:
         explicit FinancialSummaryVm(
-            application::transaction::TransactionService &transaction_service,
-            application::account::AccountService &account_service,
+            application::services::TransactionService &transaction_service,
+            application::services::AccountService &account_service,
             QObject *parent = nullptr
         );
 
@@ -38,7 +35,7 @@ namespace budgetpilot::presentation::viewmodels {
         [[nodiscard]]
         double expense() const;
 
-        Q_INVOKABLE void create_transaction(const domain::model::Transaction &transaction);
+        Q_INVOKABLE void create_transaction(const domain::models::Transaction &transaction);
         Q_INVOKABLE void load_data(int month, int year);
 
     signals:
@@ -47,8 +44,8 @@ namespace budgetpilot::presentation::viewmodels {
         void expense_changed();
 
     private:
-        application::transaction::TransactionService &transaction_service_;
-        application::account::AccountService &account_service_;
+        application::services::TransactionService &transaction_service_;
+        application::services::AccountService &account_service_;
 
         double current_balance_{0.0};
         double income_{0.0};

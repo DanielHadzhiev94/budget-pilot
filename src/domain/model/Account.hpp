@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace budgetpilot::domain::model {
+namespace budgetpilot::domain::models {
     struct Account {
         std::uint64_t id{0};
         std::string name{};

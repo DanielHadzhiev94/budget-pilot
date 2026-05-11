@@ -9,9 +9,7 @@
 #include "src/application/category/CategoryService.hpp"
 #include "src/application/transaction/TransactionService.hpp"
 
-namespace transaction = budgetpilot::application::transaction;
-namespace account = budgetpilot::application::account;
-namespace category = budgetpilot::application::category;
+namespace services = budgetpilot::application::services;
 
 namespace budgetpilot::presentation::viewmodels {
     class AddTransactionDialogVm : public QObject {
@@ -24,9 +22,9 @@ namespace budgetpilot::presentation::viewmodels {
 
     public:
         explicit AddTransactionDialogVm(
-            transaction::TransactionService &transactionService,
-            account::AccountService &account_service,
-            category::CategoryService &category_service,
+            services::TransactionService &transactionService,
+            services::AccountService &account_service,
+            services::CategoryService &category_service,
             QObject *parent = nullptr
         );
 
@@ -67,9 +65,9 @@ namespace budgetpilot::presentation::viewmodels {
         void loadAccounts();
         void loadCategories();
 
-        transaction::TransactionService &transaction_service_;
-        account::AccountService &account_service_;
-        category::CategoryService &category_service_;
+        services::TransactionService &transaction_service_;
+        services::AccountService &account_service_;
+        services::CategoryService &category_service_;
 
         QString error_message_;
         QVariantList accounts_;

@@ -6,9 +6,10 @@
 #include <cstdint>
 #include <stdexcept>
 #include <string>
+#include <cstdint>
 
 
-namespace budgetpilot::domain::model {
+namespace budgetpilot::domain::models {
     enum class Type : std::uint8_t {
         Income = 1,
         Expense = 2
@@ -17,10 +18,10 @@ namespace budgetpilot::domain::model {
     using TimePoint = std::chrono::system_clock::time_point;
 
     struct Transaction {
-        std::int64_t id{0};
+        std::uint64_t id{0};
 
-        std::int64_t account_id{0};
-        std::int64_t category_id{0};
+        std::uint64_t account_id{0};
+        std::uint64_t category_id{0};
 
         Type type{Type::Income};
 
