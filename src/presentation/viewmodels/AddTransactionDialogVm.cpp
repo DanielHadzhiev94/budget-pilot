@@ -84,7 +84,7 @@ namespace budgetpilot::presentation::viewmodels {
         setIsSaving(true);
 
         models::Transaction transaction{};
-        transaction.amount = static_cast<float>(amount);
+        transaction.amount = static_cast<double>(amount);
         transaction.source = source.toStdString();
         transaction.note = note.toStdString();
         transaction.transaction_date = utilities::Mapper::qdate_to_timepoint(date);

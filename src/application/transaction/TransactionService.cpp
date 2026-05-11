@@ -19,9 +19,20 @@ namespace budgetpilot::application::services {
 
     utilities::Response<void> TransactionService::create_transaction(const models::Transaction &transaction) const {
         try {
-            auto acc_rep = account_repository_.getOne(transaction.account_id);
+            auto acc_opt = account_repository_.getOne(transaction.account_id);
+
+            // If there is an account, add  the value
+            if (acc_opt.has_value()) {
+                acc_opt->amount +=
+                        transaction.type == models::Type::Income
+                            ? transaction.amount
+                            : -transaction.amount;
+
+                account_repository_.update(*acc_opt);
+            }
 
             transaction_repository_.add(transaction);
+
             return utilities::Response<void>::Success("Transaction added successfully");
         } catch (const std::exception &ex) {
             return utilities::Response<void>::Failed(

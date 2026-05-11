@@ -12,18 +12,22 @@ namespace budgetpilot::domain::contracts {
     class IRepository;
 }
 
+namespace models = budgetpilot::domain::models;
+namespace utilities = budgetpilot::domain::utilities;
+namespace contracts = budgetpilot::domain::contracts;
+
 namespace budgetpilot::application::services {
     class TransactionService {
     public:
-        explicit TransactionService(domain::contracts::IRepository<domain::models::Account> &account_repository,
-                                    domain::contracts::IRepository<domain::models::Transaction> &transaction_repository
+        explicit TransactionService(contracts::IRepository<models::Account> &account_repository,
+                                    contracts::IRepository<models::Transaction> &transaction_repository
         );
 
         [[nodiscard]]
-        domain::utilities::Response<void> create_transaction(const domain::models::Transaction &transaction) const;
+        utilities::Response<void> create_transaction(const models::Transaction &transaction) const;
 
     private:
-        domain::contracts::IRepository<domain::models::Account> &account_repository_;
-        domain::contracts::IRepository<domain::models::Transaction> &transaction_repository_;
+        contracts::IRepository<models::Account> &account_repository_;
+        contracts::IRepository<models::Transaction> &transaction_repository_;
     };
 }

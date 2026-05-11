@@ -6,13 +6,13 @@
 #include "src/domain/model/Account.hpp"
 #include "src/domain/utilities/Response.hpp"
 
-namespace utilities = budgetpilot::domain::utilities;
-namespace models = budgetpilot::domain::models;
-
 namespace budgetpilot::domain::contracts {
     template<typename T>
     class IRepository;
 }
+
+namespace utilities = budgetpilot::domain::utilities;
+namespace models = budgetpilot::domain::models;
 
 namespace budgetpilot::application::services {
     class AccountService {
