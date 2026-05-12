@@ -15,6 +15,12 @@ namespace budgetpilot::presentation::viewmodels {
           account_service_(account_service) {
         //Test
         load_data(0, 0);
+
+        connect(
+            &transaction_service_,
+            &services::TransactionService::transaction_created,
+            this,
+            &FinancialSummaryVm::reload_data);
     }
 
     double FinancialSummaryVm::current_balance() const {
@@ -45,5 +51,9 @@ namespace budgetpilot::presentation::viewmodels {
         }
 
         emit current_balance_changed();
+    }
+
+    void FinancialSummaryVm::reload_data() {
+        load_data(0, 0);
     }
 }

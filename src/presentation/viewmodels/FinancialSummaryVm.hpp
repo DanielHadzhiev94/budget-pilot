@@ -54,5 +54,6 @@ namespace budgetpilot::presentation::viewmodels {
         void set_current_balance(double value);
         void set_income(double value);
         void set_expense(double value);
+        void reload_data();
     };
 }

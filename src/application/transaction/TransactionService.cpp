@@ -17,7 +17,7 @@ namespace budgetpilot::application::services {
           transaction_repository_(transaction_repository) {
     }
 
-    utilities::Response<void> TransactionService::create_transaction(const models::Transaction &transaction) const {
+    utilities::Response<void> TransactionService::create_transaction(const models::Transaction &transaction) {
         try {
             auto acc_opt = account_repository_.getOne(transaction.account_id);
 
@@ -32,6 +32,7 @@ namespace budgetpilot::application::services {
             }
 
             transaction_repository_.add(transaction);
+            emit transaction_created();
 
             return utilities::Response<void>::Success("Transaction added successfully");
         } catch (const std::exception &ex) {
