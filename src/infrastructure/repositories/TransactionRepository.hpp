@@ -24,7 +24,7 @@ namespace budgetpilot::infrastructure::repositories {
         void remove(const std::uint64_t &id) override;
 
         [[nodiscard]]
-        std::vector<domain::models::Transaction> getAll() override;
+        std::vector<domain::models::Transaction> getAll(int month, int year) override;
 
         [[nodiscard]]
         std::optional<domain::models::Transaction> getOne(const std::uint64_t &id) override;

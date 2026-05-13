@@ -58,7 +58,7 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    std::vector<models::Category> CategoryRepository::getAll() {
+    std::vector<models::Category> CategoryRepository::getAll(int month, int year) {
         const auto *sql = R"(
                     SELECT id, name, created_at
                     FROM categories

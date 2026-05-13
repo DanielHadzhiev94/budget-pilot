@@ -76,7 +76,7 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    std::vector<Transaction> TransactionRepository::getAll()  {
+    std::vector<Transaction> TransactionRepository::getAll(int month, int year)  {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions

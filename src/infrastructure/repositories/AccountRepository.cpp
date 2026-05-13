@@ -99,7 +99,7 @@ namespace budgetpilot::infrastructure::repositories {
         return account;
     }
 
-    std::vector<models::Account> AccountRepository::getAll() {
+    std::vector<models::Account> AccountRepository::getAll(int month, int year) {
         const auto *sql = R"(
                     SELECT id, name, initial_balance, created_at
                     FROM accounts
