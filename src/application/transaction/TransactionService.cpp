@@ -4,7 +4,6 @@
 
 #include "src/domain/contracts/IRepository.hpp"
 #include "src/domain/model/Account.hpp"
-#include "src/domain/model/Transaction.hpp"
 
 namespace contracts = budgetpilot::domain::contracts;
 namespace models = budgetpilot::domain::models;
@@ -38,6 +37,27 @@ namespace budgetpilot::application::services {
         } catch (const std::exception &ex) {
             return utilities::Response<void>::Failed(
                 std::string{"Failed to create transaction: "} + ex.what()
+            );
+        }
+    }
+
+    utilities::Response<std::vector<models::Transaction> > TransactionService::load_income_data(const int month,
+        const int year) const {
+        try {
+            const auto income_data = transaction_repository_.getAll(month, year);
+
+            if (income_data.capacity() == 0)
+                return utilities::Response<std::vector<models::Transaction> >::Failed(
+                    std::string{"No income data found for the period "} +
+                    std::to_string(month) +
+                    "-" +
+                    std::to_string(year)
+                );
+            return utilities::Response<std::vector<models::Transaction> >::Success(
+                income_data);
+        } catch (std::exception &ex) {
+            return utilities::Response<std::vector<models::Transaction> >::Failed(
+                std::string{"Failed to load income data"} + ex.what()
             );
         }
     }

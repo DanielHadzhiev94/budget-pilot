@@ -13,9 +13,7 @@ namespace budgetpilot::presentation::viewmodels {
                                            QObject *parent)
         : transaction_service_(transaction_service),
           account_service_(account_service) {
-        //Test
-        load_data(0, 0);
-
+ 
         connect(
             &transaction_service_,
             &services::TransactionService::transaction_created,
@@ -27,12 +25,24 @@ namespace budgetpilot::presentation::viewmodels {
         return current_balance_;
     }
 
+    void FinancialSummaryVm::set_current_balance(double value) {
+        current_balance_ = value;
+    }
+
     double FinancialSummaryVm::income() const {
         return income_;
     }
 
+    void FinancialSummaryVm::set_income(double value) {
+        income_ = value;
+    }
+
     double FinancialSummaryVm::expense() const {
         return expense_;
+    }
+
+    void FinancialSummaryVm::set_expense(double value) {
+        expense_ = value;
     }
 
     void FinancialSummaryVm::create_transaction(const models::Transaction &transaction) {
@@ -42,18 +52,39 @@ namespace budgetpilot::presentation::viewmodels {
     }
 
     void FinancialSummaryVm::load_data(int month, int year) {
-        // Test
+        load_account_data();
+        load_transaction_data(month, year);
+
+        emit current_balance_changed();
+    }
+
+    void FinancialSummaryVm::set_date(int month, int year) {
+        selected_month_ = month;
+        selected_year_ = year;
+    }
+
+    void FinancialSummaryVm::load_account_data() {
         const auto account_response = account_service_.load_accounts();
         if (account_response.is_successful())
             current_balance_ = 0.0f;
         for (const auto &acc: account_response.data()) {
             current_balance_ += acc.amount;
         }
+    }
 
-        emit current_balance_changed();
+    void FinancialSummaryVm::load_transaction_data(int month, int year) {
+        const auto &transaction_response = transaction_service_.load_income_data(month, year);
+        if (transaction_response.is_successful()) {
+            for (const auto &income: transaction_response.data()) {
+                income_ += income.amount;
+            }
+
+            emit income_changed();
+        }
     }
 
     void FinancialSummaryVm::reload_data() {
-        load_data(0, 0);
+        load_data(selected_month_, selected_year_);
+        std::cout << selected_month_ << " - " << selected_year_ << std::endl;
     }
 }

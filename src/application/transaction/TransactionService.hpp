@@ -2,10 +2,10 @@
 
 #include <QObject>
 
+#include "src/domain/model/Transaction.hpp"
 #include "src/domain/utilities/Response.hpp"
 
 namespace budgetpilot::domain::models {
-    class Transaction;
     class Account;
 }
 
@@ -29,6 +29,9 @@ namespace budgetpilot::application::services {
 
         [[nodiscard]]
         utilities::Response<void> create_transaction(const models::Transaction &transaction);
+
+        [[nodiscard]]
+        utilities::Response<std::vector<models::Transaction>> load_income_data( const int month, const int year) const;
 
     signals:
         void transaction_created();

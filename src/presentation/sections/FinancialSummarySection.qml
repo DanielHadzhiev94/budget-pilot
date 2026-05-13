@@ -34,6 +34,7 @@ Rectangle {
                     Layout.leftMargin: 12
                     onDateChanged: function (month, year) {
                         viewModel.load_data(month, year);
+                        viewModel.set_date(month, year);
                     }
                 }
 

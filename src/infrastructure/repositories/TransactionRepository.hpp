@@ -33,7 +33,5 @@ namespace budgetpilot::infrastructure::repositories {
         using TimePoint = std::chrono::system_clock::time_point;
 
         sqlite3 &connection_;
-        static std::int64_t convert_to_seconds(TimePoint time_point);
-        static std::chrono::system_clock::time_point from_unix(std::int64_t value);
     };
 }

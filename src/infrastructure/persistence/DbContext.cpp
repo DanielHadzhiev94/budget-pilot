@@ -87,11 +87,11 @@ namespace budgetpilot::infrastructure::persistence {
         INSERT OR IGNORE INTO categories (name) VALUES ('Salary');
         INSERT OR IGNORE INTO categories (name) VALUES ('Food');
         INSERT OR IGNORE INTO categories (name) VALUES ('Apartment');
+        INSERT OR IGNORE INTO categories (name) VALUES ('Car');
     )";
 
         const char *acc_seed = R"(
-        INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('Bank', 1234);
-)";
+        INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('Bank', 0);)";
 
         execute(category_seed);
         execute(acc_seed);

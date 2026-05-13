@@ -37,6 +37,7 @@ namespace budgetpilot::presentation::viewmodels {
 
         Q_INVOKABLE void create_transaction(const domain::models::Transaction &transaction);
         Q_INVOKABLE void load_data(int month, int year);
+        Q_INVOKABLE void set_date(int month, int year);
 
     signals:
         void current_balance_changed();
@@ -47,6 +48,9 @@ namespace budgetpilot::presentation::viewmodels {
         application::services::TransactionService &transaction_service_;
         application::services::AccountService &account_service_;
 
+        int selected_month_;
+        int selected_year_;
+
         double current_balance_{0.0};
         double income_{0.0};
         double expense_{0.0};
@@ -54,6 +58,8 @@ namespace budgetpilot::presentation::viewmodels {
         void set_current_balance(double value);
         void set_income(double value);
         void set_expense(double value);
+        void load_account_data();
+        void load_transaction_data(int month, int year);
         void reload_data();
     };
 }
