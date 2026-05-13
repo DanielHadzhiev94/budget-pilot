@@ -46,6 +46,7 @@ qt_add_executable(appBudgetPilot
         src/application/account/AccountService.cpp
         src/application/category/CategoryService.hpp
         src/application/category/CategoryService.cpp
+        src/domain/utilities/TimeConverter.hpp
 )
 
 # QML Singleton
