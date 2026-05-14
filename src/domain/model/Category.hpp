@@ -3,7 +3,7 @@
 #include <string>
 #include <cstdint>
 
-namespace budgetpilot::domain::model {
+namespace budgetpilot::domain::models {
     struct Category {
         std::int64_t id;
         std::string name;

@@ -2,33 +2,50 @@
 
 #include <chrono>
 #include <optional>
-#include <sqlite3.h>
 #include <vector>
 
-using TimePoint = std::chrono::system_clock::time_point;
+#include "src/domain/contracts/Irepository.hpp"
+#include "src/domain/contracts/ITransactionRepository.hpp"
+#include "src/domain/model/Transaction.hpp"
 
-namespace budgetpilot {
-    namespace domain::model {
-        struct Transaction;
-        struct Category;
-    }
+struct sqlite3;
 
-    namespace infrastructure::repositories {
-        class TransactionRepository {
-        public:
-            explicit TransactionRepository(sqlite3 *connection);
+namespace budgetpilot::domain::models {
+    struct Transaction;
+    struct Category;
+}
 
-            void add(const domain::model::Transaction &transaction);
-            void update(const domain::model::Transaction &transaction);
-            void remove(std::uint64_t id);
+namespace budgetpilot::infrastructure::persistence {
+    class Statement;
+}
 
-            [[nodiscard]] std::vector<domain::model::Transaction> getAll() const;
-            [[nodiscard]] std::optional<domain::model::Transaction> getOne(std::uint64_t id) const;
+namespace models = budgetpilot::domain::models;
 
-        private:
-            sqlite3 *connection_;
-            static std::int64_t convert_to_seconds(TimePoint time_point);
-            static std::chrono::system_clock::time_point from_unix(std::int64_t value);
-        };
-    }
+namespace budgetpilot::infrastructure::repositories {
+    class TransactionRepository final : public domain::contracts::ITransactionRepository {
+    public:
+        explicit TransactionRepository(sqlite3 &connection);
+
+        void add(const models::Transaction &transaction) override;
+        void update(const models::Transaction &transaction) override;
+        void remove(const std::uint64_t &id) override;
+
+        [[nodiscard]]
+        std::vector<models::Transaction> getAll() override;
+
+        [[nodiscard]]
+        std::optional<models::Transaction> getOne(const std::uint64_t &id) override;
+
+        [[nodiscard]]
+        std::vector<models::Transaction> getAllByMonth(int month, int year) override;
+
+        [[nodiscard]]
+        std::vector<models::Transaction> getAllByMonthAndType(int month, int year, enums::Type type) override;
+
+    private:
+        using TimePoint = std::chrono::system_clock::time_point;
+
+        sqlite3 &connection_;
+        static models::Transaction build_transaction_(const persistence::Statement &stmt);
+    };
 }

@@ -2,13 +2,14 @@
 #include "src/domain/model/Transaction.hpp"
 #include "src/domain/utilities/Mapper.hpp"
 
-namespace transaction = budgetpilot::application::transaction;
-namespace account = budgetpilot::application::account;
+namespace services = budgetpilot::application::services;
+namespace models = budgetpilot::domain::models;
+namespace utilities = budgetpilot::domain::utilities;
 
 namespace budgetpilot::presentation::viewmodels {
-    AddTransactionDialogVm::AddTransactionDialogVm(transaction::TransactionService &transactionService,
-                                                   account::AccountService &account_service,
-                                                   category::CategoryService &category_service,
+    AddTransactionDialogVm::AddTransactionDialogVm(services::TransactionService &transactionService,
+                                                   services::AccountService &account_service,
+                                                   services::CategoryService &category_service,
                                                    QObject *parent)
         : transaction_service_(transactionService),
           account_service_(account_service),
@@ -82,11 +83,11 @@ namespace budgetpilot::presentation::viewmodels {
 
         setIsSaving(true);
 
-        Transaction transaction{};
-        transaction.amount = static_cast<float>(amount);
+        models::Transaction transaction{};
+        transaction.amount = static_cast<double>(amount);
         transaction.source = source.toStdString();
         transaction.note = note.toStdString();
-        transaction.transaction_date = Mapper::qdate_to_timepoint(date);
+        transaction.transaction_date = utilities::Mapper::qdate_to_timepoint(date);
 
         transaction.account_id = account_id;
 
@@ -94,9 +95,9 @@ namespace budgetpilot::presentation::viewmodels {
         transaction.category_id = 1;
 
         if (type == "Income") {
-            transaction.type = Type::Income;
+            transaction.type = enums::Type::Income;
         } else {
-            transaction.type = Type::Expense;
+            transaction.type = enums::Type::Expense;
         }
 
         const auto response = transaction_service_.create_transaction(transaction);

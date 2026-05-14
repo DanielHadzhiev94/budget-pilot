@@ -14,7 +14,8 @@ namespace budgetpilot::infrastructure::persistence {
         Statement(Statement &&) = delete;
         Statement &&operator =(Statement &&) = delete;
 
-        [[nodiscard]] sqlite3_stmt *get() const;
+        [[nodiscard]]
+        sqlite3_stmt *get() const;
 
     private:
         sqlite3_stmt *stmt_;

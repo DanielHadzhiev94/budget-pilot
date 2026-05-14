@@ -16,9 +16,7 @@
 #include "viewmodels/AddTransactionDialogVm.hpp"
 #include "viewmodels/FinancialSummaryVm.hpp"
 
-namespace account = budgetpilot::application::account;
-namespace transaction = budgetpilot::application::transaction;
-namespace category = budgetpilot::application::category;
+namespace services = budgetpilot::application::services;
 namespace repository = budgetpilot::infrastructure::repositories;
 namespace persistence = budgetpilot::infrastructure::persistence;
 namespace viewmodels = budgetpilot::presentation::viewmodels;
@@ -26,31 +24,30 @@ namespace viewmodels = budgetpilot::presentation::viewmodels;
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
-
     // Initialization of the database
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QString dbFilePath = QDir(appDataPath).filePath("budgetpilot.db");
     std::string dbPath = dbFilePath.toStdString();
-    const auto dbContext = std::make_unique<persistence::DbContext>(dbPath);
-    dbContext->initialize();
+    persistence::DbContext dbContext{dbPath};
+    dbContext.initialize();
 
     //Repositories
-    repository::AccountRepository account_repository{dbContext->getConnection()};
-    repository::TransactionRepository transaction_repository{dbContext->getConnection()};
-    repository::CategoryRepository category_repository{dbContext->getConnection()};
+    repository::AccountRepository account_repository{*dbContext.getConnection()};
+    repository::TransactionRepository transaction_repository{*dbContext.getConnection()};
+    repository::CategoryRepository category_repository{*dbContext.getConnection()};
 
     // Services
-    transaction::TransactionService transaction_service{
-        &account_repository,
-        &transaction_repository
+    services::TransactionService transaction_service{
+        account_repository,
+        transaction_repository
     };
 
-    account::AccountService account_service
+    services::AccountService account_service
     {
         account_repository,
     };
 
-    category::CategoryService category_service{
+    services::CategoryService category_service{
         category_repository,
     };
 
@@ -67,7 +64,8 @@ int main(int argc, char *argv[]) {
 
     // Initializing of the ViewModels
     viewmodels::FinancialSummaryVm financialSummaryViewModel{
-        &transaction_service
+        transaction_service,
+        account_service
     };
 
     viewmodels::AddTransactionDialogVm addDialogViewModel{
@@ -76,7 +74,7 @@ int main(int argc, char *argv[]) {
         category_service,
     };
 
-    engine.rootContext()->setContextProperty("dashboardVM", &financialSummaryViewModel);
+    engine.rootContext()->setContextProperty("financialSummaryVM", &financialSummaryViewModel);
     engine.rootContext()->setContextProperty("addTransactionVM", &addDialogViewModel);
     engine.loadFromModule("BudgetPilot", "Main");
 

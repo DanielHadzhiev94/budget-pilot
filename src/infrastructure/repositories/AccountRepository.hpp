@@ -2,33 +2,31 @@
 
 #include <cstdint>
 #include <sqlite3.h>
+#include <optional>
 #include <vector>
 
 #include "../../domain/contracts/IRepository.hpp"
+#include "../../domain/model/Account.hpp"
 
+namespace models = budgetpilot::domain::models;
+namespace contracts = budgetpilot::domain::contracts;
 
-namespace budgetpilot {
-    namespace domain::model {
-        struct Account;
-    }
+namespace budgetpilot::infrastructure::repositories {
+    class AccountRepository : public contracts::IRepository<models::Account> {
+    public:
+        explicit AccountRepository(sqlite3 &connection);
 
-    using namespace domain::model;
+        void add(const models::Account &entity) override;
+        void update(const models::Account &entity) override;
+        void remove(const std::uint64_t &id) override;
 
-    namespace infrastructure::repositories {
-        class AccountRepository : public domain::contracts::IRepository<Account> {
+        [[nodiscard]]
+        std::vector<models::Account> getAll() override;
 
-        public:
-            explicit AccountRepository(sqlite3 *connection);
+        [[nodiscard]]
+        std::optional<models::Account> getOne(const std::uint64_t &id) override;
 
-            void add(Account account) override;
-            void update(Account account) override;
-            void remove(std::uint64_t id) override;
-
-            std::vector<Account> getAll() override;
-            Account getOne(std::uint64_t id) override;
-
-        private:
-            sqlite3 *connection_;
-        };
-    }
+    private:
+        sqlite3 &connection_;
+    };
 }
