@@ -40,6 +40,9 @@ namespace budgetpilot::application::services {
         utilities::Response<std::vector<models::Transaction> > load_expense_data(
             const int month, const int year) const;
 
+        [[nodiscard]]
+        utilities::Response<double> calculate_monthly_saving_rate(int month, int year);
+
     signals:
         void transaction_created();
 

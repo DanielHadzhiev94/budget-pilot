@@ -83,4 +83,32 @@ namespace budgetpilot::application::services {
             );
         }
     }
+
+    utilities::Response<double> TransactionService::calculate_monthly_saving_rate(int month, int year) {
+        try {
+            const auto &transaction_data = transaction_repository_.getAllByMonth(month, year);
+            if (transaction_data.capacity() == 0) {
+                return utilities::Response<double>::Failed(
+                    std::string{"No transaction data found for the period "} +
+                    std::to_string(month) +
+                    "-" +
+                    std::to_string(year)
+                );
+            }
+
+            double transaction_sum{0.0};
+            for (const auto &transaction: transaction_data) {
+                transaction_sum +=
+                        transaction.type == enums::Type::Income
+                            ? transaction.amount
+                            : -transaction.amount;
+            }
+
+            return utilities::Response<double>::Success(transaction_sum);
+        } catch (std::exception &ex) {
+            return utilities::Response<double>::Failed(
+                std::string{"Failed to load transaction data"} + ex.what()
+            );
+        }
+    }
 }
