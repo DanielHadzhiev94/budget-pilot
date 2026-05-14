@@ -44,6 +44,14 @@ namespace budgetpilot::presentation::viewmodels {
         expense_ = value;
     }
 
+    double FinancialSummaryVm::saving_rate() const {
+        return saving_rate_;
+    }
+
+    void FinancialSummaryVm::set_saving_rate(double value) {
+        saving_rate_ = value;
+    }
+
     void FinancialSummaryVm::create_transaction(const models::Transaction &transaction) {
         const auto response = transaction_service_.create_transaction(transaction);
         // TODO: Add Toast to show the response on the UI
@@ -54,6 +62,7 @@ namespace budgetpilot::presentation::viewmodels {
         load_account_data();
         load_income_data(month, year);
         load_expense_data(month, year);
+        load_saving_rate(month, year);
     }
 
     void FinancialSummaryVm::set_date(int month, int year) {
@@ -98,6 +107,14 @@ namespace budgetpilot::presentation::viewmodels {
 
             set_expense(expense_sum);
             emit expense_changed();
+        }
+    }
+
+    void FinancialSummaryVm::load_saving_rate(int month, int year) {
+        const auto &saving_rate_response = transaction_service_.calculate_monthly_saving_rate(month, year);
+        if (saving_rate_response.is_successful()) {
+            set_saving_rate(saving_rate_response.data());
+            emit saving_rate_changed();
         }
     }
 

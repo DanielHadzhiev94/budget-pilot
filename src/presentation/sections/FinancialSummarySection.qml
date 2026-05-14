@@ -59,7 +59,7 @@ Rectangle {
 
             BudgetCard {
                 title: "Current Balance"
-                mainValue: "€ " + viewModel.current_balance
+                mainValue: "€ " + viewModel.current_balance.toFixed(2)
                 mainValueColor: AppTheme.primaryDark
                 subtitle: "Available funds"
                 iconSize: 60
@@ -67,14 +67,14 @@ Rectangle {
 
             BudgetCard {
                 title: "Income This Month"
-                mainValue: "€ " + viewModel.income
+                mainValue: "€ " + viewModel.income.toFixed(2)
                 subtitle: "vs last month"
                 iconSource: AppTheme.incomeIcon
             }
 
             BudgetCard {
                 title: "Expense This Month"
-                mainValue: "€ " + viewModel.expense
+                mainValue: "€ " + viewModel.expense.toFixed(2)
                 mainValueColor: AppTheme.warning
                 subtitle: "vs last month"
                 iconSource: AppTheme.expenseIcon
@@ -83,9 +83,9 @@ Rectangle {
 
             BudgetCard {
                 title: "Saving Rates"
-                mainValue: "€ 258"
+                mainValue: "€ " + viewModel.saving_rate.toFixed(2)
                 mainValueColor: AppTheme.chartPurple
-                subtitle: "300 € saved"
+                subtitle: "300 € saved Dummy data"
                 iconSource: AppTheme.rateIcon
                 iconSize: 30
             }

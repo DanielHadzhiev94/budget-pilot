@@ -136,8 +136,14 @@ namespace budgetpilot::infrastructure::repositories {
         sqlite3_bind_int64(stmt.get(), 1, current_month_seconds);
         sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
 
-        while (sqlite3_step(stmt.get()) != SQLITE_DONE) {
-            transactions.push_back(std::move(build_transaction_(stmt)));
+        int result{};
+
+        while ((result = sqlite3_step(stmt.get())) == SQLITE_ROW) {
+            transactions.push_back(build_transaction_(stmt));
+        }
+
+        if (result != SQLITE_DONE) {
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
 
         return transactions;
