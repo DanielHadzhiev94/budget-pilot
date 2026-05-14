@@ -58,8 +58,10 @@ namespace budgetpilot::presentation::viewmodels {
         void set_current_balance(double value);
         void set_income(double value);
         void set_expense(double value);
+
         void load_account_data();
-        void load_transaction_data(int month, int year);
+        void load_income_data(int month, int year);
+        void load_expense_data(int month, int year);
         void reload_data();
     };
 }

@@ -78,43 +78,18 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    std::vector<Transaction> TransactionRepository::getAll(int month, int year) {
+    std::vector<Transaction> TransactionRepository::getAll() {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
-                    WHERE transaction_date >=? AND transaction_date < ?
                     ORDER BY created_at ASC
                     )";
 
         const persistence::Statement stmt(&connection_, sql);
         std::vector<Transaction> transactions{};
 
-        const auto current_month_seconds = utilities::TimeConverter::to_unix_seconds(month, year);
-        const auto next_month_seconds = utilities::TimeConverter::next_month_to_unix_seconds(month, year);
-
-        sqlite3_bind_int64(stmt.get(), 1, current_month_seconds);
-        sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
-
         while (sqlite3_step(stmt.get()) != SQLITE_DONE) {
-            Transaction t{};
-            t.id = sqlite3_column_int64(stmt.get(), 0);
-            t.account_id = sqlite3_column_int(stmt.get(), 1);
-            t.category_id = sqlite3_column_int(stmt.get(), 2);
-            t.type = static_cast<Type>(sqlite3_column_int(stmt.get(), 3));
-            t.amount = static_cast<float>(sqlite3_column_double(stmt.get(), 4));
-
-            const unsigned char *source = sqlite3_column_text(stmt.get(), 5);
-            t.source = source ? reinterpret_cast<const char *>(source) : "";
-
-            const unsigned char *note = sqlite3_column_text(stmt.get(), 6);
-            t.note = note ? reinterpret_cast<const char *>(note) : "";
-
-            t.transaction_date = utilities::TimeConverter::from_unix(sqlite3_column_int64(stmt.get(), 7));
-
-            const unsigned char *created_at = sqlite3_column_text(stmt.get(), 8);
-            t.created_at = reinterpret_cast<const char *>(created_at);
-
-            transactions.push_back(std::move(t));
+            transactions.push_back(std::move(build_transaction_(stmt)));
         }
 
         return transactions;
@@ -133,26 +108,7 @@ namespace budgetpilot::infrastructure::repositories {
         const int result = sqlite3_step(stmt.get());
 
         if (result == SQLITE_ROW) {
-            Transaction t{};
-
-            t.id = sqlite3_column_int64(stmt.get(), 0);
-            t.account_id = sqlite3_column_int(stmt.get(), 1);
-            t.category_id = sqlite3_column_int(stmt.get(), 2);
-            t.type = static_cast<Type>(sqlite3_column_int(stmt.get(), 3));
-            t.amount = static_cast<float>(sqlite3_column_double(stmt.get(), 4));
-
-            const unsigned char *source = sqlite3_column_text(stmt.get(), 5);
-            t.source = source ? reinterpret_cast<const char *>(source) : "";
-
-            const unsigned char *note = sqlite3_column_text(stmt.get(), 6);
-            t.note = note ? reinterpret_cast<const char *>(note) : "";
-
-            t.transaction_date = utilities::TimeConverter::from_unix(sqlite3_column_int(stmt.get(), 7));
-
-            const unsigned char *created_at = sqlite3_column_text(stmt.get(), 8);
-            t.created_at = reinterpret_cast<const char *>(created_at);
-
-            return t;
+            return build_transaction_(stmt);
         }
 
         if (result == SQLITE_DONE) {
@@ -160,5 +116,80 @@ namespace budgetpilot::infrastructure::repositories {
         }
 
         throw std::runtime_error(sqlite3_errmsg(&connection_));
+    }
+
+    std::vector<Transaction> TransactionRepository::getAllByMonth(int month, int year) {
+        const auto *sql = R"(
+                    SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
+                    FROM transactions
+                    WHERE transaction_date >=?
+                        AND transaction_date < ?
+                    ORDER BY created_at ASC
+                    )";
+
+        const persistence::Statement stmt(&connection_, sql);
+        std::vector<Transaction> transactions{};
+
+        const auto current_month_seconds = utilities::TimeConverter::to_unix_seconds(month, year);
+        const auto next_month_seconds = utilities::TimeConverter::next_month_to_unix_seconds(month, year);
+
+        sqlite3_bind_int64(stmt.get(), 1, current_month_seconds);
+        sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
+
+        while (sqlite3_step(stmt.get()) != SQLITE_DONE) {
+            transactions.push_back(std::move(build_transaction_(stmt)));
+        }
+
+        return transactions;
+    }
+
+    std::vector<Transaction> TransactionRepository::getAllByMonthAndType(int month, int year, enums::Type type) {
+        const auto *sql = R"(
+                    SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
+                    FROM transactions
+                    WHERE transaction_date >=?
+                        AND transaction_date < ?
+                        AND type = ?
+                    ORDER BY created_at ASC
+                    )";
+
+        const persistence::Statement stmt(&connection_, sql);
+        std::vector<Transaction> transactions{};
+
+        const auto current_month_seconds = utilities::TimeConverter::to_unix_seconds(month, year);
+        const auto next_month_seconds = utilities::TimeConverter::next_month_to_unix_seconds(month, year);
+
+        sqlite3_bind_int64(stmt.get(), 1, current_month_seconds);
+        sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
+        sqlite3_bind_int(stmt.get(), 3, static_cast<int>(type));
+
+        while (sqlite3_step(stmt.get()) != SQLITE_DONE) {
+            transactions.push_back(std::move(build_transaction_(stmt)));
+        }
+
+        return transactions;
+    }
+
+    Transaction TransactionRepository::build_transaction_(const persistence::Statement &stmt) {
+        Transaction transaction{};
+
+        transaction.id = sqlite3_column_int64(stmt.get(), 0);
+        transaction.account_id = sqlite3_column_int(stmt.get(), 1);
+        transaction.category_id = sqlite3_column_int(stmt.get(), 2);
+        transaction.type = static_cast<enums::Type>(sqlite3_column_int(stmt.get(), 3));
+        transaction.amount = sqlite3_column_double(stmt.get(), 4);
+
+        const unsigned char *source = sqlite3_column_text(stmt.get(), 5);
+        transaction.source = source ? reinterpret_cast<const char *>(source) : "";
+
+        const unsigned char *note = sqlite3_column_text(stmt.get(), 6);
+        transaction.note = note ? reinterpret_cast<const char *>(note) : "";
+
+        transaction.transaction_date = utilities::TimeConverter::from_unix(sqlite3_column_int(stmt.get(), 7));
+
+        const unsigned char *created_at = sqlite3_column_text(stmt.get(), 8);
+        transaction.created_at = reinterpret_cast<const char *>(created_at);
+
+        return transaction;
     }
 }

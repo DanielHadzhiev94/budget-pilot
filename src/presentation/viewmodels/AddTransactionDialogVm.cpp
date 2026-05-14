@@ -95,9 +95,9 @@ namespace budgetpilot::presentation::viewmodels {
         transaction.category_id = 1;
 
         if (type == "Income") {
-            transaction.type = models::Type::Income;
+            transaction.type = enums::Type::Income;
         } else {
-            transaction.type = models::Type::Expense;
+            transaction.type = enums::Type::Expense;
         }
 
         const auto response = transaction_service_.create_transaction(transaction);

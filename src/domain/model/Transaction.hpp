@@ -8,13 +8,11 @@
 #include <string>
 #include <cstdint>
 
+#include "Enums.hpp"
+
+namespace enums = budgetpilot::domain::model::enums;
 
 namespace budgetpilot::domain::models {
-    enum class Type : std::uint8_t {
-        Income = 1,
-        Expense = 2
-    };
-
     using TimePoint = std::chrono::system_clock::time_point;
 
     struct Transaction {
@@ -23,7 +21,7 @@ namespace budgetpilot::domain::models {
         std::uint64_t account_id{0};
         std::uint64_t category_id{0};
 
-        Type type{Type::Income};
+        enums::Type type{enums::Type::Income};
 
         double amount{0.0};
 
@@ -38,7 +36,7 @@ namespace budgetpilot::domain::models {
         Transaction(
             std::int64_t accountId,
             std::int64_t categoryId,
-            Type t,
+            enums::Type t,
             double amt,
             TimePoint txDate,
             std::optional<std::string> src = std::nullopt,

@@ -13,7 +13,6 @@ namespace budgetpilot::presentation::viewmodels {
                                            QObject *parent)
         : transaction_service_(transaction_service),
           account_service_(account_service) {
- 
         connect(
             &transaction_service_,
             &services::TransactionService::transaction_created,
@@ -53,7 +52,8 @@ namespace budgetpilot::presentation::viewmodels {
 
     void FinancialSummaryVm::load_data(int month, int year) {
         load_account_data();
-        load_transaction_data(month, year);
+        load_income_data(month, year);
+        load_expense_data(month, year);
 
         emit current_balance_changed();
     }
@@ -72,14 +72,32 @@ namespace budgetpilot::presentation::viewmodels {
         }
     }
 
-    void FinancialSummaryVm::load_transaction_data(int month, int year) {
+    void FinancialSummaryVm::load_income_data(int month, int year) {
         const auto &transaction_response = transaction_service_.load_income_data(month, year);
         if (transaction_response.is_successful()) {
+            set_income(0);
+
+            double income_sum = 0;
             for (const auto &income: transaction_response.data()) {
-                income_ += income.amount;
+                income_sum += income.amount;
             }
 
+            set_income(income_sum);
             emit income_changed();
+        }
+    }
+
+    void FinancialSummaryVm::load_expense_data(int month, int year) {
+        const auto &expense_response = transaction_service_.load_expense_data(month, year);
+        if (expense_response.is_successful()) {
+            set_expense(0);
+            double expense_sum = 0;
+            for (const auto &expense: expense_response.data()) {
+                expense_sum += expense.amount;
+            }
+
+            set_expense(expense_sum);
+            emit expense_changed();
         }
     }
 

@@ -14,7 +14,7 @@ namespace budgetpilot::application::services {
 
     utilities::Response<std::vector<domain::models::Category> > CategoryService::load_category() const {
         try {
-            const auto categories = category_repository_.getAll(0,0);
+            const auto categories = category_repository_.getAll();
             return utilities::Response<std::vector<models::Category> >::Success(categories);
         } catch (std::exception &ex) {
             return utilities::Response<std::vector<models::Category> >::Failed(

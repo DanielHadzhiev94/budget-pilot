@@ -24,7 +24,6 @@ namespace viewmodels = budgetpilot::presentation::viewmodels;
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
-
     // Initialization of the database
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QString dbFilePath = QDir(appDataPath).filePath("budgetpilot.db");
