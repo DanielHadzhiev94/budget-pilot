@@ -54,8 +54,6 @@ namespace budgetpilot::presentation::viewmodels {
         load_account_data();
         load_income_data(month, year);
         load_expense_data(month, year);
-
-        emit current_balance_changed();
     }
 
     void FinancialSummaryVm::set_date(int month, int year) {
@@ -70,6 +68,8 @@ namespace budgetpilot::presentation::viewmodels {
         for (const auto &acc: account_response.data()) {
             current_balance_ += acc.amount;
         }
+
+        emit current_balance_changed();
     }
 
     void FinancialSummaryVm::load_income_data(int month, int year) {
