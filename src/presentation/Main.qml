@@ -9,6 +9,8 @@ ApplicationWindow {
     height: 900
     title: "BudgetPilot"
 
+    property int currentPage: 0
+
     Rectangle {
         anchors.fill: parent
         color: AppTheme.background
@@ -28,12 +30,29 @@ ApplicationWindow {
                 Sidebar {
                     Layout.preferredWidth: 240
                     Layout.fillHeight: true
+
+                    selectedIndex: currentPage
+                    onItemSelected: function (index) {
+                        currentPage = index
+                    }
                 }
 
-                DashbordPage {
+                Loader {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    dialogPopup: addTransactionDialog
+
+                    sourceComponent: {
+
+                        switch (currentPage) {
+                            case 0:
+                                return dashboardPage
+                            case 1:
+                                return transactionsPage
+
+                            default:
+                                return dashboardPage
+                        }
+                    }
                 }
             }
         }
@@ -42,5 +61,21 @@ ApplicationWindow {
     AddTransactionDialog {
         id: addTransactionDialog
         viewModel: addTransactionVM
+    }
+
+    Component {
+        id: dashboardPage
+
+        DashboardPage {
+            dialogPopup: addTransactionDialog
+        }
+    }
+
+    Component {
+        id: transactionsPage
+
+        TransactionsPage {
+
+        }
     }
 }
