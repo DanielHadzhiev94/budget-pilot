@@ -12,18 +12,23 @@ namespace budgetpilot::domain::contracts {
 }
 
 namespace models = budgetpilot::domain::models;
+namespace utilities = budgetpilot::domain::utilities;
+namespace contracts = budgetpilot::domain::contracts;
 
 namespace budgetpilot::application::services {
     class CategoryService {
     public:
         explicit CategoryService(
-            domain::contracts::IRepository<models::Category> &category_repository
+            contracts::IRepository<models::Category> &category_repository
         );
 
         [[nodiscard]]
-        domain::utilities::Response<std::vector<models::Category> > load_category() const;
+        utilities::Response<std::vector<models::Category> > load_category() const;
+
+        [[nodiscard]]
+        utilities::Response<models::Category> get_category(const std::int64_t id) const;
 
     private:
-        domain::contracts::IRepository<models::Category> &category_repository_;
+        contracts::IRepository<models::Category> &category_repository_;
     };
 }

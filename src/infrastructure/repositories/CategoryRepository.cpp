@@ -58,7 +58,7 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    std::vector<models::Category> CategoryRepository::getAll() {
+    std::vector<models::Category> CategoryRepository::get_all() {
         const auto *sql = R"(
                     SELECT id, name, created_at
                     FROM categories
@@ -84,7 +84,7 @@ namespace budgetpilot::infrastructure::repositories {
         return categories;
     }
 
-    std::optional<models::Category> CategoryRepository::getOne(const std::uint64_t &id) {
+    std::optional<models::Category> CategoryRepository::get_one(const std::uint64_t &id) {
         const char *sql = R"(
         SELECT id, name, created_at
         FROM categories

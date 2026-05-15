@@ -7,48 +7,11 @@ Rectangle {
     id: root
 
     required property var viewModel
-
-    signal  addTransactionClicked()
-
     color: AppTheme.backgroundAlt
 
     ColumnLayout {
-        anchors.fill: parent
+
         spacing: 12
-
-        Rectangle {
-            radius: 12
-            color: AppTheme.backgroundMainCard
-            border.color: AppTheme.border
-
-            Layout.fillWidth: true
-            Layout.preferredHeight: 60
-            Layout.leftMargin: 20
-            Layout.rightMargin: 20
-            Layout.topMargin: 20
-
-            RowLayout {
-                anchors.fill: parent
-
-                DatePicker {
-                    Layout.leftMargin: 12
-                    onDateChanged: function (month, year) {
-                        viewModel.load_data(month, year);
-                        viewModel.set_date(month, year);
-                    }
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                }
-
-                CustomButton {
-                    text: "Add Transaction"
-                    Layout.rightMargin: 12
-                    onClicked: root.addTransactionClicked()
-                }
-            }
-        }
 
         RowLayout {
             Layout.fillWidth: true

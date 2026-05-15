@@ -78,11 +78,11 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    std::vector<Transaction> TransactionRepository::getAll() {
+    std::vector<Transaction> TransactionRepository::get_all() {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
-                    ORDER BY created_at ASC
+                    ORDER BY created_at DESC
                     )";
 
         const persistence::Statement stmt(&connection_, sql);
@@ -95,7 +95,7 @@ namespace budgetpilot::infrastructure::repositories {
         return transactions;
     }
 
-    std::optional<Transaction> TransactionRepository::getOne(const std::uint64_t &id) {
+    std::optional<Transaction> TransactionRepository::get_one(const std::uint64_t &id) {
         const auto sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
@@ -118,13 +118,13 @@ namespace budgetpilot::infrastructure::repositories {
         throw std::runtime_error(sqlite3_errmsg(&connection_));
     }
 
-    std::vector<Transaction> TransactionRepository::getAllByMonth(int month, int year) {
+    std::vector<Transaction> TransactionRepository::get_all_by_month(int month, int year) {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
                     WHERE transaction_date >=?
                         AND transaction_date < ?
-                    ORDER BY created_at ASC
+                    ORDER BY created_at DESC
                     )";
 
         const persistence::Statement stmt(&connection_, sql);
@@ -149,14 +149,14 @@ namespace budgetpilot::infrastructure::repositories {
         return transactions;
     }
 
-    std::vector<Transaction> TransactionRepository::getAllByMonthAndType(int month, int year, enums::Type type) {
+    std::vector<Transaction> TransactionRepository::get_all_by_month_and_type(int month, int year, enums::Type type) {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
                     WHERE transaction_date >=?
                         AND transaction_date < ?
                         AND type = ?
-                    ORDER BY created_at ASC
+                    ORDER BY created_at DESC
                     )";
 
         const persistence::Statement stmt(&connection_, sql);

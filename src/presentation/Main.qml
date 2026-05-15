@@ -30,11 +30,10 @@ ApplicationWindow {
                     Layout.fillHeight: true
                 }
 
-                FinancialSummarySection {
-                    viewModel: financialSummaryVM
+                DashbordPage {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    onAddTransactionClicked: addTransactionDialog.open()
+                    dialogPopup: addTransactionDialog
                 }
             }
         }

@@ -31,16 +31,16 @@ namespace budgetpilot::infrastructure::repositories {
         void remove(const std::uint64_t &id) override;
 
         [[nodiscard]]
-        std::vector<models::Transaction> getAll() override;
+        std::vector<models::Transaction> get_all() override;
 
         [[nodiscard]]
-        std::optional<models::Transaction> getOne(const std::uint64_t &id) override;
+        std::optional<models::Transaction> get_one(const std::uint64_t &id) override;
 
         [[nodiscard]]
-        std::vector<models::Transaction> getAllByMonth(int month, int year) override;
+        std::vector<models::Transaction> get_all_by_month(int month, int year) override;
 
         [[nodiscard]]
-        std::vector<models::Transaction> getAllByMonthAndType(int month, int year, enums::Type type) override;
+        std::vector<models::Transaction> get_all_by_month_and_type(int month, int year, enums::Type type) override;
 
     private:
         using TimePoint = std::chrono::system_clock::time_point;

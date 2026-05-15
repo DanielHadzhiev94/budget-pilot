@@ -82,7 +82,7 @@ namespace budgetpilot::presentation::viewmodels {
     }
 
     void FinancialSummaryVm::load_income_data(int month, int year) {
-        const auto &transaction_response = transaction_service_.load_income_data(month, year);
+        const auto &transaction_response = transaction_service_.load_income(month, year);
         if (transaction_response.is_successful()) {
             set_income(0);
 
@@ -97,7 +97,7 @@ namespace budgetpilot::presentation::viewmodels {
     }
 
     void FinancialSummaryVm::load_expense_data(int month, int year) {
-        const auto &expense_response = transaction_service_.load_expense_data(month, year);
+        const auto &expense_response = transaction_service_.load_expense(month, year);
         if (expense_response.is_successful()) {
             set_expense(0);
             double expense_sum = 0;
@@ -120,6 +120,5 @@ namespace budgetpilot::presentation::viewmodels {
 
     void FinancialSummaryVm::reload_data() {
         load_data(selected_month_, selected_year_);
-        std::cout << selected_month_ << " - " << selected_year_ << std::endl;
     }
 }

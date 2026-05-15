@@ -88,11 +88,8 @@ namespace budgetpilot::presentation::viewmodels {
         transaction.source = source.toStdString();
         transaction.note = note.toStdString();
         transaction.transaction_date = utilities::Mapper::qdate_to_timepoint(date);
-
         transaction.account_id = account_id;
-
-        // Temporary until you have proper category lookup.
-        transaction.category_id = 1;
+        transaction.category_id = category_id;
 
         if (type == "Income") {
             transaction.type = enums::Type::Income;

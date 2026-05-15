@@ -15,6 +15,7 @@
 #include "src/application/transaction/TransactionService.hpp"
 #include "viewmodels/AddTransactionDialogVm.hpp"
 #include "viewmodels/FinancialSummaryVm.hpp"
+#include "viewmodels/TransactionTableVm.hpp"
 
 namespace services = budgetpilot::application::services;
 namespace repository = budgetpilot::infrastructure::repositories;
@@ -74,8 +75,15 @@ int main(int argc, char *argv[]) {
         category_service,
     };
 
+    viewmodels::TransactionTableVm transactionViewModel{
+        transaction_service,
+        category_service
+    };
+
     engine.rootContext()->setContextProperty("financialSummaryVM", &financialSummaryViewModel);
     engine.rootContext()->setContextProperty("addTransactionVM", &addDialogViewModel);
+    engine.rootContext()->setContextProperty("transactionTableVM", &transactionViewModel);
+
     engine.loadFromModule("BudgetPilot", "Main");
 
     return QCoreApplication::exec();

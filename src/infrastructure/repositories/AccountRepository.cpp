@@ -64,7 +64,7 @@ namespace budgetpilot::infrastructure::repositories {
         }
     }
 
-    std::optional<models::Account> AccountRepository::getOne(const std::uint64_t &id) {
+    std::optional<models::Account> AccountRepository::get_one(const std::uint64_t &id) {
         const char *sql = R"(
         SELECT id, name, initial_balance, created_at
         FROM accounts
@@ -99,7 +99,7 @@ namespace budgetpilot::infrastructure::repositories {
         return account;
     }
 
-    std::vector<models::Account> AccountRepository::getAll() {
+    std::vector<models::Account> AccountRepository::get_all() {
         const auto *sql = R"(
                     SELECT id, name, initial_balance, created_at
                     FROM accounts
