@@ -12,7 +12,7 @@ namespace budgetpilot::domain::contracts {
         virtual void update(const T &entity) = 0;
         virtual void remove(const std::uint64_t &id) = 0;
 
-        virtual std::vector<T> getAll() = 0;
-        virtual std::optional<T> getOne(const std::uint64_t &id) = 0;
+        virtual std::vector<T> get_all() = 0;
+        virtual std::optional<T> get_one(const std::uint64_t &id) = 0;
     };
 };

@@ -20,10 +20,10 @@ namespace budgetpilot::infrastructure::repositories {
         void remove(const std::uint64_t &id) override;
 
         [[nodiscard]]
-        std::vector<domain::models::Category> getAll() override;
+        std::vector<domain::models::Category> get_all() override;
 
         [[nodiscard]]
-        std::optional<domain::models::Category> getOne(const std::uint64_t &id) override;
+        std::optional<domain::models::Category> get_one(const std::uint64_t &id) override;
 
     private:
         sqlite3 &connection_;

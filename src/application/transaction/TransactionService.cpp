@@ -19,7 +19,7 @@ namespace budgetpilot::application::services {
 
     utilities::Response<void> TransactionService::create_transaction(const models::Transaction &transaction) {
         try {
-            auto acc_opt = account_repository_.getOne(transaction.account_id);
+            auto acc_opt = account_repository_.get_one(transaction.account_id);
 
             // If there is an account, add  the value
             if (acc_opt.has_value()) {
@@ -42,10 +42,31 @@ namespace budgetpilot::application::services {
         }
     }
 
-    utilities::Response<std::vector<models::Transaction> > TransactionService::load_income_data(const int month,
+    utilities::Response<std::vector<models::Transaction> > TransactionService::load_all_by_month(const int month,
+        const int year) {
+        try {
+            const auto &transactions = transaction_repository_.get_all_by_month(month, year);
+            if (transactions.capacity() <= 0)
+                return utilities::Response<std::vector<models::Transaction> >::Failed(
+                    std::string{"No transaction data found for the period "} +
+                    std::to_string(month) +
+                    "-" +
+                    std::to_string(year)
+                );
+
+            return utilities::Response<std::vector<models::Transaction> >::Success(transactions);
+        } catch (std::exception &ex) {
+            return utilities::Response<std::vector<models::Transaction> >::Failed(
+                std::string{"Failed to get transactions: "} + ex.what()
+            );
+        }
+    }
+
+    utilities::Response<std::vector<models::Transaction> > TransactionService::load_income(const int month,
         const int year) const {
         try {
-            const auto income_data = transaction_repository_.getAllByMonthAndType(month, year, enums::Type::Income);
+            const auto income_data = transaction_repository_.
+                    get_all_by_month_and_type(month, year, enums::Type::Income);
 
             if (income_data.capacity() == 0)
                 return utilities::Response<std::vector<models::Transaction> >::Failed(
@@ -63,10 +84,11 @@ namespace budgetpilot::application::services {
         }
     }
 
-    utilities::Response<std::vector<models::Transaction> > TransactionService::load_expense_data(const int month,
+    utilities::Response<std::vector<models::Transaction> > TransactionService::load_expense(const int month,
         const int year) const {
         try {
-            const auto income_data = transaction_repository_.getAllByMonthAndType(month, year, enums::Type::Expense);
+            const auto income_data = transaction_repository_.get_all_by_month_and_type(
+                month, year, enums::Type::Expense);
 
             if (income_data.capacity() == 0)
                 return utilities::Response<std::vector<models::Transaction> >::Failed(
@@ -86,7 +108,7 @@ namespace budgetpilot::application::services {
 
     utilities::Response<double> TransactionService::calculate_monthly_saving_rate(int month, int year) {
         try {
-            const auto &transaction_data = transaction_repository_.getAllByMonth(month, year);
+            const auto &transaction_data = transaction_repository_.get_all_by_month(month, year);
             if (transaction_data.capacity() == 0) {
                 return utilities::Response<double>::Failed(
                     std::string{"No transaction data found for the period "} +

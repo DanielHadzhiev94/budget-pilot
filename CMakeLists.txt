@@ -12,7 +12,7 @@ qt_standard_project_setup(REQUIRES 6.10)
 
 # Executable
 qt_add_executable(appBudgetPilot
-    src/presentation/main.cpp
+        src/presentation/main.cpp
 
         src/infrastructure/persistence/dbcontext.hpp
         src/infrastructure/persistence/dbcontext.cpp
@@ -49,20 +49,22 @@ qt_add_executable(appBudgetPilot
         src/domain/utilities/TimeConverter.hpp
         src/domain/model/Enums.hpp
         src/domain/contracts/ITransactionRepository.hpp
+        src/presentation/viewmodels/TransactionTableVm.hpp
+        src/presentation/viewmodels/TransactionTableVm.cpp
 )
 
 # QML Singleton
 set_source_files_properties(
-    src/presentation/themes/AppTheme.qml
-    PROPERTIES QT_QML_SINGLETON_TYPE TRUE
+        src/presentation/themes/AppTheme.qml
+        PROPERTIES QT_QML_SINGLETON_TYPE TRUE
 )
 
 # QML Module
 qt_add_qml_module(appBudgetPilot
-    URI BudgetPilot
-    VERSION 1.0
+        URI BudgetPilot
+        VERSION 1.0
 
-    QML_FILES
+        QML_FILES
         src/presentation/Main.qml
         src/presentation/themes/AppTheme.qml
 
@@ -74,34 +76,35 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/BudgetCard.qml
         src/presentation/components/AddTransactionDialog.qml
         src/presentation/sections/FinancialSummarySection.qml
+        src/presentation/sections/TransactionTableSection.qml
 
-    RESOURCES
+        RESOURCES
         src/presentation/images/rico_robot.png
         src/presentation/images/balance.png
         src/presentation/images/income.png
         src/presentation/images/expense.png
         src/presentation/images/rate.png
-        )
+)
 
 # Qt Creator
 set(QML_IMPORT_PATH
-    ${CMAKE_BINARY_DIR}
-    CACHE STRING "Qt Creator QML import path"
-    FORCE
+        ${CMAKE_BINARY_DIR}
+        CACHE STRING "Qt Creator QML import path"
+        FORCE
 )
 
 # SQLite
 add_library(sqlite3
-    src/third_party/sqlite/sqlite3.c
+        src/third_party/sqlite/sqlite3.c
 )
 
 target_include_directories(sqlite3 PUBLIC
-    src/third_party/sqlite
+        src/third_party/sqlite
 )
 
 # Linking
 target_link_libraries(appBudgetPilot
-    PRIVATE
+        PRIVATE
         Qt6::Quick
         Qt6::Svg
         Qt6::QuickControls2
@@ -110,15 +113,15 @@ target_link_libraries(appBudgetPilot
 
 # Platform settings
 set_target_properties(appBudgetPilot PROPERTIES
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+        MACOSX_BUNDLE TRUE
+        WIN32_EXECUTABLE TRUE
 )
 
 # Install
 install(TARGETS appBudgetPilot
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        BUNDLE DESTINATION .
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

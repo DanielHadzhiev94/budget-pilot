@@ -18,7 +18,7 @@ namespace budgetpilot::application::services {
 
     utilities::Response<std::vector<models::Account> > AccountService::load_accounts() const {
         try {
-            auto accounts = account_repository_.getAll();
+            auto accounts = account_repository_.get_all();
 
             return utilities::Response<std::vector<models::Account> >::Success(
                 std::move(accounts)

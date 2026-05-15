@@ -11,6 +11,8 @@ namespace budgetpilot::domain::models {
     class Transaction;
 }
 
+namespace services = budgetpilot::application::services;
+
 namespace budgetpilot::presentation::viewmodels {
     class FinancialSummaryVm final : public QObject {
         Q_OBJECT
@@ -22,8 +24,8 @@ namespace budgetpilot::presentation::viewmodels {
 
     public:
         explicit FinancialSummaryVm(
-            application::services::TransactionService &transaction_service,
-            application::services::AccountService &account_service,
+            services::TransactionService &transaction_service,
+            services::AccountService &account_service,
             QObject *parent = nullptr
         );
 
@@ -50,8 +52,8 @@ namespace budgetpilot::presentation::viewmodels {
         void saving_rate_changed();
 
     private:
-        application::services::TransactionService &transaction_service_;
-        application::services::AccountService &account_service_;
+        services::TransactionService &transaction_service_;
+        services::AccountService &account_service_;
 
         int selected_month_;
         int selected_year_;

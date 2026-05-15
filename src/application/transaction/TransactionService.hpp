@@ -33,11 +33,13 @@ namespace budgetpilot::application::services {
         utilities::Response<void> create_transaction(const models::Transaction &transaction);
 
         [[nodiscard]]
-        utilities::Response<std::vector<models::Transaction> > load_income_data(
+        utilities::Response<std::vector<models::Transaction> > load_all_by_month(const int month, const int year);
+        [[nodiscard]]
+        utilities::Response<std::vector<models::Transaction> > load_income(
             const int month, const int year) const;
 
         [[nodiscard]]
-        utilities::Response<std::vector<models::Transaction> > load_expense_data(
+        utilities::Response<std::vector<models::Transaction> > load_expense(
             const int month, const int year) const;
 
         [[nodiscard]]
