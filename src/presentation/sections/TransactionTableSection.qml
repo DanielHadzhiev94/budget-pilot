@@ -22,7 +22,7 @@ Rectangle {
     // Root layout sizes
     property int tableWidth: 720
     property int tableHeight: 360
-    property int rootTopMargin: 15
+    property int rootTopMargin: 0
     property int rootLeftMargin: 20
     property int rootRadius: 16
     property int borderWidth: 1

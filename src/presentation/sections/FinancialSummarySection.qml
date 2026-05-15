@@ -7,13 +7,10 @@ Rectangle {
     id: root
 
     required property var viewModel
-
-    signal  addTransactionClicked()
-
     color: AppTheme.backgroundAlt
 
     ColumnLayout {
-        anchors.fill: parent
+
         spacing: 12
 
         RowLayout {

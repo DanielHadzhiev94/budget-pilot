@@ -21,7 +21,7 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 12
+        spacing: 15
 
         Rectangle {
             radius: 12
@@ -42,7 +42,7 @@ Rectangle {
                 spacing: 12
 
                 DatePicker {
-                    onDateChanged: function(month, year) {
+                    onDateChanged: function (month, year) {
                         financialSummaryVM.set_date(month, year)
                         financialSummaryVM.load_data(month, year)
                         transactionTableVM.load_data(month, year)
@@ -67,11 +67,7 @@ Rectangle {
             viewModel: financialSummaryVM
 
             Layout.fillWidth: true
-            Layout.preferredHeight: 220
-
-            onAddTransactionClicked: {
-                root.openAddTransactionDialog()
-            }
+            Layout.preferredHeight: 160
         }
 
         TransactionTableSection {

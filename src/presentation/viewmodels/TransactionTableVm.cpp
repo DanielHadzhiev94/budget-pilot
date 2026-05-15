@@ -26,8 +26,9 @@ namespace budgetpilot::presentation::viewmodels {
 
     void TransactionTableVm::load_data(int month, int year) {
         const auto &transaction_response = transaction_service_.load_all_by_month(month, year);
+        transactions_.clear();
+
         if (transaction_response.is_successful()) {
-            transactions_.clear();
             QVariantList new_transactions;
 
             for (const auto &transaction: transaction_response.data()) {
@@ -42,8 +43,9 @@ namespace budgetpilot::presentation::viewmodels {
                 new_transactions.push_back(row);
             }
             transactions_.append(std::move(new_transactions));
-            emit transaction_changed();
         }
+
+        emit transaction_changed();
     }
 
     std::string TransactionTableVm::get_category_name(const std::int64_t id) {
