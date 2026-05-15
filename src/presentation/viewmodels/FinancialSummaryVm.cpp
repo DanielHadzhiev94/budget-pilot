@@ -120,6 +120,5 @@ namespace budgetpilot::presentation::viewmodels {
 
     void FinancialSummaryVm::reload_data() {
         load_data(selected_month_, selected_year_);
-        std::cout << selected_month_ << " - " << selected_year_ << std::endl;
     }
 }

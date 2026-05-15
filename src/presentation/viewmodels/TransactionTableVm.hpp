@@ -37,5 +37,7 @@ namespace budgetpilot::presentation::viewmodels {
         services::CategoryService &category_service_;
 
         std::string get_category_name(const std::int64_t id);
+
+        void reload_data();
     };
 }

@@ -173,7 +173,7 @@ Dialog {
                         Number(amountInput.text),
                         typeInput.currentText,
                         accountInput.currentValue,
-                        categoryInput.currentText,
+                        categoryInput.currentValue,
                         sourceInput.text,
                         date,
                         noteInput.text

@@ -12,8 +12,12 @@ namespace budgetpilot::presentation::viewmodels {
                                            QObject *parent)
         : transaction_service_(transaction_service),
           category_service_(category_service) {
+        connect(&transaction_service_,
+                &services::TransactionService::transaction_created,
+                this,
+                &TransactionTableVm::reload_data);
 
-        load_data(5,2026);
+        load_data(5, 2026);
     }
 
     QVariantList TransactionTableVm::transactions() const {
@@ -50,5 +54,9 @@ namespace budgetpilot::presentation::viewmodels {
             category.assign(category_response.data().name);
 
         return category;
+    }
+
+    void TransactionTableVm::reload_data() {
+        load_data(5, 2026);
     }
 }

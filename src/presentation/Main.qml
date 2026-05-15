@@ -52,12 +52,6 @@ ApplicationWindow {
 
                         TransactionTableSection {
                             viewModel: transactionTableVM
-
-                            Layout.preferredWidth: 580
-                            Layout.preferredHeight: 220
-                            Layout.topMargin: 35
-                            Layout.leftMargin: 20
-
                         }
 
                         Item {

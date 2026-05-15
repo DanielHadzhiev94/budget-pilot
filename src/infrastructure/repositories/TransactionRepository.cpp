@@ -82,7 +82,7 @@ namespace budgetpilot::infrastructure::repositories {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
-                    ORDER BY created_at ASC
+                    ORDER BY created_at DESC
                     )";
 
         const persistence::Statement stmt(&connection_, sql);
@@ -124,7 +124,7 @@ namespace budgetpilot::infrastructure::repositories {
                     FROM transactions
                     WHERE transaction_date >=?
                         AND transaction_date < ?
-                    ORDER BY created_at ASC
+                    ORDER BY created_at DESC
                     )";
 
         const persistence::Statement stmt(&connection_, sql);
@@ -156,7 +156,7 @@ namespace budgetpilot::infrastructure::repositories {
                     WHERE transaction_date >=?
                         AND transaction_date < ?
                         AND type = ?
-                    ORDER BY created_at ASC
+                    ORDER BY created_at DESC
                     )";
 
         const persistence::Statement stmt(&connection_, sql);
