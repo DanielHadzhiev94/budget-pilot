@@ -77,6 +77,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/AddTransactionDialog.qml
         src/presentation/sections/FinancialSummarySection.qml
         src/presentation/sections/TransactionTableSection.qml
+        src/presentation/pages/DashbordPage.qml
 
         RESOURCES
         src/presentation/images/rico_robot.png

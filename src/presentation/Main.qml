@@ -30,37 +30,11 @@ ApplicationWindow {
                     Layout.fillHeight: true
                 }
 
-                Rectangle {
+                DashbordPage {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-
-                    color: AppTheme.backgroundAlt
-
-                    ColumnLayout {
-                        anchors.fill: parent
-
-                        spacing: 12
-
-                        FinancialSummarySection {
-                            viewModel: financialSummaryVM
-
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 220
-
-                            onAddTransactionClicked: addTransactionDialog.open()
-                        }
-
-                        TransactionTableSection {
-                            viewModel: transactionTableVM
-                        }
-
-                        Item {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                        }
-                    }
+                    dialogPopup: addTransactionDialog
                 }
-
             }
         }
     }
