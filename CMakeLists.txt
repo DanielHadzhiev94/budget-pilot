@@ -17,9 +17,9 @@ qt_add_executable(appBudgetPilot
         src/infrastructure/persistence/dbcontext.hpp
         src/infrastructure/persistence/dbcontext.cpp
 
-        src/domain/model/transaction.hpp
-        src/domain/model/category.hpp
-        src/domain/model/account.hpp
+        src/domain/models/transaction.hpp
+        src/domain/models/category.hpp
+        src/domain/models/account.hpp
 
         src/domain/contracts/IRepository.hpp
 
@@ -47,7 +47,7 @@ qt_add_executable(appBudgetPilot
         src/application/category/CategoryService.hpp
         src/application/category/CategoryService.cpp
         src/domain/utilities/TimeConverter.hpp
-        src/domain/model/Enums.hpp
+        src/domain/models/Enums.hpp
         src/domain/contracts/ITransactionRepository.hpp
         src/presentation/viewmodels/TransactionTableVm.hpp
         src/presentation/viewmodels/TransactionTableVm.cpp

@@ -4,9 +4,8 @@
 #include <optional>
 #include <vector>
 
-#include "src/domain/contracts/Irepository.hpp"
-#include "src/domain/contracts/ITransactionRepository.hpp"
-#include "src/domain/model/Transaction.hpp"
+#include "../../domain/contracts/ITransactionRepository.hpp"
+#include "../../domain/models/Transaction.hpp"
 
 struct sqlite3;
 

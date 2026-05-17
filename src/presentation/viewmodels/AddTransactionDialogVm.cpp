@@ -1,5 +1,5 @@
 #include "AddTransactionDialogVm.hpp"
-#include "src/domain/model/Transaction.hpp"
+#include "src/domain/models/Transaction.hpp"
 #include "src/domain/utilities/Mapper.hpp"
 
 namespace services = budgetpilot::application::services;

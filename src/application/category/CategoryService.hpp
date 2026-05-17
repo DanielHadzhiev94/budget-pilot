@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "src/domain/model/Category.hpp"
+#include "src/domain/models/Category.hpp"
 #include "src/domain/utilities/Response.hpp"
 
 

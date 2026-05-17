@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-#include "../../domain/model/Account.hpp"
+#include "../../domain/models/Account.hpp"
 #include "src/infrastructure/persistence/Statement.hpp"
 
 

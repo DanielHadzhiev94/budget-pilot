@@ -55,6 +55,7 @@ namespace budgetpilot::infrastructure::persistence {
         CREATE TABLE IF NOT EXISTS categories (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL UNIQUE,
+                type INTEGER NOT NULL CHECK(type IN (1, 2)),
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         )";
@@ -84,11 +85,17 @@ namespace budgetpilot::infrastructure::persistence {
 
     void DbContext::seedCategories() const {
         const char *category_seed = R"(
-        INSERT OR IGNORE INTO categories (name) VALUES ('Salary');
-        INSERT OR IGNORE INTO categories (name) VALUES ('Food');
-        INSERT OR IGNORE INTO categories (name) VALUES ('Apartment');
-        INSERT OR IGNORE INTO categories (name) VALUES ('Car');
-    )";
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Salary', 1);
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Other', 1);
+
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Food', 2);
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Apartment', 2);
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Transport', 2);
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Car', 2);
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Health', 2);
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Entertainment', 2);
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Other', 2);
+       )";
 
         const char *acc_seed = R"(
         INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('Bank', 0);)";
