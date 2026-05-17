@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "AccountsService.hpp"
-#include "src/domain/model/Account.hpp"
+#include "src/domain/models/Account.hpp"
 #include "src/domain/utilities/Response.hpp"
 
 namespace budgetpilot::domain::contracts {

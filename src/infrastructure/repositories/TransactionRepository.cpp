@@ -2,10 +2,9 @@
 
 #include <stdexcept>
 
-#include "../../domain/model/Transaction.hpp"
-#include "src/infrastructure/persistence/Statement.hpp"
+#include "../../domain/models/Transaction.hpp"
+#include "../../infrastructure/persistence/Statement.hpp"
 #include "../../domain/utilities/Timeconverter.hpp"
-#include "../../domain/utilities/TimeConverter.hpp"
 
 using namespace budgetpilot::domain::models;
 namespace utilities = budgetpilot::domain::utilities;

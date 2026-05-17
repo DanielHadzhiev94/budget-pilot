@@ -10,7 +10,7 @@
 
 #include "Enums.hpp"
 
-namespace enums = budgetpilot::domain::model::enums;
+namespace enums = budgetpilot::domain::models::enums;
 
 namespace budgetpilot::domain::models {
     using TimePoint = std::chrono::system_clock::time_point;

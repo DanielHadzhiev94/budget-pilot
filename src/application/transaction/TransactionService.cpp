@@ -3,7 +3,7 @@
 #include<cstdint>
 
 #include "src/domain/contracts/IRepository.hpp"
-#include "src/domain/model/Account.hpp"
+#include "src/domain/models/Account.hpp"
 #include "src/infrastructure/repositories/TransactionRepository.hpp"
 
 namespace contracts = budgetpilot::domain::contracts;

@@ -2,8 +2,9 @@
 
 #include <stdexcept>
 
-#include "../../domain/model/Category.hpp"
-#include "src/infrastructure/persistence/Statement.hpp"
+#include "../../domain/models/Category.hpp"
+#include "../../infrastructure/persistence/Statement.hpp"
+#include "../../domain/models/Enums.hpp"
 
 namespace models = budgetpilot::domain::models;
 
@@ -86,7 +87,7 @@ namespace budgetpilot::infrastructure::repositories {
 
     std::optional<models::Category> CategoryRepository::get_one(const std::uint64_t &id) {
         const char *sql = R"(
-        SELECT id, name, created_at
+        SELECT id, name, type, created_at
         FROM categories
         WHERE id = ?
     )";
@@ -110,6 +111,8 @@ namespace budgetpilot::infrastructure::repositories {
 
         const unsigned char *name = sqlite3_column_text(stmt.get(), 1);
         category.name = name ? reinterpret_cast<const char *>(name) : "";
+
+        category.type = static_cast<domain::models::enums::Type>(sqlite3_column_int(stmt.get(), 3));
 
         const unsigned char *created_at = sqlite3_column_text(stmt.get(), 3);
         category.created_at = created_at ? reinterpret_cast<const char *>(created_at) : "";

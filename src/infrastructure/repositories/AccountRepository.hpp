@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "../../domain/contracts/IRepository.hpp"
-#include "../../domain/model/Account.hpp"
+#include "../../domain/models/Account.hpp"
 
 namespace models = budgetpilot::domain::models;
 namespace contracts = budgetpilot::domain::contracts;

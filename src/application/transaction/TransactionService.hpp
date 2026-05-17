@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-#include "src/domain/model/Transaction.hpp"
+#include "src/domain/models/Transaction.hpp"
 #include "src/domain/utilities/Response.hpp"
 
 namespace budgetpilot::domain::models {

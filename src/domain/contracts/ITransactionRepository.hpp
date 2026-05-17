@@ -1,6 +1,6 @@
 #pragma once
 #include "IRepository.hpp"
-#include "src/domain/model/Transaction.hpp"
+#include "src/domain/models/Transaction.hpp"
 
 
 namespace budgetpilot::domain::contracts {
