@@ -34,18 +34,19 @@ Rectangle {
             onClicked: root.itemSelected(1)
         }
 
+        Item {
+            Layout.fillHeight: true
+        }
+
         SidebarItem {
-            title: "Settings"
-            selected: root.selectedIndex === 2
+            title: "Test"
+            selected: root.selectedIndex === 4
             Layout.fillWidth: true
             Layout.preferredHeight: 44
 
             onClicked: root.itemSelected(2)
         }
 
-        Item {
-            Layout.fillHeight: true
-        }
     }
 
     // Right border only
