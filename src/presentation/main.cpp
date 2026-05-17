@@ -15,6 +15,7 @@
 #include "src/application/transaction/TransactionService.hpp"
 #include "viewmodels/AddTransactionDialogVm.hpp"
 #include "viewmodels/FinancialSummaryVm.hpp"
+#include "viewmodels/RecentTransactionVm.hpp"
 #include "viewmodels/TransactionTableVm.hpp"
 
 namespace services = budgetpilot::application::services;
@@ -75,14 +76,17 @@ int main(int argc, char *argv[]) {
         category_service,
     };
 
-    viewmodels::TransactionTableVm transactionViewModel{
+    viewmodels::RecentTransactionVm recentTransactionsViewModel{
         transaction_service,
         category_service
     };
 
+    viewmodels::TransactionTableVm transactionTableViewModel{};
+
     engine.rootContext()->setContextProperty("financialSummaryVM", &financialSummaryViewModel);
     engine.rootContext()->setContextProperty("addTransactionVM", &addDialogViewModel);
-    engine.rootContext()->setContextProperty("transactionTableVM", &transactionViewModel);
+    engine.rootContext()->setContextProperty("recentTransactionsVM", &recentTransactionsViewModel);
+    engine.rootContext()->setContextProperty("transactionTableVM", &transactionTableViewModel);
 
     engine.loadFromModule("BudgetPilot", "Main");
 

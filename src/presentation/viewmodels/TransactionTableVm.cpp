@@ -1,64 +1,115 @@
 #include "TransactionTableVm.hpp"
 
-#include <qmap.h>
-#include<qvariant.h>
-
-#include "src/application/category/CategoryService.hpp"
-#include "src/application/transaction/TransactionService.hpp"
-
 namespace budgetpilot::presentation::viewmodels {
-    TransactionTableVm::TransactionTableVm(services::TransactionService &transaction_service,
-                                           services::CategoryService &category_service,
-                                           QObject *parent)
-        : transaction_service_(transaction_service),
-          category_service_(category_service) {
-        connect(&transaction_service_,
-                &services::TransactionService::transaction_created,
-                this,
-                &TransactionTableVm::reload_data);
-
-        load_data(5, 2026);
+    TransactionTableVm::TransactionTableVm(QObject *parent)
+        : QAbstractTableModel(parent) {
+        loadMockData();
     }
 
-    QVariantList TransactionTableVm::transactions() const {
-        return transactions_;
-    }
-
-    void TransactionTableVm::load_data(int month, int year) {
-        const auto &transaction_response = transaction_service_.load_all_by_month(month, year);
-        transactions_.clear();
-
-        if (transaction_response.is_successful()) {
-            QVariantList new_transactions;
-
-            for (const auto &transaction: transaction_response.data()) {
-                QVariantMap row;
-
-                row["date"] = QString::fromStdString(transaction.created_at);
-                row["type"] = transaction.type == enums::Type::Income ? "Income" : "Expense";
-                row["category"] = QString::fromStdString(get_category_name(transaction.category_id));
-                row["source"] = QString::fromStdString(transaction.source.value());
-                row["amount"] = transaction.amount;
-
-                new_transactions.push_back(row);
-            }
-            transactions_.append(std::move(new_transactions));
+    int TransactionTableVm::rowCount(const QModelIndex &parent) const {
+        if (parent.isValid()) {
+            return 0;
         }
 
-        emit transaction_changed();
+        return static_cast<int>(transactions_.size());
     }
 
-    std::string TransactionTableVm::get_category_name(const std::int64_t id) {
-        const auto &category_response = category_service_.get_category(id);
-        std::string category{"unknown"};
+    int TransactionTableVm::columnCount(const QModelIndex &parent) const {
+        if (parent.isValid()) {
+            return 0;
+        }
 
-        if (category_response.is_successful())
-            category.assign(category_response.data().name);
-
-        return category;
+        return ColumnCount;
     }
 
-    void TransactionTableVm::reload_data() {
-        load_data(5, 2026);
+    QVariant TransactionTableVm::data(
+        const QModelIndex &index,
+        int role
+    ) const {
+        if (!index.isValid()) {
+            return {};
+        }
+
+        if (index.row() < 0 || index.row() >= static_cast<int>(transactions_.size())) {
+            return {};
+        }
+
+        const auto &transaction = transactions_[index.row()];
+
+        if (role != Qt::DisplayRole) {
+            return {};
+        }
+
+        switch (index.column()) {
+            case DateColumn:
+                return transaction.date;
+
+            case TypeColumn:
+                return transaction.type;
+
+            case CategoryColumn:
+                return transaction.category;
+
+            case SourceColumn:
+                return transaction.source;
+
+            case NoteColumn:
+                return transaction.note;
+
+            case AmountColumn:
+                return transaction.amount;
+
+            default:
+                return {};
+        }
+    }
+
+    QVariant TransactionTableVm::headerData(
+        int section,
+        Qt::Orientation orientation,
+        int role
+    ) const {
+        if (orientation != Qt::Horizontal || role != Qt::DisplayRole) {
+            return {};
+        }
+
+        switch (section) {
+            case DateColumn:
+                return "Date";
+
+            case TypeColumn:
+                return "Type";
+
+            case CategoryColumn:
+                return "Category";
+
+            case SourceColumn:
+                return "Source";
+
+            case NoteColumn:
+                return "Note";
+
+            case AmountColumn:
+                return "Amount";
+
+            default:
+                return {};
+        }
+    }
+
+    void TransactionTableVm::loadMockData() {
+        beginResetModel();
+
+        transactions_.clear();
+
+        transactions_ = {
+            {"2026-05-17", "Expense", "Food", "Lidl", "Text", 24.50},
+            {"2026-05-16", "Income", "Salary", "Company", "Text", 3200.00},
+            {"2026-05-15", "Expense", "Transport", "DB Ticket", "Text", 49.90},
+            {"2026-05-14", "Expense", "Shopping", "Amazon", "Text", 89.99},
+            {"2026-05-13", "Expense", "Apartment", "Rent", "Text", 950.00}
+        };
+
+        endResetModel();
     }
 }

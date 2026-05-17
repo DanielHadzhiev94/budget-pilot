@@ -49,9 +49,11 @@ qt_add_executable(appBudgetPilot
         src/domain/utilities/TimeConverter.hpp
         src/domain/models/Enums.hpp
         src/domain/contracts/ITransactionRepository.hpp
+        src/presentation/viewmodels/RecentTransactionVm.hpp
+        src/presentation/viewmodels/RecentTransactionVm.cpp
+        src/presentation/pages/TransactionsPage.qml
         src/presentation/viewmodels/TransactionTableVm.hpp
         src/presentation/viewmodels/TransactionTableVm.cpp
-        src/presentation/pages/TransactionsPage.qml
 )
 
 # QML Singleton
@@ -78,6 +80,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/AddTransactionDialog.qml
         src/presentation/components/SidebarItem.qml
         src/presentation/sections/FinancialSummarySection.qml
+        src/presentation/sections/RecentTransactionsSection.qml
         src/presentation/sections/TransactionTableSection.qml
         src/presentation/pages/DashboardPage.qml
         src/presentation/pages/TransactionsPage.qml

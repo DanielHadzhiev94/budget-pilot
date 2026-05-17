@@ -45,7 +45,7 @@ Rectangle {
                     onDateChanged: function (month, year) {
                         financialSummaryVM.set_date(month, year)
                         financialSummaryVM.load_data(month, year)
-                        transactionTableVM.load_data(month, year)
+                        recentTransactionsVM.load_data(month, year)
                     }
                 }
 
@@ -70,8 +70,8 @@ Rectangle {
             Layout.preferredHeight: 160
         }
 
-        TransactionTableSection {
-            viewModel: transactionTableVM
+        RecentTransactionsSection {
+            viewModel: recentTransactionsVM
         }
 
         Item {
