@@ -10,6 +10,11 @@ QtObject {
     readonly property color surfaceLight: "#182334"      // hover / secondary panels
     readonly property color surfaceElevated: "#1B2638"   // inputs / raised cards
 
+    // === Table colors
+    readonly property color tableSurface: "#0D1B2E"
+    readonly property color tableHeaderSurface: "#13243A"
+    readonly property color tableRowAlt: "#102037"
+
     // === PRIMARY COLORS ===
     readonly property color primary: "#2563EB"           // main blue
     readonly property color primaryLight: "#3B82F6"      // hover / highlights
