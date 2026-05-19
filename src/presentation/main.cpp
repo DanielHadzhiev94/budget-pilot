@@ -81,7 +81,10 @@ int main(int argc, char *argv[]) {
         category_service
     };
 
-    viewmodels::TransactionTableVm transactionTableViewModel{};
+    viewmodels::TransactionTableVm transactionTableViewModel{
+        transaction_service,
+        category_service
+    };
 
     engine.rootContext()->setContextProperty("financialSummaryVM", &financialSummaryViewModel);
     engine.rootContext()->setContextProperty("addTransactionVM", &addDialogViewModel);

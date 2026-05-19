@@ -1,10 +1,23 @@
 #include "TransactionTableVm.hpp"
 
-namespace budgetpilot::presentation::viewmodels {
+#include <QDateTime>
+#include <QDate>
 
-    TransactionTableVm::TransactionTableVm(QObject *parent)
-        : QAbstractTableModel(parent) {
-        loadMockData();
+#include "src/application/category/CategoryService.hpp"
+#include "src/application/transaction/TransactionService.hpp"
+
+namespace budgetpilot::presentation::viewmodels {
+    TransactionTableVm::TransactionTableVm(
+        services::TransactionService &transaction_service,
+        services::CategoryService &category_service,
+        QObject *parent
+    )
+        : QAbstractTableModel(parent),
+          transaction_service_(transaction_service),
+          category_service_(category_service) {
+        const QDate today = QDate::currentDate();
+
+        loadData(today.month(), today.year());
     }
 
     int TransactionTableVm::rowCount(const QModelIndex &parent) const {
@@ -71,18 +84,50 @@ namespace budgetpilot::presentation::viewmodels {
         }
     }
 
-    void TransactionTableVm::loadMockData() {
+    void TransactionTableVm::loadData(int month, int year) {
         beginResetModel();
 
-        transactions_ = {
-            {"2026-05-17", "Expense", "Food", "Lidl", "Text", 24.50},
-            {"2026-05-16", "Income", "Salary", "Company", "Text", 3200.00},
-            {"2026-05-15", "Expense", "Transport", "DB Ticket", "Text", 49.90},
-            {"2026-05-14", "Expense", "Shopping", "Amazon", "Text", 89.99},
-            {"2026-05-13", "Expense", "Apartment", "Rent", "Text", 950.00}
-        };
+        transactions_.clear();
+
+        const auto transaction_response = transaction_service_.load_all_by_month(month, year);
+
+        if (!transaction_response.is_successful()) {
+            return;
+        }
+
+        for (const auto &transaction: transaction_response.data()) {
+            TransactionRow row;
+
+            row.date = QString::fromStdString(transaction.created_at);
+
+            row.type = transaction.type == decltype(transaction.type)::Income
+                           ? "Income"
+                           : "Expense";
+
+            row.category = getCategoryName(transaction.category_id);
+
+            row.source = QString::fromStdString(transaction.source.value());
+            row.note = QString::fromStdString(transaction.note.value());
+            row.amount = static_cast<double>(transaction.amount);
+
+            transactions_.push_back(row);
+        }
 
         endResetModel();
     }
 
+    QString TransactionTableVm::formatDate(std::int64_t timestamp) const {
+        const QDateTime dateTime = QDateTime::fromSecsSinceEpoch(timestamp);
+        return dateTime.date().toString("yyyy-MM-dd");
+    }
+
+    QString TransactionTableVm::getCategoryName(std::int64_t id) const {
+        const auto &category_response = category_service_.get_category(id);
+        std::string category{"unknown"};
+
+        if (category_response.is_successful())
+            category.assign(category_response.data().name);
+
+        return QString::fromStdString(category);
+    }
 }

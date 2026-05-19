@@ -8,7 +8,9 @@ Item {
     property var viewModel
 
     signal addTransactionClicked()
+
     signal editTransactionClicked(int row)
+
     signal deleteTransactionClicked(int row)
 
     ColumnLayout {
@@ -37,13 +39,17 @@ Item {
                 }
             }
 
-            Item{
+            Item {
                 Layout.fillWidth: true
             }
             DatePicker {
                 Layout.preferredWidth: 285
                 Layout.preferredHeight: 40
                 Layout.alignment: Qt.AlignVCenter
+
+                onDateChanged: function (month, year) {
+                    root.viewModel.loadData(month, year);
+                }
             }
 
             CustomButton {
@@ -62,11 +68,11 @@ Item {
 
             viewModel: root.viewModel
 
-            onEditTransactionClicked: function(row) {
+            onEditTransactionClicked: function (row) {
                 root.editTransactionClicked(row)
             }
 
-            onDeleteTransactionClicked: function(row) {
+            onDeleteTransactionClicked: function (row) {
                 root.deleteTransactionClicked(row)
             }
         }
