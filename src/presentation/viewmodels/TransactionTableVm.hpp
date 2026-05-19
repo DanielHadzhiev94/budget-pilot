@@ -1,26 +1,26 @@
 #pragma once
 
-#pragma once
-
 #include <QAbstractTableModel>
 #include <QString>
 #include <vector>
 
 namespace budgetpilot::presentation::viewmodels {
-    struct TransactionTableRow {
-        QString date;
-        QString type;
-        QString category;
-        QString source;
-        QString note;
-        double amount{};
-        QString actions;
-    };
 
-    class TransactionTableVm : public QAbstractTableModel {
+    class TransactionTableVm final : public QAbstractTableModel {
         Q_OBJECT
 
     public:
+        explicit TransactionTableVm(QObject *parent = nullptr);
+
+        int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+
+        QVariant data(
+            const QModelIndex &index,
+            int role = Qt::DisplayRole
+        ) const override;
+
+    private:
         enum Column {
             DateColumn = 0,
             TypeColumn,
@@ -32,25 +32,19 @@ namespace budgetpilot::presentation::viewmodels {
             ColumnCount
         };
 
-        explicit TransactionTableVm(QObject *parent = nullptr);
+        struct TransactionRow {
+            QString date;
+            QString type;
+            QString category;
+            QString source;
+            QString note;
+            double amount = 0.0;
+        };
 
-        int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-        int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-
-        QVariant data(
-            const QModelIndex &index,
-            int role = Qt::DisplayRole
-        ) const override;
-
-        QVariant headerData(
-            int section,
-            Qt::Orientation orientation,
-            int role = Qt::DisplayRole
-        ) const override;
-
-        Q_INVOKABLE void loadMockData();
+        void loadMockData();
 
     private:
-        std::vector<TransactionTableRow> transactions_;
+        std::vector<TransactionRow> transactions_;
     };
+
 }

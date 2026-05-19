@@ -1,6 +1,7 @@
 #include "TransactionTableVm.hpp"
 
 namespace budgetpilot::presentation::viewmodels {
+
     TransactionTableVm::TransactionTableVm(QObject *parent)
         : QAbstractTableModel(parent) {
         loadMockData();
@@ -30,17 +31,20 @@ namespace budgetpilot::presentation::viewmodels {
             return {};
         }
 
-        if (index.row() < 0 || index.row() >= static_cast<int>(transactions_.size())) {
-            return {};
-        }
-
-        const auto &transaction = transactions_[index.row()];
-
         if (role != Qt::DisplayRole) {
             return {};
         }
 
-        switch (index.column()) {
+        const int row = index.row();
+        const int column = index.column();
+
+        if (row < 0 || row >= static_cast<int>(transactions_.size())) {
+            return {};
+        }
+
+        const auto &transaction = transactions_[row];
+
+        switch (column) {
             case DateColumn:
                 return transaction.date;
 
@@ -59,38 +63,8 @@ namespace budgetpilot::presentation::viewmodels {
             case AmountColumn:
                 return transaction.amount;
 
-            default:
+            case ActionsColumn:
                 return {};
-        }
-    }
-
-    QVariant TransactionTableVm::headerData(
-        int section,
-        Qt::Orientation orientation,
-        int role
-    ) const {
-        if (orientation != Qt::Horizontal || role != Qt::DisplayRole) {
-            return {};
-        }
-
-        switch (section) {
-            case DateColumn:
-                return "Date";
-
-            case TypeColumn:
-                return "Type";
-
-            case CategoryColumn:
-                return "Category";
-
-            case SourceColumn:
-                return "Source";
-
-            case NoteColumn:
-                return "Note";
-
-            case AmountColumn:
-                return "Amount";
 
             default:
                 return {};
@@ -99,8 +73,6 @@ namespace budgetpilot::presentation::viewmodels {
 
     void TransactionTableVm::loadMockData() {
         beginResetModel();
-
-        transactions_.clear();
 
         transactions_ = {
             {"2026-05-17", "Expense", "Food", "Lidl", "Text", 24.50},
@@ -112,4 +84,5 @@ namespace budgetpilot::presentation::viewmodels {
 
         endResetModel();
     }
+
 }
