@@ -15,7 +15,6 @@ namespace budgetpilot::application::services {
 namespace services = budgetpilot::application::services;
 
 namespace budgetpilot::presentation::viewmodels {
-
     class TransactionTableVm final : public QAbstractTableModel {
         Q_OBJECT
 
@@ -35,6 +34,7 @@ namespace budgetpilot::presentation::viewmodels {
         ) const override;
 
         Q_INVOKABLE void loadData(int month, int year);
+        Q_INVOKABLE void deleteTransaction(int transaction_id);
 
     private:
         enum Column {
@@ -67,5 +67,4 @@ namespace budgetpilot::presentation::viewmodels {
         services::TransactionService &transaction_service_;
         services::CategoryService &category_service_;
     };
-
 }

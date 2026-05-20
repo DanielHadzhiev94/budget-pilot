@@ -83,6 +83,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/TransactionTableHeader.qml
         src/presentation/components/TransactionActionButton.qml
         src/presentation/components/TypeBadge.qml
+        src/presentation/components/Dialog.qml
         src/presentation/sections/FinancialSummarySection.qml
         src/presentation/sections/RecentTransactionsSection.qml
         src/presentation/sections/TransactionTableSection.qml

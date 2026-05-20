@@ -13,6 +13,10 @@ Item {
 
     signal deleteTransactionClicked(int row)
 
+    Dialog {
+        id: deleteDialog
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 22
@@ -73,6 +77,7 @@ Item {
             }
 
             onDeleteTransactionClicked: function (row) {
+                deleteDialog.open()
                 root.deleteTransactionClicked(row)
             }
         }

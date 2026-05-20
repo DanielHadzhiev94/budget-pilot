@@ -116,6 +116,9 @@ namespace budgetpilot::presentation::viewmodels {
         endResetModel();
     }
 
+    void TransactionTableVm::deleteTransaction(int transaction_id) {
+    }
+
     QString TransactionTableVm::formatDate(std::int64_t timestamp) const {
         const QDateTime dateTime = QDateTime::fromSecsSinceEpoch(timestamp);
         return dateTime.date().toString("yyyy-MM-dd");
