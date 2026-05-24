@@ -141,3 +141,4 @@ qrc_*.cpp
 build/Qt_6_11_0_for_macOS-Debug
 build
 .qtcreator
+AGENTS.md
