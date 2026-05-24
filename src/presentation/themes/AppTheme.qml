@@ -19,6 +19,7 @@ QtObject {
     readonly property color primary: "#2563EB"           // main blue
     readonly property color primaryLight: "#3B82F6"      // hover / highlights
     readonly property color primaryDark: "#1D4ED8"       // active / pressed
+    readonly property color primarySoft: "#1B3A5C"       // soft / muted blue (button states)
 
     // === STATUS COLORS ===
     readonly property color success: "#22C55E"           // income green

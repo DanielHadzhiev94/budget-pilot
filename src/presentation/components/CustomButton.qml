@@ -21,20 +21,20 @@ Button {
     Layout.preferredHeight: custom_height
     Layout.preferredWidth: custom_width
 
-
-    scale: btn.hovered ? 1.05 : 1.0
-
-    Behavior on scale {
-        NumberAnimation {
-            duration: 120
-            easing.type: Easing.OutQuad
-        }
+    background: Rectangle {
+        radius: 10
+        color: btn.hovered ? AppTheme.primaryLight : AppTheme.primarySoft
+        border.color: AppTheme.primary
+        border.width: 1
     }
 
-    background: Rectangle {
-        radius: 8
-        border.color: AppTheme.border
-        color: AppTheme.primary
+    contentItem: Text {
+        text: btn.text
+        color: AppTheme.textPrimary
+        font.pixelSize: 14
+        font.bold: true
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
     }
 }
 
