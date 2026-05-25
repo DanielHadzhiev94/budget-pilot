@@ -1,20 +1,36 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls.Basic
 import BudgetPilot
 
 Item {
     id: root
 
     property var viewModel
+    property int rowIndex: -1
 
     signal addTransactionClicked()
-
-    signal editTransactionClicked(int row)
-
-    signal deleteTransactionClicked(int row)
+    signal editTransactionClicked(var row)
+    signal deleteTransactionClicked(int rowIndex)
 
     Dialog {
         id: deleteDialog
+
+        title: "Delete transaction?"
+        modal: true
+
+        onAccepted: {
+            root.viewModel.deleteTransaction(root.rowIndex)
+
+            if (root.rowIndex !== -1) {
+                root.viewModel.deleteTransaction(root.rowIndex)
+                root.rowIndex = -1
+            }
+        }
+
+        onRejected: {
+            root.rowIndex = -1
+        }
     }
 
     ColumnLayout {
@@ -46,13 +62,14 @@ Item {
             Item {
                 Layout.fillWidth: true
             }
+
             DatePicker {
                 Layout.preferredWidth: 285
                 Layout.preferredHeight: 40
                 Layout.alignment: Qt.AlignVCenter
 
-                onDateChanged: function (month, year) {
-                    root.viewModel.loadData(month, year);
+                onDateChanged: function(month, year) {
+                    root.viewModel.loadData(month, year)
                 }
             }
 
@@ -60,7 +77,7 @@ Item {
                 title: "Add Transaction"
                 custom_width: 190
                 custom_height: 48
-                Layout.alignment: Qt.Alignment.AlignRight
+                Layout.alignment: Qt.AlignRight
 
                 onClicked: root.addTransactionClicked()
             }
@@ -72,13 +89,13 @@ Item {
 
             viewModel: root.viewModel
 
-            onEditTransactionClicked: function (row) {
+            onEditTransactionClicked: function(row) {
                 root.editTransactionClicked(row)
             }
 
-            onDeleteTransactionClicked: function (row) {
+            onDeleteTransactionClicked: function(rowIndex) {
+                root.rowIndex = rowIndex
                 deleteDialog.open()
-                root.deleteTransactionClicked(row)
             }
         }
     }

@@ -1,20 +1,19 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import BudgetPilot
 
 Dialog {
-    id: deleteDialog
-
-    property int transactionId: -1
-
-    signal deleteConfirmed(int transactionId)
+    id: root
 
     modal: true
     anchors.centerIn: parent
 
+    title: ""
+    header: null
+
     width: 390
-    height: 230
+    height: 310
 
     padding: 0
 
@@ -27,8 +26,8 @@ Dialog {
     }
 
     contentItem: Rectangle {
-        radius: 16
         color: AppTheme.backgroundMainCard
+        radius: 16
         clip: true
 
         ColumnLayout {
@@ -43,7 +42,6 @@ Dialog {
                 Rectangle {
                     Layout.preferredWidth: 42
                     Layout.preferredHeight: 42
-
                     radius: 12
                     color: AppTheme.purpleSoft
 
@@ -105,6 +103,7 @@ Dialog {
 
             RowLayout {
                 Layout.fillWidth: true
+                Layout.preferredHeight: 40
                 spacing: 10
 
                 Item {
@@ -121,7 +120,9 @@ Dialog {
 
                     background: Rectangle {
                         radius: 10
-                        color: cancelButton.hovered ? AppTheme.backgroundAlt : AppTheme.backgroundMainCard
+                        color: cancelButton.hovered
+                            ? AppTheme.backgroundAlt
+                            : AppTheme.backgroundMainCard
                         border.color: AppTheme.border
                         border.width: 1
                     }
@@ -136,8 +137,7 @@ Dialog {
                     }
 
                     onClicked: {
-                        deleteDialog.transactionId = -1
-                        deleteDialog.close()
+                        root.reject()
                     }
                 }
 
@@ -151,7 +151,9 @@ Dialog {
 
                     background: Rectangle {
                         radius: 10
-                        color: deleteButton.hovered ? AppTheme.purple : AppTheme.purpleSoft
+                        color: deleteButton.hovered
+                            ? AppTheme.purple
+                            : AppTheme.purpleSoft
                         border.color: AppTheme.purple
                         border.width: 1
                     }
@@ -166,12 +168,7 @@ Dialog {
                     }
 
                     onClicked: {
-                        if (deleteDialog.transactionId !== -1) {
-                            deleteDialog.deleteConfirmed(deleteDialog.transactionId)
-                        }
-
-                        deleteDialog.transactionId = -1
-                        deleteDialog.close()
+                        root.accept()
                     }
                 }
             }

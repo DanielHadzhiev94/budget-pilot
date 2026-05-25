@@ -15,7 +15,7 @@ namespace budgetpilot::presentation::viewmodels {
           account_service_(account_service) {
         connect(
             &transaction_service_,
-            &services::TransactionService::transaction_created,
+            &services::TransactionService::transaction_changed,
             this,
             &FinancialSummaryVm::reload_data);
     }

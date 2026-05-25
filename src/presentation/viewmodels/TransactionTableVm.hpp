@@ -34,7 +34,7 @@ namespace budgetpilot::presentation::viewmodels {
         ) const override;
 
         Q_INVOKABLE void loadData(int month, int year);
-        Q_INVOKABLE void deleteTransaction(int transaction_id);
+        Q_INVOKABLE void deleteTransaction(int row);
 
     private:
         enum Column {
@@ -49,6 +49,7 @@ namespace budgetpilot::presentation::viewmodels {
         };
 
         struct TransactionRow {
+            std::int64_t id;
             QString date;
             QString type;
             QString category;
@@ -61,7 +62,6 @@ namespace budgetpilot::presentation::viewmodels {
         QString formatDate(std::int64_t timestamp) const;
         QString getCategoryName(std::int64_t id) const;
 
-    private:
         std::vector<TransactionRow> transactions_;
 
         services::TransactionService &transaction_service_;

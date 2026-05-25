@@ -45,11 +45,14 @@ namespace budgetpilot::application::services {
         [[nodiscard]]
         utilities::Response<double> calculate_monthly_saving_rate(int month, int year);
 
+        utilities::Response<void> delete_transaction(const std::uint64_t id);
+
     signals:
-        void transaction_created();
+        void transaction_changed();
 
     private:
         contracts::IRepository<models::Account> &account_repository_;
         contracts::ITransactionRepository &transaction_repository_;
+        void update_account(const std::uint64_t account_id, const double amount, bool increase) ;
     };
 }

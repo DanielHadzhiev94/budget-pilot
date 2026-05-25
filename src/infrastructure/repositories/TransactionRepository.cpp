@@ -30,7 +30,7 @@ namespace budgetpilot::infrastructure::repositories {
         sqlite3_bind_text(stmt.get(), 5, transaction.source.value().c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_text(stmt.get(), 6, transaction.note.value().c_str(), -1, SQLITE_TRANSIENT);
 
-        auto seconds = domain::utilities::TimeConverter::convert_to_seconds(transaction.transaction_date);
+        auto seconds = utilities::TimeConverter::convert_to_seconds(transaction.transaction_date);
         sqlite3_bind_int64(stmt.get(), 7, seconds);
 
         const int result = sqlite3_step(stmt.get());

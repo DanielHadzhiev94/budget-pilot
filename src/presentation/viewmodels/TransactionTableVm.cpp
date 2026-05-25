@@ -1,5 +1,6 @@
 #include "TransactionTableVm.hpp"
 
+#include <iostream>
 #include <QDateTime>
 #include <QDate>
 
@@ -97,7 +98,7 @@ namespace budgetpilot::presentation::viewmodels {
 
         for (const auto &transaction: transaction_response.data()) {
             TransactionRow row;
-
+            row.id = transaction.id;
             row.date = QString::fromStdString(transaction.created_at);
 
             row.type = transaction.type == decltype(transaction.type)::Income
@@ -116,7 +117,15 @@ namespace budgetpilot::presentation::viewmodels {
         endResetModel();
     }
 
-    void TransactionTableVm::deleteTransaction(int transaction_id) {
+    void TransactionTableVm::deleteTransaction(int row) {
+        if (row < 0 || row >= static_cast<int>(transactions_.size()))
+            return;
+
+        const auto transactionRow = transactions_[row];
+
+        //TODO: Add toas for succesful message
+        const auto response = transaction_service_.delete_transaction(transactionRow.id);
+        std::cout << response.message() << "\n";
     }
 
     QString TransactionTableVm::formatDate(std::int64_t timestamp) const {

@@ -9,20 +9,21 @@ Rectangle {
     property var viewModel
 
     signal editTransactionClicked(int row)
-    signal deleteTransactionClicked(int row)
+
+    signal deleteTransactionClicked(int rowIndex)
 
     property int headerHeight: 52
     property int rowHeight: 62
     property int cellPadding: 18
 
     readonly property var columns: [
-        { title: "Date", ratio: 0.13, align: Text.AlignLeft },
-        { title: "Type", ratio: 0.12, align: Text.AlignHCenter },
-        { title: "Category", ratio: 0.14, align: Text.AlignLeft },
-        { title: "Source", ratio: 0.15, align: Text.AlignLeft },
-        { title: "Note", ratio: 0.22, align: Text.AlignLeft },
-        { title: "Amount", ratio: 0.14, align: Text.AlignRight },
-        { title: "Actions", ratio: 0.10, align: Text.AlignHCenter }
+        {title: "Date", ratio: 0.13, align: Text.AlignLeft},
+        {title: "Type", ratio: 0.12, align: Text.AlignHCenter},
+        {title: "Category", ratio: 0.14, align: Text.AlignLeft},
+        {title: "Source", ratio: 0.15, align: Text.AlignLeft},
+        {title: "Note", ratio: 0.22, align: Text.AlignLeft},
+        {title: "Amount", ratio: 0.14, align: Text.AlignRight},
+        {title: "Actions", ratio: 0.10, align: Text.AlignHCenter}
     ]
 
     radius: 14
@@ -53,7 +54,7 @@ Rectangle {
             columns: root.columns
             cellPadding: root.cellPadding
 
-            columnWidthProvider: function(column) {
+            columnWidthProvider: function (column) {
                 return root.columnWidth(column)
             }
         }
@@ -77,11 +78,11 @@ Rectangle {
             columnSpacing: 0
             rowSpacing: 0
 
-            columnWidthProvider: function(column) {
+            columnWidthProvider: function (column) {
                 return root.columnWidth(column)
             }
 
-            rowHeightProvider: function(row) {
+            rowHeightProvider: function (row) {
                 return root.rowHeight
             }
 
@@ -176,7 +177,9 @@ Rectangle {
                         textColor: AppTheme.danger
                         danger: true
 
-                        onClicked: root.deleteTransactionClicked(row)
+                        onClicked: {
+                            root.deleteTransactionClicked(row)
+                        }
                     }
                 }
             }

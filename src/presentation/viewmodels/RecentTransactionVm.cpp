@@ -13,7 +13,7 @@ namespace budgetpilot::presentation::viewmodels {
         : transaction_service_(transaction_service),
           category_service_(category_service) {
         connect(&transaction_service_,
-                &services::TransactionService::transaction_created,
+                &services::TransactionService::transaction_changed,
                 this,
                 &RecentTransactionVm::reload_data);
 
