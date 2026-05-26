@@ -9,36 +9,73 @@ Rectangle {
     property var viewModel
 
     signal editTransactionClicked(int row)
-
     signal deleteTransactionClicked(int rowIndex)
 
-    property int headerHeight: 52
-    property int rowHeight: 62
-    property int cellPadding: 18
+    property int headerHeight: 50
+    property int rowHeight: 58
+    property int cellPadding: 16
 
-    readonly property var columns: [
-        {title: "Date", ratio: 0.13, align: Text.AlignLeft},
-        {title: "Type", ratio: 0.12, align: Text.AlignHCenter},
-        {title: "Category", ratio: 0.14, align: Text.AlignLeft},
-        {title: "Source", ratio: 0.15, align: Text.AlignLeft},
-        {title: "Note", ratio: 0.22, align: Text.AlignLeft},
-        {title: "Amount", ratio: 0.14, align: Text.AlignRight},
-        {title: "Actions", ratio: 0.10, align: Text.AlignHCenter}
-    ]
-
-    radius: 14
+    radius: 16
     color: AppTheme.tableSurface
     border.color: AppTheme.border
     border.width: 1
     clip: true
 
+    readonly property int dateColumnWidth: 125
+    readonly property int typeColumnWidth: 110
+    readonly property int amountColumnWidth: 130
+    readonly property int actionsColumnWidth: 108
+
+    readonly property int fixedColumnsWidth:
+        dateColumnWidth +
+        typeColumnWidth +
+        amountColumnWidth +
+        actionsColumnWidth
+
+    readonly property int flexibleAreaWidth: Math.max(
+        360,
+        tableView.width - fixedColumnsWidth
+    )
+
+    readonly property int categoryColumnWidth: Math.max(120, flexibleAreaWidth * 0.24)
+    readonly property int sourceColumnWidth: Math.max(140, flexibleAreaWidth * 0.30)
+    readonly property int noteColumnWidth: Math.max(160, flexibleAreaWidth * 0.46)
+
+    readonly property var columns: [
+        { title: "Date",     align: Text.AlignLeft },
+        { title: "Type",     align: Text.AlignHCenter },
+        { title: "Category", align: Text.AlignLeft },
+        { title: "Source",   align: Text.AlignLeft },
+        { title: "Note",     align: Text.AlignLeft },
+        { title: "Amount",   align: Text.AlignRight },
+        { title: "Actions",  align: Text.AlignHCenter }
+    ]
+
     function columnWidth(column) {
-        return Math.max(80, tableView.width * columns[column].ratio)
+        switch (column) {
+            case 0:
+                return root.dateColumnWidth
+            case 1:
+                return root.typeColumnWidth
+            case 2:
+                return root.categoryColumnWidth
+            case 3:
+                return root.sourceColumnWidth
+            case 4:
+                return root.noteColumnWidth
+            case 5:
+                return root.amountColumnWidth
+            case 6:
+                return root.actionsColumnWidth
+            default:
+                return 100
+        }
     }
 
     function transactionType(rowIndex) {
-        if (!tableView.model)
+        if (!tableView.model) {
             return ""
+        }
 
         return tableView.model.index(rowIndex, 1).data()
     }
@@ -47,22 +84,51 @@ Rectangle {
         anchors.fill: parent
         spacing: 0
 
-        TransactionTableHeader {
+        // Header
+        Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: root.headerHeight
 
-            columns: root.columns
-            cellPadding: root.cellPadding
+            color: AppTheme.backgroundMainCard
 
-            columnWidthProvider: function (column) {
-                return root.columnWidth(column)
+            Row {
+                anchors.fill: parent
+                spacing: 0
+
+                Repeater {
+                    model: root.columns.length
+
+                    delegate: Rectangle {
+                        width: root.columnWidth(index)
+                        height: root.headerHeight
+                        color: "transparent"
+
+                        Text {
+                            anchors.fill: parent
+                            anchors.leftMargin: root.cellPadding
+                            anchors.rightMargin: root.cellPadding
+
+                            text: root.columns[index].title
+                            color: AppTheme.textSecondary
+                            font.pixelSize: 12
+                            font.bold: true
+                            font.capitalization: Font.AllUppercase
+
+                            horizontalAlignment: root.columns[index].align
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                        }
+                    }
+                }
             }
-        }
 
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 1
-            color: AppTheme.border
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: 1
+                color: AppTheme.border
+            }
         }
 
         TableView {
@@ -78,11 +144,11 @@ Rectangle {
             columnSpacing: 0
             rowSpacing: 0
 
-            columnWidthProvider: function (column) {
+            columnWidthProvider: function(column) {
                 return root.columnWidth(column)
             }
 
-            rowHeightProvider: function (row) {
+            rowHeightProvider: function(row) {
                 return root.rowHeight
             }
 
@@ -109,8 +175,10 @@ Rectangle {
                     anchors.bottom: parent.bottom
                     height: 1
                     color: AppTheme.border
+                    opacity: 0.75
                 }
 
+                // Normal text cells: Date, Category, Source, Note
                 Text {
                     visible: column !== 1 && column !== 5 && column !== 6
 
@@ -119,15 +187,21 @@ Rectangle {
                     anchors.rightMargin: root.cellPadding
 
                     text: display
-                    color: column === 0
+                    color: column === 0 || column === 4
                         ? AppTheme.textSecondary
                         : AppTheme.textPrimary
 
-                    font.pixelSize: 15
-                    elide: Text.ElideRight
+                    font.pixelSize: 14
+
+                    horizontalAlignment: column === 0
+                        ? Text.AlignLeft
+                        : Text.AlignLeft
+
                     verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
                 }
 
+                // Type badge
                 TypeBadge {
                     visible: column === 1
                     anchors.centerIn: parent
@@ -135,6 +209,7 @@ Rectangle {
                     value: display
                 }
 
+                // Amount
                 Text {
                     visible: column === 5
 
@@ -153,19 +228,25 @@ Rectangle {
                         ? AppTheme.success
                         : AppTheme.danger
 
-                    font.pixelSize: 16
+                    font.pixelSize: 15
                     font.bold: true
+
                     horizontalAlignment: Text.AlignRight
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                 }
 
-                RowLayout {
+                // Actions
+                Row {
                     visible: column === 6
+
                     anchors.centerIn: parent
                     spacing: 8
 
                     TransactionActionButton {
+                        width: 32
+                        height: 32
+
                         text: "✎"
                         textColor: AppTheme.textPrimary
 
@@ -173,13 +254,14 @@ Rectangle {
                     }
 
                     TransactionActionButton {
+                        width: 32
+                        height: 32
+
                         text: "🗑"
                         textColor: AppTheme.danger
                         danger: true
 
-                        onClicked: {
-                            root.deleteTransactionClicked(row)
-                        }
+                        onClicked: root.deleteTransactionClicked(row)
                     }
                 }
             }

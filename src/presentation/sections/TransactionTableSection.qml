@@ -76,10 +76,14 @@ Item {
                 }
             }
 
+            Item {
+                Layout.preferredWidth: 5
+            }
+
             CustomButton {
                 title: "Add Transaction"
-                custom_width: 190
-                custom_height: 48
+                custom_width: 160
+                custom_height: 40
                 Layout.alignment: Qt.AlignRight
 
                 onClicked: root.addTransactionClicked()

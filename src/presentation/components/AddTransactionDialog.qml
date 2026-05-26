@@ -649,7 +649,7 @@ Dialog {
                             let month = datePicker.selectedMonth
                             let year = datePicker.selectedYear
                             let date = new Date(year, month, 1)
-                        
+
                             const success = root.viewModel.saveTransaction(
                                 Number(amountInput.text),
                                 typeInput.currentText,
