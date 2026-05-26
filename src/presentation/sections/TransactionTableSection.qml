@@ -10,7 +10,9 @@ Item {
     property int rowIndex: -1
 
     signal addTransactionClicked()
+
     signal editTransactionClicked(var row)
+
     signal deleteTransactionClicked(int rowIndex)
 
     Dialog {
@@ -68,8 +70,9 @@ Item {
                 Layout.preferredHeight: 40
                 Layout.alignment: Qt.AlignVCenter
 
-                onDateChanged: function(month, year) {
+                onDateChanged: function (month, year) {
                     root.viewModel.loadData(month, year)
+                    root.viewModel.setDate(month, year)
                 }
             }
 
@@ -89,11 +92,11 @@ Item {
 
             viewModel: root.viewModel
 
-            onEditTransactionClicked: function(row) {
+            onEditTransactionClicked: function (row) {
                 root.editTransactionClicked(row)
             }
 
-            onDeleteTransactionClicked: function(rowIndex) {
+            onDeleteTransactionClicked: function (rowIndex) {
                 root.rowIndex = rowIndex
                 deleteDialog.open()
             }

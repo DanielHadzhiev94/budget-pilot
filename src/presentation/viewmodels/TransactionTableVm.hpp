@@ -35,6 +35,7 @@ namespace budgetpilot::presentation::viewmodels {
 
         Q_INVOKABLE void loadData(int month, int year);
         Q_INVOKABLE void deleteTransaction(int row);
+        Q_INVOKABLE void setDate(int month, int year);
 
     private:
         enum Column {
@@ -58,13 +59,17 @@ namespace budgetpilot::presentation::viewmodels {
             double amount = 0.0;
         };
 
-    private:
         QString formatDate(std::int64_t timestamp) const;
         QString getCategoryName(std::int64_t id) const;
+
+        int selected_month;
+        int selected_year;
 
         std::vector<TransactionRow> transactions_;
 
         services::TransactionService &transaction_service_;
         services::CategoryService &category_service_;
+
+        void reload();
     };
 }

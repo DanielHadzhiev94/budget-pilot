@@ -19,6 +19,12 @@ namespace budgetpilot::presentation::viewmodels {
         const QDate today = QDate::currentDate();
 
         loadData(today.month(), today.year());
+        connect(
+            &transaction_service_,
+            &services::TransactionService::transaction_changed,
+            this,
+            &TransactionTableVm::reload
+        );
     }
 
     int TransactionTableVm::rowCount(const QModelIndex &parent) const {
@@ -85,6 +91,11 @@ namespace budgetpilot::presentation::viewmodels {
         }
     }
 
+    void TransactionTableVm::setDate(int month, int year) {
+        selected_month = month;
+        selected_year = year;
+    }
+
     void TransactionTableVm::loadData(int month, int year) {
         beginResetModel();
 
@@ -123,7 +134,7 @@ namespace budgetpilot::presentation::viewmodels {
 
         const auto transactionRow = transactions_[row];
 
-        //TODO: Add toas for succesful message
+        //TODO: Add toas for successful message
         const auto response = transaction_service_.delete_transaction(transactionRow.id);
         std::cout << response.message() << "\n";
     }
@@ -141,5 +152,9 @@ namespace budgetpilot::presentation::viewmodels {
             category.assign(category_response.data().name);
 
         return QString::fromStdString(category);
+    }
+
+    void TransactionTableVm::reload() {
+        loadData(selected_month, selected_year);
     }
 }
