@@ -342,7 +342,6 @@ Dialog {
                         ColumnLayout {
                             Layout.fillWidth: true
                             spacing: 6
-                            visible: root.transactionType === "Income"
 
                             Text {
                                 text: "Account"
@@ -650,15 +649,11 @@ Dialog {
                             let month = datePicker.selectedMonth
                             let year = datePicker.selectedYear
                             let date = new Date(year, month, 1)
-
-                            const accountId = root.transactionType === "Income"
-                                ? accountInput.currentValue
-                                : -1
-
+                        
                             const success = root.viewModel.saveTransaction(
                                 Number(amountInput.text),
                                 typeInput.currentText,
-                                accountId,
+                                accountInput.currentValue,
                                 categoryInput.currentValue,
                                 sourceInput.text,
                                 date,
