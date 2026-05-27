@@ -80,6 +80,10 @@ Rectangle {
         return tableView.model.index(rowIndex, 1).data()
     }
 
+    function openAddTransactionDialog(){
+
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0

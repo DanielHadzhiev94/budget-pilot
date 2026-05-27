@@ -4,6 +4,8 @@ import QtQuick.Layouts
 import BudgetPilot
 
 Rectangle {
+    property var popup
+
     Layout.fillWidth: true
     Layout.fillHeight: true
 
@@ -11,6 +13,7 @@ Rectangle {
 
     TransactionTableSection {
         viewModel: transactionTableVM
+        dialogPopup: popup
 
         anchors.fill: parent
         anchors.margins: 24

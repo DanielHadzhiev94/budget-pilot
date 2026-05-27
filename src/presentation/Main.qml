@@ -75,7 +75,7 @@ ApplicationWindow {
         id: transactionsPage
 
         TransactionsPage {
-
+            popup: addTransactionDialog
         }
     }
 }

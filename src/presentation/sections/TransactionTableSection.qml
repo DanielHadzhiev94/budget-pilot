@@ -7,9 +7,8 @@ Item {
     id: root
 
     property var viewModel
+    property var dialogPopup
     property int rowIndex: -1
-
-    signal addTransactionClicked()
 
     signal editTransactionClicked(var row)
 
@@ -86,7 +85,9 @@ Item {
                 custom_height: 40
                 Layout.alignment: Qt.AlignRight
 
-                onClicked: root.addTransactionClicked()
+                onClicked: {
+                    dialogPopup.open()
+                }
             }
         }
 
