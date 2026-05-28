@@ -305,7 +305,7 @@ Dialog {
                                         }
 
                                         contentItem: Text {
-                                            text: name
+                                            text: modelData.name
                                             color: AppTheme.textPrimary
                                             font.pixelSize: 14
                                             verticalAlignment: Text.AlignVCenter
@@ -395,7 +395,7 @@ Dialog {
                                     }
 
                                     contentItem: Text {
-                                        text: name
+                                        text: modelData.name
                                         color: AppTheme.textPrimary
                                         font.pixelSize: 14
                                         verticalAlignment: Text.AlignVCenter
