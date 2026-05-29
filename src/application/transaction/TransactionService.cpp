@@ -33,6 +33,29 @@ namespace budgetpilot::application::services {
         }
     }
 
+    utilities::Response<void> TransactionService::update_transaction(const models::Transaction &transaction) {
+        try {
+            const auto old_transaction = transaction_repository_
+                    .get_one(transaction.id)
+                    .value();
+
+            const auto amount_difference = transaction.amount - old_transaction.amount;
+
+            bool should_increase = transaction.type == enums::Type::Income;
+            update_account(transaction.account_id, amount_difference, should_increase);
+
+            transaction_repository_.update(transaction);
+
+            emit transaction_changed();
+
+            return utilities::Response<void>::Success("Transaction updated successfully");
+        } catch (const std::exception &ex) {
+            return utilities::Response<void>::Failed(
+                std::string{"Failed to update transaction: "} + ex.what()
+            );
+        }
+    }
+
     utilities::Response<std::vector<models::Transaction> > TransactionService::load_all_by_month(const int month,
         const int year) {
         try {

@@ -33,7 +33,11 @@ namespace budgetpilot::application::services {
         utilities::Response<void> create_transaction(const models::Transaction &transaction);
 
         [[nodiscard]]
+        utilities::Response<void> update_transaction(const models::Transaction &transaction);
+
+        [[nodiscard]]
         utilities::Response<std::vector<models::Transaction> > load_all_by_month(const int month, const int year);
+
         [[nodiscard]]
         utilities::Response<std::vector<models::Transaction> > load_income(
             const int month, const int year) const;
@@ -53,6 +57,6 @@ namespace budgetpilot::application::services {
     private:
         contracts::IRepository<models::Account> &account_repository_;
         contracts::ITransactionRepository &transaction_repository_;
-        void update_account(const std::uint64_t account_id, const double amount, bool increase) ;
+        void update_account(const std::uint64_t account_id, const double amount, bool increase);
     };
 }

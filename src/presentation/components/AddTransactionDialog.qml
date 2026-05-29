@@ -9,6 +9,69 @@ Dialog {
     required property var viewModel
     property string transactionType: "Expense"
 
+    property bool isEditMode: false;
+    property int editingTransactionId: -1
+    property var editingTransaction: null
+
+    function clearData() {
+        isEditMode = false
+        editingTransactionId = -1
+        editingTransaction = null
+
+        amountInput.text = ""
+        typeInput.currentIndex = 0
+        root.transactionType = "Expense"
+
+        categoryInput.currentIndex = -1
+        accountInput.currentIndex = -1
+
+        sourceInput.text = ""
+        noteInput.text = ""
+    }
+
+    function openForCreate() {
+        root.clearData()
+        root.open()
+    }
+
+    function openForEdit(row) {
+        if (row === undefined || row === null) {
+            console.log("AddTransactionDialog: invalid edit row")
+            return
+        }
+
+        console.log("AddTransactionDialog openForEdit row:", JSON.stringify(row))
+
+        root.isEditMode = true
+        root.editingTransactionId = row.rowIndex !== undefined ? row.rowIndex : -1
+
+        amountInput.text = row.amount !== undefined && row.amount !== null
+            ? String(row.amount)
+            : ""
+
+        sourceInput.text = row.source !== undefined && row.source !== null
+            ? String(row.source)
+            : ""
+
+        noteInput.text = row.note !== undefined && row.note !== null
+            ? String(row.note)
+            : ""
+
+        if (row.type === "Income") {
+            typeInput.currentIndex = 1
+        } else {
+            typeInput.currentIndex = 0
+        }
+
+        var categoryIndex = categoryInput.model.indexOf(row.category)
+
+        categoryInput.currentIndex = categoryIndex >= 0
+            ? categoryIndex
+            : 0
+
+        root.open()
+    }
+
     modal: true
     anchors.centerIn: parent
 
@@ -618,7 +681,10 @@ Dialog {
                             verticalAlignment: Text.AlignVCenter
                         }
 
-                        onClicked: root.close()
+                        onClicked: {
+                            root.clearData()
+                            root.close()
+                        }
                     }
 
                     Button {
@@ -650,7 +716,11 @@ Dialog {
                             let year = datePicker.selectedYear
                             let date = new Date(year, month, 1)
 
-                            const success = root.viewModel.saveTransaction(
+                            let success = false
+
+                            success = root.viewModel.saveTransaction(
+                                root.isEditMode,
+                                root.isEditMode ? root.editingTransactionId : -1,
                                 Number(amountInput.text),
                                 typeInput.currentText,
                                 accountInput.currentValue,
@@ -661,7 +731,7 @@ Dialog {
                             )
 
                             if (success) {
-                                root.close()
+                                root.clearData()
                             }
                         }
                     }

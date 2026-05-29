@@ -15,7 +15,7 @@ Rectangle {
 
     function openAddTransactionDialog() {
         if (root.dialogPopup) {
-            root.dialogPopup.open()
+            root.dialogPopup.openForCreate()
         }
     }
 

@@ -8,7 +8,7 @@ Rectangle {
 
     property var viewModel
 
-    signal editTransactionClicked(int row)
+    signal editTransactionClicked(var row)
     signal deleteTransactionClicked(int rowIndex)
 
     property int headerHeight: 50
@@ -72,16 +72,34 @@ Rectangle {
         }
     }
 
-    function transactionType(rowIndex) {
+    function cellData(rowIndex, columnIndex) {
         if (!tableView.model) {
             return ""
         }
 
-        return tableView.model.index(rowIndex, 1).data()
+        var value = tableView.model.index(rowIndex, columnIndex).data()
+
+        if (value === undefined || value === null) {
+            return ""
+        }
+
+        return value
     }
 
-    function openAddTransactionDialog(){
+    function transactionType(rowIndex) {
+        return String(root.cellData(rowIndex, 1))
+    }
 
+    function transactionRow(rowIndex) {
+        return {
+            rowIndex: rowIndex,
+            date: String(root.cellData(rowIndex, 0)),
+            type: String(root.cellData(rowIndex, 1)),
+            category: String(root.cellData(rowIndex, 2)),
+            source: String(root.cellData(rowIndex, 3)),
+            note: String(root.cellData(rowIndex, 4)),
+            amount: Number(root.cellData(rowIndex, 5))
+        }
     }
 
     ColumnLayout {
@@ -190,17 +208,15 @@ Rectangle {
                     anchors.leftMargin: root.cellPadding
                     anchors.rightMargin: root.cellPadding
 
-                    text: display
+                    text: display === undefined || display === null ? "" : String(display)
+
                     color: column === 0 || column === 4
                         ? AppTheme.textSecondary
                         : AppTheme.textPrimary
 
                     font.pixelSize: 14
 
-                    horizontalAlignment: column === 0
-                        ? Text.AlignLeft
-                        : Text.AlignLeft
-
+                    horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                 }
@@ -210,7 +226,7 @@ Rectangle {
                     visible: column === 1
                     anchors.centerIn: parent
 
-                    value: display
+                    value: display === undefined || display === null ? "" : String(display)
                 }
 
                 // Amount
@@ -222,7 +238,10 @@ Rectangle {
                     anchors.rightMargin: root.cellPadding
 
                     property string typeText: root.transactionType(row)
-                    property real amountValue: Number(display)
+                    property real amountValue: {
+                        var value = Number(display)
+                        return isNaN(value) ? 0 : value
+                    }
 
                     text: typeText === "Income"
                         ? "+ €" + amountValue.toFixed(2)
@@ -254,7 +273,11 @@ Rectangle {
                         text: "✎"
                         textColor: AppTheme.textPrimary
 
-                        onClicked: root.editTransactionClicked(row)
+                        onClicked: {
+                            var selectedRow = root.transactionRow(row)
+                            console.log("TransactionTable edit row:", JSON.stringify(selectedRow))
+                            root.editTransactionClicked(selectedRow)
+                        }
                     }
 
                     TransactionActionButton {

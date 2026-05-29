@@ -66,6 +66,8 @@ namespace budgetpilot::presentation::viewmodels {
     }
 
     bool AddTransactionDialogVm::saveTransaction(
+        bool is_edit,
+        std::uint64_t id,
         const double amount,
         const QString &type,
         const std::int64_t &account_id,
@@ -97,7 +99,9 @@ namespace budgetpilot::presentation::viewmodels {
             transaction.type = enums::Type::Expense;
         }
 
-        const auto response = transaction_service_.create_transaction(transaction);
+        const auto response = !is_edit
+                                  ? transaction_service_.create_transaction(transaction)
+                                  : transaction_service_.update_transaction(transaction);
 
         setIsSaving(false);
 
