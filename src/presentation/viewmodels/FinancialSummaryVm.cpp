@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "FinancialSummaryVm.hpp"
-#include "src/application/transaction/TransactionService.hpp"
-#include "src/application/account/AccountsService.hpp"
+#include "../../application/transaction/TransactionService.hpp"
+#include "../../application/account/AccountsService.hpp"
 
 namespace services = budgetpilot::application::services;
 namespace models = budgetpilot::domain::models;
@@ -15,7 +15,7 @@ namespace budgetpilot::presentation::viewmodels {
           account_service_(account_service) {
         connect(
             &transaction_service_,
-            &services::TransactionService::transaction_created,
+            &services::TransactionService::transaction_changed,
             this,
             &FinancialSummaryVm::reload_data);
     }
@@ -72,50 +72,50 @@ namespace budgetpilot::presentation::viewmodels {
 
     void FinancialSummaryVm::load_account_data() {
         const auto account_response = account_service_.load_accounts();
+        set_current_balance(0);
         if (account_response.is_successful())
-            current_balance_ = 0.0f;
-        for (const auto &acc: account_response.data()) {
-            current_balance_ += acc.amount;
-        }
+            for (const auto &acc: account_response.data()) {
+                current_balance_ += acc.amount;
+            }
 
         emit current_balance_changed();
     }
 
     void FinancialSummaryVm::load_income_data(int month, int year) {
         const auto &transaction_response = transaction_service_.load_income(month, year);
+        set_income(0);
         if (transaction_response.is_successful()) {
-            set_income(0);
-
             double income_sum = 0;
             for (const auto &income: transaction_response.data()) {
                 income_sum += income.amount;
             }
 
             set_income(income_sum);
-            emit income_changed();
         }
+        emit income_changed();
     }
 
     void FinancialSummaryVm::load_expense_data(int month, int year) {
         const auto &expense_response = transaction_service_.load_expense(month, year);
+        set_expense(0);
         if (expense_response.is_successful()) {
-            set_expense(0);
             double expense_sum = 0;
             for (const auto &expense: expense_response.data()) {
                 expense_sum += expense.amount;
             }
 
             set_expense(expense_sum);
-            emit expense_changed();
         }
+        emit expense_changed();
     }
 
     void FinancialSummaryVm::load_saving_rate(int month, int year) {
         const auto &saving_rate_response = transaction_service_.calculate_monthly_saving_rate(month, year);
+        set_saving_rate(0);
         if (saving_rate_response.is_successful()) {
             set_saving_rate(saving_rate_response.data());
-            emit saving_rate_changed();
         }
+        emit saving_rate_changed();
     }
 
     void FinancialSummaryVm::reload_data() {

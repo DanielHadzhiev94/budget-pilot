@@ -1,43 +1,77 @@
 #pragma once
-#include <QObject>
+
+#include <QAbstractTableModel>
+#include <QString>
+
+#include <cstdint>
+#include <string>
+#include <vector>
 
 namespace budgetpilot::application::services {
     class TransactionService;
     class CategoryService;
 }
 
-namespace budgetpilot::domain::models {
-    class Transaction;
-}
-
 namespace services = budgetpilot::application::services;
 
 namespace budgetpilot::presentation::viewmodels {
-    class TransactionTableVm : public QObject {
+    class TransactionTableVm final : public QAbstractTableModel {
         Q_OBJECT
 
-        Q_PROPERTY(QVariantList transactions READ transactions NOTIFY transaction_changed)
-
     public:
-        explicit TransactionTableVm(services::TransactionService &transaction_service,
-                                    services::CategoryService &category_service,
-                                    QObject *parent = nullptr);
+        explicit TransactionTableVm(
+            services::TransactionService &transaction_service,
+            services::CategoryService &category_service,
+            QObject *parent = nullptr
+        );
 
-        [[nodiscard]]
-        QVariantList transactions() const;
+        int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-        Q_INVOKABLE void load_data(int month, int year);
+        QVariant data(
+            const QModelIndex &index,
+            int role = Qt::DisplayRole
+        ) const override;
 
-    signals:
-        void transaction_changed();
+        Q_INVOKABLE void loadData(int month, int year);
+        Q_INVOKABLE void deleteTransaction(int row);
+        Q_INVOKABLE void setDate(int month, int year);
+
+        Q_INVOKABLE QVariantMap transactionAt(int row) const;
 
     private:
-        QVariantList transactions_;
+        enum Column {
+            DateColumn = 0,
+            TypeColumn,
+            CategoryColumn,
+            SourceColumn,
+            NoteColumn,
+            AmountColumn,
+            ActionsColumn,
+            ColumnCount
+        };
+
+        struct TransactionRow {
+            std::int64_t id;
+            QString date;
+            QString type;
+            QString category;
+            QString source;
+            QString note;
+            double amount = 0.0;
+        };
+
+        QString formatDate(std::int64_t timestamp) const;
+        QString getCategoryName(std::int64_t id) const;
+
+        int selected_month;
+        int selected_year;
+
+        std::vector<TransactionRow> transactions_;
+
         services::TransactionService &transaction_service_;
         services::CategoryService &category_service_;
 
-        std::string get_category_name(const std::int64_t id);
-
-        void reload_data();
+        void reload();
     };
 }

@@ -41,6 +41,8 @@ namespace budgetpilot::presentation::viewmodels {
         bool isSaving() const;
 
         Q_INVOKABLE bool saveTransaction(
+            bool is_edit,
+            std::uint64_t id,
             double amount,
             const QString &type,
             const std::int64_t &account_id,
