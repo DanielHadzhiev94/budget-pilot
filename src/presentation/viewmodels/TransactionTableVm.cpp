@@ -157,4 +157,24 @@ namespace budgetpilot::presentation::viewmodels {
     void TransactionTableVm::reload() {
         loadData(selected_month, selected_year);
     }
+
+    QVariantMap TransactionTableVm::transactionAt(int row) const {
+        QVariantMap map;
+
+        if (row < 0 || row >= transactions_.size()) {
+            return map;
+        }
+
+        const auto &transaction = transactions_[row];
+
+        map["id"] = transaction.id;
+        map["date"] = QString::fromStdString(transaction.date.toStdString());
+        map["type"] = transaction.type == "Income" ? "Income" : "Expense";
+        map["category"] = QString::fromStdString(transaction.category.toStdString());
+        map["source"] = QString::fromStdString(transaction.source.toStdString());
+        map["note"] = QString::fromStdString(transaction.note.toStdString());
+        map["amount"] = transaction.amount;
+
+        return map;
+    }
 }

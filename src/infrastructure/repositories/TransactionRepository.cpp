@@ -42,22 +42,51 @@ namespace budgetpilot::infrastructure::repositories {
     void TransactionRepository::update(const Transaction &transaction) {
         const auto *sql = R"(
         UPDATE transactions
-        SET account_id = ?, category_id = ?, type = ?, amount = ?, source = ?, note= ?, transaction_date = ?
+        SET account_id = ?,
+            category_id = ?,
+            type = ?,
+            amount = ?,
+            source = ?,
+            note = ?,
+            transaction_date = ?
         WHERE id = ?
     )";
 
         persistence::Statement stmt(&connection_, sql);
 
-        sqlite3_bind_int(stmt.get(), 1, static_cast<int>(transaction.account_id));
-        sqlite3_bind_int(stmt.get(), 2, static_cast<int>(transaction.category_id));
+        sqlite3_bind_int64(stmt.get(), 1, transaction.account_id);
+        sqlite3_bind_int64(stmt.get(), 2, transaction.category_id);
         sqlite3_bind_int(stmt.get(), 3, static_cast<int>(transaction.type));
         sqlite3_bind_double(stmt.get(), 4, transaction.amount);
-        sqlite3_bind_text(stmt.get(), 5, transaction.source.value().c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(stmt.get(), 6, transaction.note.value().c_str(), -1, SQLITE_TRANSIENT);
 
-        int result = sqlite3_step(stmt.get());
+        sqlite3_bind_text(
+            stmt.get(),
+            5,
+            transaction.source.value_or("").c_str(),
+            -1,
+            SQLITE_TRANSIENT
+        );
+
+        sqlite3_bind_text(
+            stmt.get(),
+            6,
+            transaction.note.value_or("").c_str(),
+            -1,
+            SQLITE_TRANSIENT
+        );
+
+        auto seconds = utilities::TimeConverter::convert_to_seconds(transaction.transaction_date);
+        sqlite3_bind_int64(stmt.get(), 7, seconds);
+        sqlite3_bind_int64(stmt.get(), 8, transaction.id);
+
+        const int result = sqlite3_step(stmt.get());
+
         if (result != SQLITE_DONE) {
             throw std::runtime_error(sqlite3_errmsg(&connection_));
+        }
+
+        if (sqlite3_changes(&connection_) == 0) {
+            throw std::runtime_error("No transaction was updated. Invalid transaction id?");
         }
     }
 

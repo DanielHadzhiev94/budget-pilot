@@ -40,10 +40,10 @@ Dialog {
             return
         }
 
-        console.log("AddTransactionDialog openForEdit row:", JSON.stringify(row))
+        console.log("ROW ID:", row.id)
 
         root.isEditMode = true
-        root.editingTransactionId = row.rowIndex !== undefined ? row.rowIndex : -1
+        root.editingTransactionId = row.id !== undefined ? row.id : -1
 
         amountInput.text = row.amount !== undefined && row.amount !== null
             ? String(row.amount)
@@ -717,6 +717,7 @@ Dialog {
                             let date = new Date(year, month, 1)
 
                             let success = false
+                            console.log("The id is " + root.editTransactionId);
 
                             success = root.viewModel.saveTransaction(
                                 root.isEditMode,

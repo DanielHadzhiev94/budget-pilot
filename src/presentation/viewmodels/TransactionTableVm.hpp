@@ -37,6 +37,8 @@ namespace budgetpilot::presentation::viewmodels {
         Q_INVOKABLE void deleteTransaction(int row);
         Q_INVOKABLE void setDate(int month, int year);
 
+        Q_INVOKABLE QVariantMap transactionAt(int row) const;
+
     private:
         enum Column {
             DateColumn = 0,

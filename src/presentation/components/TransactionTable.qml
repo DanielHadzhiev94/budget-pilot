@@ -274,7 +274,7 @@ Rectangle {
                         textColor: AppTheme.textPrimary
 
                         onClicked: {
-                            var selectedRow = root.transactionRow(row)
+                            var selectedRow = root.viewModel.transactionAt(row.rowIndex)
                             console.log("TransactionTable edit row:", JSON.stringify(selectedRow))
                             root.editTransactionClicked(selectedRow)
                         }

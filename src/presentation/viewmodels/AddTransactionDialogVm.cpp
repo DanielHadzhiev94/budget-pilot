@@ -86,6 +86,10 @@ namespace budgetpilot::presentation::viewmodels {
         setIsSaving(true);
 
         models::Transaction transaction{};
+
+        if (is_edit)
+            transaction.id = id;
+
         transaction.amount = static_cast<double>(amount);
         transaction.source = source.toStdString();
         transaction.note = note.toStdString();

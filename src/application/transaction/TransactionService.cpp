@@ -35,11 +35,15 @@ namespace budgetpilot::application::services {
 
     utilities::Response<void> TransactionService::update_transaction(const models::Transaction &transaction) {
         try {
-            const auto old_transaction = transaction_repository_
-                    .get_one(transaction.id)
-                    .value();
+            const auto old_transaction_opt = transaction_repository_.get_one(transaction.id);
 
-            const auto amount_difference = transaction.amount - old_transaction.amount;
+            if (!old_transaction_opt.has_value())
+                return utilities::Response<void>::Failed(std::string{"Transaction with id: "}
+                                                         + std::to_string(transaction.id)
+                                                         + " not found!");
+
+            const auto old_amount = old_transaction_opt.value().amount;
+            const auto amount_difference = transaction.amount - old_amount;
 
             bool should_increase = transaction.type == enums::Type::Income;
             update_account(transaction.account_id, amount_difference, should_increase);
