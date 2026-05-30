@@ -4,6 +4,8 @@ import QtQuick.Layouts
 import BudgetPilot
 
 ApplicationWindow {
+    id: appRoot
+
     visible: true
     width: 1440
     height: 900
@@ -31,9 +33,10 @@ ApplicationWindow {
                     Layout.preferredWidth: 240
                     Layout.fillHeight: true
 
-                    selectedIndex: currentPage
-                    onItemSelected: function (index) {
-                        currentPage = index
+                    selectedIndex: appRoot.currentPage
+
+                    onItemSelected: function(index) {
+                        appRoot.currentPage = index
                     }
                 }
 
@@ -42,13 +45,11 @@ ApplicationWindow {
                     Layout.fillHeight: true
 
                     sourceComponent: {
-
-                        switch (currentPage) {
+                        switch (appRoot.currentPage) {
                             case 0:
                                 return dashboardPage
                             case 1:
                                 return transactionsPage
-
                             default:
                                 return dashboardPage
                         }
@@ -68,6 +69,10 @@ ApplicationWindow {
 
         DashboardPage {
             dialogPopup: addTransactionDialog
+
+            onViewAllTransactionsClicked: {
+                appRoot.currentPage = 1
+            }
         }
     }
 

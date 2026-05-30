@@ -8,6 +8,8 @@ Rectangle {
 
     required property var dialogPopup
 
+    signal viewAllTransactionsClicked()
+
     Layout.fillWidth: true
     Layout.fillHeight: true
 
@@ -42,7 +44,7 @@ Rectangle {
                 spacing: 12
 
                 DatePicker {
-                    onDateChanged: function (month, year) {
+                    onDateChanged: function(month, year) {
                         financialSummaryVM.set_date(month, year)
                         financialSummaryVM.load_data(month, year)
                         recentTransactionsVM.load_data(month, year)
@@ -72,6 +74,10 @@ Rectangle {
 
         RecentTransactionsSection {
             viewModel: recentTransactionsVM
+
+            onViewAllTransactionsClicked: {
+                root.viewAllTransactionsClicked()
+            }
         }
 
         Item {
