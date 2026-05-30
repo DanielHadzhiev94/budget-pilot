@@ -9,67 +9,59 @@ Dialog {
     required property var viewModel
     property string transactionType: "Expense"
 
-    property bool isEditMode: false;
+    property bool isEditMode: false
     property int editingTransactionId: -1
     property var editingTransaction: null
 
     function clearData() {
-        isEditMode = false
-        editingTransactionId = -1
-        editingTransaction = null
+        isEditMode = false;
+        editingTransactionId = -1;
+        editingTransaction = null;
 
-        amountInput.text = ""
-        typeInput.currentIndex = 0
-        root.transactionType = "Expense"
+        amountInput.text = "";
+        typeInput.currentIndex = 0;
+        root.transactionType = "Expense";
 
-        categoryInput.currentIndex = -1
-        accountInput.currentIndex = -1
+        categoryInput.currentIndex = -1;
+        accountInput.currentIndex = -1;
 
-        sourceInput.text = ""
-        noteInput.text = ""
+        sourceInput.text = "";
+        noteInput.text = "";
     }
 
     function openForCreate() {
-        root.clearData()
-        root.open()
+        root.clearData();
+        root.open();
     }
 
     function openForEdit(row) {
         if (row === undefined || row === null) {
-            console.log("AddTransactionDialog: invalid edit row")
-            return
+            console.log("AddTransactionDialog: invalid edit row");
+            return;
         }
 
-        console.log("ROW ID:", row.id)
+        console.log("ROW ID:", row.id);
 
-        root.isEditMode = true
-        root.editingTransactionId = row.id !== undefined ? row.id : -1
+        root.isEditMode = true;
+        root.editingTransactionId = row.id !== undefined ? row.id : -1;
 
-        amountInput.text = row.amount !== undefined && row.amount !== null
-            ? String(row.amount)
-            : ""
+        amountInput.text = row.amount !== undefined && row.amount !== null ? String(row.amount) : "";
 
-        sourceInput.text = row.source !== undefined && row.source !== null
-            ? String(row.source)
-            : ""
+        sourceInput.text = row.source !== undefined && row.source !== null ? String(row.source) : "";
 
-        noteInput.text = row.note !== undefined && row.note !== null
-            ? String(row.note)
-            : ""
+        noteInput.text = row.note !== undefined && row.note !== null ? String(row.note) : "";
 
         if (row.type === "Income") {
-            typeInput.currentIndex = 1
+            typeInput.currentIndex = 1;
         } else {
-            typeInput.currentIndex = 0
+            typeInput.currentIndex = 0;
         }
 
-        var categoryIndex = categoryInput.model.indexOf(row.category)
+        var categoryIndex = categoryInput.model.indexOf(row.category);
 
-        categoryInput.currentIndex = categoryIndex >= 0
-            ? categoryIndex
-            : 0
+        categoryInput.currentIndex = categoryIndex >= 0 ? categoryIndex : 0;
 
-        root.open()
+        root.open();
     }
 
     modal: true
@@ -82,8 +74,8 @@ Dialog {
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
     onOpened: {
-        root.viewModel.loadInitialData()
-        amountInput.forceActiveFocus()
+        root.viewModel.loadInitialData();
+        amountInput.forceActiveFocus();
     }
 
     background: Rectangle {
@@ -131,19 +123,18 @@ Dialog {
                         spacing: 2
 
                         Text {
-                            text: "Add transaction"
+                            text: root.isEditMode ? "Edit transaction" : "Add transaction"
                             color: AppTheme.textPrimary
                             font.pixelSize: 20
                             font.bold: true
                         }
 
                         Text {
-                            text: "Create a new income or expense entry"
+                            text: root.isEditMode ? "Update an existing income or expense entry" : "Create a new income or expense entry"
                             color: AppTheme.textSecondary
                             font.pixelSize: 13
                         }
                     }
-
                 }
 
                 Rectangle {
@@ -152,6 +143,42 @@ Dialog {
                     anchors.bottom: parent.bottom
                     height: 1
                     color: AppTheme.border
+                }
+            }
+
+            // =========================
+            // Error message - shown at top
+            // =========================
+            Rectangle {
+                id: errorBox
+
+                Layout.fillWidth: true
+                Layout.leftMargin: 24
+                Layout.rightMargin: 24
+                Layout.topMargin: root.viewModel.errorMessage.length > 0 ? 16 : 0
+                Layout.bottomMargin: root.viewModel.errorMessage.length > 0 ? 4 : 0
+
+                Layout.preferredHeight: root.viewModel.errorMessage.length > 0 ? errorText.implicitHeight + 22 : 0
+
+                visible: root.viewModel.errorMessage.length > 0
+
+                radius: 11
+                color: "#2A1215"
+                border.color: AppTheme.danger
+                border.width: 1
+
+                Text {
+                    id: errorText
+
+                    anchors.fill: parent
+                    anchors.margins: 11
+
+                    text: root.viewModel.errorMessage
+                    color: AppTheme.danger
+                    font.pixelSize: 13
+                    font.bold: true
+                    wrapMode: Text.WordWrap
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
@@ -241,7 +268,7 @@ Dialog {
                                     currentIndex: 0
 
                                     onCurrentTextChanged: {
-                                        root.transactionType = currentText
+                                        root.transactionType = currentText;
                                     }
 
                                     background: Rectangle {
@@ -401,7 +428,7 @@ Dialog {
                             }
                         }
 
-                        // Account - visible only for Income
+                        // Account
                         ColumnLayout {
                             Layout.fillWidth: true
                             spacing: 6
@@ -508,9 +535,7 @@ Dialog {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 44
 
-                                placeholderText: root.transactionType === "Income"
-                                    ? "Salary, bonus, freelance..."
-                                    : "Lidl, rent, Amazon..."
+                                placeholderText: root.transactionType === "Income" ? "Salary, bonus, freelance..." : "Lidl, rent, Amazon..."
                                 color: AppTheme.textPrimary
                                 placeholderTextColor: AppTheme.textSecondary
                                 font.pixelSize: 14
@@ -596,34 +621,6 @@ Dialog {
                                 }
                             }
                         }
-
-                        // Error
-                        Rectangle {
-                            id: errorBox
-
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: errorText.implicitHeight + 22
-
-                            visible: root.viewModel.errorMessage.length > 0
-
-                            radius: 11
-                            color: "#2A1215"
-                            border.color: AppTheme.danger
-                            border.width: 1
-
-                            Text {
-                                id: errorText
-
-                                anchors.fill: parent
-                                anchors.margins: 11
-
-                                text: root.viewModel.errorMessage
-                                color: AppTheme.danger
-                                font.pixelSize: 13
-                                wrapMode: Text.WordWrap
-                                verticalAlignment: Text.AlignVCenter
-                            }
-                        }
                     }
 
                     Item {
@@ -682,8 +679,8 @@ Dialog {
                         }
 
                         onClicked: {
-                            root.clearData()
-                            root.close()
+                            root.clearData();
+                            root.close();
                         }
                     }
 
@@ -693,7 +690,7 @@ Dialog {
                         Layout.preferredWidth: 112
                         Layout.preferredHeight: 42
 
-                        text: "Save"
+                        text: root.isEditMode ? "Update" : "Save"
 
                         background: Rectangle {
                             radius: 11
@@ -712,27 +709,16 @@ Dialog {
                         }
 
                         onClicked: {
-                            let month = datePicker.selectedMonth
-                            let year = datePicker.selectedYear
-                            let date = new Date(year, month, 1)
+                            let month = datePicker.selectedMonth;
+                            let year = datePicker.selectedYear;
+                            let date = new Date(year, month, 1);
 
-                            let success = false
-                            console.log("The id is " + root.editTransactionId);
+                            let success = false;
 
-                            success = root.viewModel.saveTransaction(
-                                root.isEditMode,
-                                root.isEditMode ? root.editingTransactionId : -1,
-                                Number(amountInput.text),
-                                typeInput.currentText,
-                                accountInput.currentValue,
-                                categoryInput.currentValue,
-                                sourceInput.text,
-                                date,
-                                noteInput.text
-                            )
+                            success = root.viewModel.saveTransaction(root.isEditMode, root.isEditMode ? root.editingTransactionId : -1, Number(amountInput.text), typeInput.currentText, accountInput.currentValue, categoryInput.currentValue, sourceInput.text, date, noteInput.text);
 
                             if (success) {
-                                root.clearData()
+                                root.clearData();
                             }
                         }
                     }

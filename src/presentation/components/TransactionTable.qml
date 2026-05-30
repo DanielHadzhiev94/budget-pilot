@@ -11,9 +11,9 @@ Rectangle {
     signal editTransactionClicked(var row)
     signal deleteTransactionClicked(int rowIndex)
 
-    property int headerHeight: 50
+    property int headerHeight: 52
     property int rowHeight: 58
-    property int cellPadding: 16
+    property int cellPadding: 18
 
     radius: 16
     color: AppTheme.tableSurface
@@ -21,73 +21,142 @@ Rectangle {
     border.width: 1
     clip: true
 
-    readonly property int dateColumnWidth: 125
-    readonly property int typeColumnWidth: 110
-    readonly property int amountColumnWidth: 130
-    readonly property int actionsColumnWidth: 108
+    /*
+        Professional table sizing strategy:
 
-    readonly property int fixedColumnsWidth:
-        dateColumnWidth +
-        typeColumnWidth +
-        amountColumnWidth +
-        actionsColumnWidth
+        Fixed columns:
+        - Date
+        - Type
+        - Category
+        - Amount
+        - Actions
 
-    readonly property int flexibleAreaWidth: Math.max(
-        360,
-        tableView.width - fixedColumnsWidth
-    )
+        Flexible columns:
+        - Source
+        - Note
 
-    readonly property int categoryColumnWidth: Math.max(120, flexibleAreaWidth * 0.24)
-    readonly property int sourceColumnWidth: Math.max(140, flexibleAreaWidth * 0.30)
-    readonly property int noteColumnWidth: Math.max(160, flexibleAreaWidth * 0.46)
+        Source and Note get the remaining width because they contain
+        the longest user-entered text.
+    */
+
+    readonly property int dateColumnWidth: 136
+    readonly property int typeColumnWidth: 124
+    readonly property int categoryColumnWidth: 190
+    readonly property int amountColumnWidth: 150
+    readonly property int actionsColumnWidth: 120
+
+    readonly property int sourceMinWidth: 230
+    readonly property int noteMinWidth: 200
+
+    readonly property int fixedColumnsWidth: dateColumnWidth + typeColumnWidth + categoryColumnWidth + amountColumnWidth + actionsColumnWidth
+
+    readonly property int minimumTableWidth: fixedColumnsWidth + sourceMinWidth + noteMinWidth
+
+    readonly property int flexibleWidth: Math.max(sourceMinWidth + noteMinWidth, tableView.width - fixedColumnsWidth)
+
+    readonly property int sourceColumnWidth: Math.round(flexibleWidth * 0.43)
+    readonly property int noteColumnWidth: Math.round(flexibleWidth * 0.57)
+
+    readonly property int totalTableWidth: dateColumnWidth + typeColumnWidth + categoryColumnWidth + sourceColumnWidth + noteColumnWidth + amountColumnWidth + actionsColumnWidth
 
     readonly property var columns: [
-        { title: "Date",     align: Text.AlignLeft },
-        { title: "Type",     align: Text.AlignHCenter },
-        { title: "Category", align: Text.AlignLeft },
-        { title: "Source",   align: Text.AlignLeft },
-        { title: "Note",     align: Text.AlignLeft },
-        { title: "Amount",   align: Text.AlignRight },
-        { title: "Actions",  align: Text.AlignHCenter }
+        {
+            title: "Date",
+            align: Text.AlignLeft
+        },
+        {
+            title: "Type",
+            align: Text.AlignHCenter
+        },
+        {
+            title: "Category",
+            align: Text.AlignLeft
+        },
+        {
+            title: "Source",
+            align: Text.AlignLeft
+        },
+        {
+            title: "Note",
+            align: Text.AlignLeft
+        },
+        {
+            title: "Amount",
+            align: Text.AlignRight
+        },
+        {
+            title: "Actions",
+            align: Text.AlignHCenter
+        }
     ]
 
     function columnWidth(column) {
         switch (column) {
-            case 0:
-                return root.dateColumnWidth
-            case 1:
-                return root.typeColumnWidth
-            case 2:
-                return root.categoryColumnWidth
-            case 3:
-                return root.sourceColumnWidth
-            case 4:
-                return root.noteColumnWidth
-            case 5:
-                return root.amountColumnWidth
-            case 6:
-                return root.actionsColumnWidth
-            default:
-                return 100
+        case 0:
+            return root.dateColumnWidth;
+        case 1:
+            return root.typeColumnWidth;
+        case 2:
+            return root.categoryColumnWidth;
+        case 3:
+            return root.sourceColumnWidth;
+        case 4:
+            return root.noteColumnWidth;
+        case 5:
+            return root.amountColumnWidth;
+        case 6:
+            return root.actionsColumnWidth;
+        default:
+            return 100;
         }
     }
 
     function cellData(rowIndex, columnIndex) {
         if (!tableView.model) {
-            return ""
+            return "";
         }
 
-        var value = tableView.model.index(rowIndex, columnIndex).data()
+        var value = tableView.model.index(rowIndex, columnIndex).data();
 
         if (value === undefined || value === null) {
-            return ""
+            return "";
         }
 
-        return value
+        return value;
     }
 
     function transactionType(rowIndex) {
-        return String(root.cellData(rowIndex, 1))
+        return String(root.cellData(rowIndex, 1));
+    }
+
+    function formatDate(value) {
+        if (value === undefined || value === null) {
+            return "";
+        }
+
+        var text = String(value);
+
+        // Handles values like:
+        // 2026-05-28
+        // 2026-05-28 00:00:00
+        // 2026-05-28T00:00:00
+        if (text.length >= 10) {
+            return text.substring(0, 10);
+        }
+
+        return text;
+    }
+
+    function displayTextForColumn(columnIndex, value) {
+        if (value === undefined || value === null) {
+            return "";
+        }
+
+        if (columnIndex === 0) {
+            return root.formatDate(value);
+        }
+
+        return String(value);
     }
 
     function transactionRow(rowIndex) {
@@ -99,7 +168,7 @@ Rectangle {
             source: String(root.cellData(rowIndex, 3)),
             note: String(root.cellData(rowIndex, 4)),
             amount: Number(root.cellData(rowIndex, 5))
-        }
+        };
     }
 
     ColumnLayout {
@@ -112,9 +181,14 @@ Rectangle {
             Layout.preferredHeight: root.headerHeight
 
             color: AppTheme.backgroundMainCard
+            clip: true
 
             Row {
-                anchors.fill: parent
+                id: headerRow
+
+                x: -tableView.contentX
+                width: root.totalTableWidth
+                height: root.headerHeight
                 spacing: 0
 
                 Repeater {
@@ -166,23 +240,27 @@ Rectangle {
             columnSpacing: 0
             rowSpacing: 0
 
-            columnWidthProvider: function(column) {
-                return root.columnWidth(column)
+            columnWidthProvider: function (column) {
+                return root.columnWidth(column);
             }
 
-            rowHeightProvider: function(row) {
-                return root.rowHeight
+            rowHeightProvider: function (row) {
+                return root.rowHeight;
+            }
+
+            ScrollBar.horizontal: ScrollBar {
+                policy: root.totalTableWidth > tableView.width ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+            }
+
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AsNeeded
             }
 
             delegate: Rectangle {
                 implicitWidth: root.columnWidth(column)
                 implicitHeight: root.rowHeight
 
-                color: rowMouseArea.containsMouse
-                    ? AppTheme.tableRowHover
-                    : row % 2 === 0
-                        ? "transparent"
-                        : AppTheme.tableRowAlt
+                color: rowMouseArea.containsMouse ? AppTheme.tableRowHover : row % 2 === 0 ? "transparent" : AppTheme.tableRowAlt
 
                 MouseArea {
                     id: rowMouseArea
@@ -200,25 +278,35 @@ Rectangle {
                     opacity: 0.75
                 }
 
-                // Normal text cells: Date, Category, Source, Note
+                // Text cells: Date, Category, Source, Note
                 Text {
+                    id: normalCellText
+
                     visible: column !== 1 && column !== 5 && column !== 6
 
                     anchors.fill: parent
                     anchors.leftMargin: root.cellPadding
                     anchors.rightMargin: root.cellPadding
 
-                    text: display === undefined || display === null ? "" : String(display)
+                    text: root.displayTextForColumn(column, display)
 
-                    color: column === 0 || column === 4
-                        ? AppTheme.textSecondary
-                        : AppTheme.textPrimary
+                    color: column === 0 || column === 4 ? AppTheme.textSecondary : AppTheme.textPrimary
 
                     font.pixelSize: 14
 
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
+
+                    ToolTip.visible: normalCellMouseArea.containsMouse && truncated
+                    ToolTip.text: text
+
+                    MouseArea {
+                        id: normalCellMouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        acceptedButtons: Qt.NoButton
+                    }
                 }
 
                 // Type badge
@@ -239,17 +327,13 @@ Rectangle {
 
                     property string typeText: root.transactionType(row)
                     property real amountValue: {
-                        var value = Number(display)
-                        return isNaN(value) ? 0 : value
+                        var value = Number(display);
+                        return isNaN(value) ? 0 : value;
                     }
 
-                    text: typeText === "Income"
-                        ? "+ €" + amountValue.toFixed(2)
-                        : "- €" + amountValue.toFixed(2)
+                    text: typeText === "Income" ? "+ €" + amountValue.toFixed(2) : "- €" + amountValue.toFixed(2)
 
-                    color: typeText === "Income"
-                        ? AppTheme.success
-                        : AppTheme.danger
+                    color: typeText === "Income" ? AppTheme.success : AppTheme.danger
 
                     font.pixelSize: 15
                     font.bold: true
@@ -264,25 +348,25 @@ Rectangle {
                     visible: column === 6
 
                     anchors.centerIn: parent
-                    spacing: 8
+                    spacing: 10
 
                     TransactionActionButton {
-                        width: 32
-                        height: 32
+                        width: 34
+                        height: 34
 
                         text: "✎"
                         textColor: AppTheme.textPrimary
 
                         onClicked: {
-                            var selectedRow = root.viewModel.transactionAt(row.rowIndex)
-                            console.log("TransactionTable edit row:", JSON.stringify(selectedRow))
-                            root.editTransactionClicked(selectedRow)
+                            var selectedRow = root.viewModel.transactionAt(row);
+                            console.log("TransactionTable edit row:", JSON.stringify(selectedRow));
+                            root.editTransactionClicked(selectedRow);
                         }
                     }
 
                     TransactionActionButton {
-                        width: 32
-                        height: 32
+                        width: 34
+                        height: 34
 
                         text: "🗑"
                         textColor: AppTheme.danger
