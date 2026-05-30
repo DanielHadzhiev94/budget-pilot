@@ -1,28 +1,35 @@
 #include <filesystem>
 #include "DbContext.hpp"
 
-namespace budgetpilot::infrastructure::persistence {
+namespace budgetpilot::infrastructure::persistence
+{
     DbContext::DbContext(const std::string &db_path)
-        : db_path_(db_path) {
+        : db_path_(db_path)
+    {
     }
 
-    DbContext::~DbContext() {
+    DbContext::~DbContext()
+    {
         close();
     }
 
-    void DbContext::initialize() {
+    void DbContext::initialize()
+    {
         open();
         createTable();
         seedCategories();
     }
 
-    void DbContext::open() {
-        if (connection_ != nullptr) {
+    void DbContext::open()
+    {
+        if (connection_ != nullptr)
+        {
             return;
         }
 
         std::int32_t result = sqlite3_open(db_path_.c_str(), &connection_);
-        if (result != SQLITE_OK) {
+        if (result != SQLITE_OK)
+        {
             std::string errorMessage = connection_ != nullptr
                                            ? sqlite3_errmsg(connection_)
                                            : "Failed to open SQLite database.";
@@ -32,8 +39,10 @@ namespace budgetpilot::infrastructure::persistence {
         }
     }
 
-    void DbContext::close() {
-        if (connection_ == nullptr) {
+    void DbContext::close()
+    {
+        if (connection_ == nullptr)
+        {
             return;
         }
 
@@ -41,7 +50,8 @@ namespace budgetpilot::infrastructure::persistence {
         connection_ = nullptr;
     }
 
-    void DbContext::createTable() const {
+    void DbContext::createTable() const
+    {
         const char *account_query = R"(
                 CREATE TABLE IF NOT EXISTS accounts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -83,7 +93,8 @@ namespace budgetpilot::infrastructure::persistence {
         execute("PRAGMA foreign_keys = ON;");
     }
 
-    void DbContext::seedCategories() const {
+    void DbContext::seedCategories() const
+    {
         const char *category_seed = R"(
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Salary', 1);
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Other', 1);
@@ -98,27 +109,33 @@ namespace budgetpilot::infrastructure::persistence {
        )";
 
         const char *acc_seed = R"(
-        INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('Bank', 0);)";
+        INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('Bank', 0);
+        INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('PayPal', 0);
+        INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('ICard', 0);)";
 
         execute(category_seed);
         execute(acc_seed);
     }
 
-    void DbContext::execute(const char *query) const {
-        if (connection_ == nullptr) {
+    void DbContext::execute(const char *query) const
+    {
+        if (connection_ == nullptr)
+        {
             throw std::runtime_error("Database connection is not open.");
         }
         char *errMsg = nullptr;
 
         int result = sqlite3_exec(connection_, query, nullptr, nullptr, &errMsg);
-        if (result != SQLITE_OK) {
+        if (result != SQLITE_OK)
+        {
             std::string error = errMsg ? errMsg : "Unknown SQL error";
             sqlite3_free(errMsg);
             throw std::runtime_error(error);
         }
     }
 
-    sqlite3 *DbContext::getConnection() const {
+    sqlite3 *DbContext::getConnection() const
+    {
         return connection_;
     }
 }
