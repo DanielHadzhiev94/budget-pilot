@@ -80,6 +80,26 @@ namespace budgetpilot::application::services {
         }
     }
 
+    utilities::Response<std::vector<models::Transaction> > TransactionService::load_by_month(
+        const int month, const int year, const int limit) {
+        try {
+            const auto &transactions = transaction_repository_.get_by_month(month, year, limit);
+            if (transactions.capacity() <= 0)
+                return utilities::Response<std::vector<models::Transaction> >::Failed(
+                    std::string{"No transaction data found for the period "} +
+                    std::to_string(month) +
+                    "-" +
+                    std::to_string(year)
+                );
+
+            return utilities::Response<std::vector<models::Transaction> >::Success(transactions);
+        } catch (std::exception &ex) {
+            return utilities::Response<std::vector<models::Transaction> >::Failed(
+                std::string{"Failed to get transactions: "} + ex.what()
+            );
+        }
+    }
+
     utilities::Response<std::vector<models::Transaction> > TransactionService::load_income(const int month,
         const int year) const {
         try {

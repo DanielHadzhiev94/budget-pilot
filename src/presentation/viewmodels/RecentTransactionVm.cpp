@@ -8,16 +8,14 @@
 
 namespace budgetpilot::presentation::viewmodels {
     RecentTransactionVm::RecentTransactionVm(services::TransactionService &transaction_service,
-                                           services::CategoryService &category_service,
-                                           QObject *parent)
+                                             services::CategoryService &category_service,
+                                             QObject *parent)
         : transaction_service_(transaction_service),
           category_service_(category_service) {
         connect(&transaction_service_,
                 &services::TransactionService::transaction_changed,
                 this,
                 &RecentTransactionVm::reload_data);
-
-        load_data(5, 2026);
     }
 
     QVariantList RecentTransactionVm::transactions() const {
@@ -25,7 +23,7 @@ namespace budgetpilot::presentation::viewmodels {
     }
 
     void RecentTransactionVm::load_data(int month, int year) {
-        const auto &transaction_response = transaction_service_.load_all_by_month(month, year);
+        const auto &transaction_response = transaction_service_.load_by_month(month, year, 15);
         transactions_.clear();
 
         if (transaction_response.is_successful()) {

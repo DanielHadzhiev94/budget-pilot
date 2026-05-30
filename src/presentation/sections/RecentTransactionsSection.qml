@@ -1,27 +1,18 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import BudgetPilot
 
 Rectangle {
     id: root
 
-    // Root size
-    Layout.preferredWidth: tableWidth
-    Layout.preferredHeight: tableHeight
-    Layout.topMargin: rootTopMargin
-    Layout.leftMargin: rootLeftMargin
-
-    color: AppTheme.backgroundMainCard
-    radius: rootRadius
-    border.color: AppTheme.border
-    border.width: borderWidth
-    clip: true
+    signal viewAllTransactionsClicked()
 
     property var viewModel
 
     // Root layout sizes
     property int tableWidth: 720
-    property int tableHeight: 360
+    property int tableHeight: 460
     property int rootTopMargin: 0
     property int rootLeftMargin: 20
     property int rootRadius: 16
@@ -64,6 +55,23 @@ Rectangle {
     property color incomeBadgeColor: Qt.rgba(0.1, 0.8, 0.45, 0.12)
     property color expenseBadgeColor: Qt.rgba(1.0, 0.25, 0.25, 0.12)
 
+    // Helper property
+    readonly property bool hasTransactions: root.viewModel
+        && root.viewModel.transactions
+        && root.viewModel.transactions.length > 0
+
+    // Root size
+    Layout.preferredWidth: root.tableWidth
+    Layout.preferredHeight: root.tableHeight
+    Layout.topMargin: root.rootTopMargin
+    Layout.leftMargin: root.rootLeftMargin
+
+    color: AppTheme.backgroundMainCard
+    radius: root.rootRadius
+    border.color: AppTheme.border
+    border.width: root.borderWidth
+    clip: true
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: root.contentMargin
@@ -78,7 +86,7 @@ Rectangle {
                 spacing: 2
 
                 Text {
-                    text: "Recent Transactions"
+                    text: "Recent 15 Transactions"
                     color: AppTheme.textPrimary
                     font.pixelSize: root.titleFontSize
                     font.bold: true
@@ -183,7 +191,7 @@ Rectangle {
                 Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    visible: !root.viewModel || root.viewModel.transactions.length === 0
+                    visible: !root.hasTransactions
 
                     ColumnLayout {
                         anchors.centerIn: parent
@@ -213,20 +221,26 @@ Rectangle {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
-                    visible: root.viewModel && root.viewModel.transactions.length > 0
+                    visible: root.hasTransactions
                     clip: true
                     boundsBehavior: Flickable.StopAtBounds
-                    model: root.viewModel ? root.viewModel.transactions : []
+
+                    model: root.hasTransactions
+                        ? root.viewModel.transactions
+                        : []
 
                     delegate: Rectangle {
                         id: row
+
+                        required property var modelData
+                        required property int index
 
                         width: ListView.view.width
                         height: root.rowHeight
 
                         color: mouseArea.containsMouse
                             ? root.hoverRowColor
-                            : index % 2 === 0
+                            : row.index % 2 === 0
                                 ? "transparent"
                                 : root.zebraRowColor
 
@@ -249,7 +263,7 @@ Rectangle {
                             spacing: root.columnSpacing
 
                             Text {
-                                text: modelData.date
+                                text: row.modelData.date
                                 color: AppTheme.textSecondary
                                 font.pixelSize: root.rowFontSize
                                 Layout.preferredWidth: root.dateColumnSize
@@ -269,15 +283,16 @@ Rectangle {
 
                                     anchors.centerIn: parent
 
-                                    color: modelData.type === "Income"
+                                    color: row.modelData.type === "Income"
                                         ? root.incomeBadgeColor
                                         : root.expenseBadgeColor
 
                                     Text {
                                         anchors.centerIn: parent
 
-                                        text: modelData.type
-                                        color: modelData.type === "Income"
+                                        text: row.modelData.type
+
+                                        color: row.modelData.type === "Income"
                                             ? AppTheme.success
                                             : AppTheme.danger
 
@@ -288,7 +303,7 @@ Rectangle {
                             }
 
                             Text {
-                                text: modelData.category
+                                text: row.modelData.category
                                 color: AppTheme.textPrimary
                                 font.pixelSize: root.rowFontSize
                                 Layout.preferredWidth: root.categoryColumnSize
@@ -297,7 +312,7 @@ Rectangle {
                             }
 
                             Text {
-                                text: modelData.source
+                                text: row.modelData.source
                                 color: AppTheme.textSecondary
                                 font.pixelSize: root.rowFontSize
                                 Layout.fillWidth: true
@@ -306,11 +321,11 @@ Rectangle {
                             }
 
                             Text {
-                                text: modelData.type === "Income"
-                                    ? "+ €" + Number(modelData.amount).toFixed(2)
-                                    : "- €" + Number(modelData.amount).toFixed(2)
+                                text: row.modelData.type === "Income"
+                                    ? "+ €" + Number(row.modelData.amount).toFixed(2)
+                                    : "- €" + Number(row.modelData.amount).toFixed(2)
 
-                                color: modelData.type === "Income"
+                                color: row.modelData.type === "Income"
                                     ? AppTheme.success
                                     : AppTheme.danger
 
@@ -335,6 +350,33 @@ Rectangle {
                         }
                     }
                 }
+            }
+        }
+
+        Button {
+            id: viewAllButton
+
+            Layout.alignment: Qt.AlignRight
+
+            background: Rectangle {
+                color: "transparent"
+            }
+
+            contentItem: Text {
+                text: "View all transactions ->"
+                color: viewAllButton.hovered
+                    ? AppTheme.primary
+                    : AppTheme.textPrimary
+
+                font.pixelSize: 14
+                font.bold: true
+
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            onClicked: {
+                root.viewAllTransactionsClicked()
             }
         }
     }
