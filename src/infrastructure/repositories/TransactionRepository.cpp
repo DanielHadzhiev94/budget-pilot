@@ -177,6 +177,33 @@ namespace budgetpilot::infrastructure::repositories {
         return transactions;
     }
 
+    std::vector<Transaction> TransactionRepository::get_by_month(int month, int year, int limit) {
+        const auto *sql = R"(
+                    SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
+                    FROM transactions
+                    WHERE transaction_date >=?
+                        AND transaction_date < ?
+                    ORDER BY created_at DESC
+                    LIMIT ?
+                    )";
+
+        const persistence::Statement stmt(&connection_, sql);
+        std::vector<Transaction> transactions{};
+
+        const auto current_month_seconds = utilities::TimeConverter::to_unix_seconds(month, year);
+        const auto next_month_seconds = utilities::TimeConverter::next_month_to_unix_seconds(month, year);
+
+        sqlite3_bind_int64(stmt.get(), 1, current_month_seconds);
+        sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
+        sqlite3_bind_int(stmt.get(), 3, limit);
+
+        while (sqlite3_step(stmt.get()) != SQLITE_DONE) {
+            transactions.push_back(std::move(build_transaction_(stmt)));
+        }
+
+        return transactions;
+    }
+
     std::vector<Transaction> TransactionRepository::get_all_by_month_and_type(int month, int year, enums::Type type) {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at

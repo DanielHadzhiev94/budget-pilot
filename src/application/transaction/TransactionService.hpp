@@ -39,6 +39,9 @@ namespace budgetpilot::application::services {
         utilities::Response<std::vector<models::Transaction> > load_all_by_month(const int month, const int year);
 
         [[nodiscard]]
+        utilities::Response<std::vector<models::Transaction>>load_by_month(const int month, const int year, const int limit);
+
+        [[nodiscard]]
         utilities::Response<std::vector<models::Transaction> > load_income(
             const int month, const int year) const;
 

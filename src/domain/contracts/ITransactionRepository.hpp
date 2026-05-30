@@ -9,6 +9,7 @@ namespace budgetpilot::domain::contracts {
         virtual ~ITransactionRepository() = default;
 
         virtual std::vector<models::Transaction> get_all_by_month(int month, int year) = 0;
+        virtual std::vector<models::Transaction> get_by_month(int month, int year, int limit) = 0;
         virtual std::vector<models::Transaction> get_all_by_month_and_type(int month, int year, enums::Type type) = 0;
     };
 }

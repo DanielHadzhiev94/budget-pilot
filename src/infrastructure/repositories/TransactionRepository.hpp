@@ -39,6 +39,9 @@ namespace budgetpilot::infrastructure::repositories {
         std::vector<models::Transaction> get_all_by_month(int month, int year) override;
 
         [[nodiscard]]
+        std::vector<models::Transaction> get_by_month(int month, int year, int limit) override;
+
+        [[nodiscard]]
         std::vector<models::Transaction> get_all_by_month_and_type(int month, int year, enums::Type type) override;
 
     private:
