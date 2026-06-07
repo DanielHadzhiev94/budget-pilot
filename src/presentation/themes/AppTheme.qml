@@ -2,78 +2,71 @@ pragma Singleton
 import QtQuick
 
 QtObject {
-    // === BACKGROUNDS ===
-    readonly property color background: "#090c12"        // main app background
-    readonly property color backgroundAlt: "#101319"     // slightly lighter bg
-    readonly property color backgroundMainCard: "#12171f"
-    readonly property color surface: "#121A27"           // cards / panels
-    readonly property color surfaceLight: "#182334"      // hover / secondary panels
-    readonly property color surfaceElevated: "#1B2638"   // inputs / raised cards
+    // Modern dark product palette: low contrast surfaces, clear accent, readable text.
+    readonly property color background: "#070A12"
+    readonly property color backgroundAlt: "#0B1020"
+    readonly property color backgroundMainCard: "#111827"
+    readonly property color surface: "#111827"
+    readonly property color surfaceLight: "#172033"
+    readonly property color surfaceElevated: "#1F2937"
 
-    // === Table colors
-    readonly property color tableSurface: "#0D1B2E"
-    readonly property color tableHeaderSurface: "#13243A"
-    readonly property color tableRowAlt: "#102037"
+    readonly property color tableSurface: "#0F172A"
+    readonly property color tableHeaderSurface: "#111C31"
+    readonly property color tableRowAlt: "#111B2F"
+    readonly property color tableRowHover: "#18243A"
 
-    // === PRIMARY COLORS ===
-    readonly property color primary: "#2563EB"           // main blue
-    readonly property color primaryLight: "#3B82F6"      // hover / highlights
-    readonly property color primaryDark: "#1D4ED8"       // active / pressed
-    readonly property color primarySoft: "#1B3A5C"       // soft / muted blue (button states)
+    readonly property color primary: "#4F8CFF"
+    readonly property color primaryLight: "#6EA3FF"
+    readonly property color primaryDark: "#2F6FE8"
+    readonly property color primarySoft: "#18345E"
+    readonly property color primarySubtle: "#12233D"
 
-    // === STATUS COLORS ===
-    readonly property color success: "#22C55E"           // income green
-    readonly property color successSoft: "#123524"       // green badge bg
+    readonly property color success: "#22C55E"
+    readonly property color successSoft: "#123524"
 
-    readonly property color danger: "#EF4444"            // expense red
-    readonly property color dangerSoft: "#3A1A1A"        // red badge bg
+    readonly property color danger: "#F87171"
+    readonly property color dangerStrong: "#EF4444"
+    readonly property color dangerSoft: "#3A1A1A"
 
-    readonly property color warning: "#F97316"           // orange chart / warning
-    readonly property color warningSoft: "#3A2412"
+    readonly property color warning: "#F59E0B"
+    readonly property color warningSoft: "#3A2A12"
 
-    readonly property color purple: "#8B5CF6"            // goals / savings
+    readonly property color purple: "#A78BFA"
     readonly property color purpleSoft: "#241A3A"
 
-    // === TEXT ===
     readonly property color textPrimary: "#F8FAFC"
     readonly property color textSecondary: "#CBD5E1"
     readonly property color textMuted: "#94A3B8"
     readonly property color textDisabled: "#64748B"
 
-    // === BORDERS / DIVIDERS ===
     readonly property color border: "#263244"
     readonly property color borderLight: "#334155"
-    readonly property color divider: "#1F2937"
+    readonly property color divider: "#1E293B"
 
-    // === SIDEBAR ===
-    readonly property color sidebarBorder: "#1F2937"
-    readonly property color sidebarItemHover: "#111827"
-    readonly property color sidebarItemActive: "#132B4F"
-    readonly property color sidebarItemActiveText: "#60A5FA"
+    readonly property color sidebarBorder: "#1E293B"
+    readonly property color sidebarItemHover: "#131C2E"
+    readonly property color sidebarItemActive: "#19365F"
+    readonly property color sidebarItemActiveText: "#DDEBFF"
 
-    // === INPUTS ===
-    readonly property color inputBackground: "#0E1623"
+    readonly property color inputBackground: "#0B1220"
     readonly property color inputBorder: "#2A3A50"
     readonly property color inputPlaceholder: "#64748B"
 
-    // === CHART COLORS ===
-    readonly property color chartBlue: "#2563EB"
+    readonly property color chartBlue: "#4F8CFF"
     readonly property color chartGreen: "#22C55E"
-    readonly property color chartOrange: "#F97316"
-    readonly property color chartPurple: "#8B5CF6"
+    readonly property color chartOrange: "#F59E0B"
+    readonly property color chartPurple: "#A78BFA"
     readonly property color chartGray: "#64748B"
 
-    // === SHADOW / OVERLAY ===
     readonly property color overlay: "#000000"
     readonly property color shadow: "#000000"
 
-    // === RADIUS ===
     readonly property int radiusSmall: 6
     readonly property int radiusMedium: 10
     readonly property int radiusLarge: 14
     readonly property int radiusXL: 18
+    readonly property int radiusXXL: 24
 
-    // === SPACING ===
     readonly property int spacingXS: 4
     readonly property int spacingSmall: 8
     readonly property int spacingMedium: 12
@@ -81,15 +74,13 @@ QtObject {
     readonly property int spacingXL: 24
     readonly property int spacingXXL: 32
 
-    // === FONT SIZES ===
     readonly property int fontSmall: 12
     readonly property int fontBody: 14
     readonly property int fontMedium: 16
     readonly property int fontTitle: 20
-    readonly property int fontHeading: 26
+    readonly property int fontHeading: 28
     readonly property int fontDisplay: 38
 
-    // === ICONS ===
     property string balanceIcon: "../images/balance.png"
     property string incomeIcon: "../images/income.png"
     property string expenseIcon: "../images/expense.png"

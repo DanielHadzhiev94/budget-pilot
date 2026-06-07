@@ -22,8 +22,8 @@ Dialog {
         typeInput.currentIndex = 0;
         root.transactionType = "Expense";
 
-        categoryInput.currentIndex = 0 ?? -1;
-        accountInput.currentIndex = 0 ?? -1;
+        categoryInput.currentIndex = categoryInput.count > 0 ? 0 : -1;
+        accountInput.currentIndex = accountInput.count > 0 ? 0 : -1;
 
         sourceInput.text = "";
         noteInput.text = "";
@@ -34,33 +34,50 @@ Dialog {
         root.open();
     }
 
+    function findIndexByValue(comboBox, value) {
+        for (let i = 0; i < comboBox.count; ++i) {
+            if (Number(comboBox.valueAt(i)) === Number(value)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    function applyTransactionToForm(row) {
+        if (row === undefined || row === null) {
+            return;
+        }
+
+        root.isEditMode = true;
+        root.editingTransactionId = row.id !== undefined ? row.id : -1;
+        root.editingTransaction = row;
+
+        amountInput.text = row.amount !== undefined && row.amount !== null ? String(row.amount) : "";
+        sourceInput.text = row.source !== undefined && row.source !== null ? String(row.source) : "";
+        noteInput.text = row.note !== undefined && row.note !== null ? String(row.note) : "";
+
+        typeInput.currentIndex = row.type === "Income" ? 1 : 0;
+
+        const categoryIndex = findIndexByValue(categoryInput, row.categoryId);
+        categoryInput.currentIndex = categoryIndex >= 0 ? categoryIndex : 0;
+
+        const accountIndex = findIndexByValue(accountInput, row.accountId);
+        accountInput.currentIndex = accountIndex >= 0 ? accountIndex : 0;
+
+        if (row.date !== undefined && row.date !== null) {
+            datePicker.setDateFromString(String(row.date));
+        }
+    }
+
     function openForEdit(row) {
         if (row === undefined || row === null) {
             console.log("AddTransactionDialog: invalid edit row");
             return;
         }
 
-        console.log("ROW ID:", row.id);
-
-        root.isEditMode = true;
-        root.editingTransactionId = row.id !== undefined ? row.id : -1;
-
-        amountInput.text = row.amount !== undefined && row.amount !== null ? String(row.amount) : "";
-
-        sourceInput.text = row.source !== undefined && row.source !== null ? String(row.source) : "";
-
-        noteInput.text = row.note !== undefined && row.note !== null ? String(row.note) : "";
-
-        if (row.type === "Income") {
-            typeInput.currentIndex = 1;
-        } else {
-            typeInput.currentIndex = 0;
-        }
-
-        var categoryIndex = categoryInput.model.indexOf(row.category);
-
-        categoryInput.currentIndex = categoryIndex >= 0 ? categoryIndex : 0;
-
+        root.viewModel.loadInitialData();
+        applyTransactionToForm(row);
         root.open();
     }
 
@@ -75,6 +92,11 @@ Dialog {
 
     onOpened: {
         root.viewModel.loadInitialData();
+
+        if (root.isEditMode && root.editingTransaction !== null) {
+            applyTransactionToForm(root.editingTransaction);
+        }
+
         amountInput.forceActiveFocus();
     }
 
@@ -577,6 +599,15 @@ Dialog {
                                     id: datePicker
                                     anchors.fill: parent
                                     anchors.margins: 2
+
+                                    function setDateFromString(value) {
+                                        const parsedDate = new Date(value);
+                                        if (isNaN(parsedDate.getTime())) {
+                                            return;
+                                        }
+
+                                        setDate(parsedDate.getMonth() + 1, parsedDate.getFullYear());
+                                    }
                                 }
                             }
                         }
@@ -711,7 +742,7 @@ Dialog {
                         onClicked: {
                             let month = datePicker.selectedMonth;
                             let year = datePicker.selectedYear;
-                            let date = new Date(year, month, 1);
+                            let date = new Date(year, month - 1, 1);
 
                             let success = false;
 

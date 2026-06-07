@@ -15,9 +15,16 @@ Item {
 
     Dialog {
         id: deleteDialog
-
         title: "Delete transaction?"
         modal: true
+        standardButtons: Dialog.Cancel | Dialog.Ok
+
+        background: Rectangle {
+            radius: AppTheme.radiusLarge
+            color: AppTheme.backgroundMainCard
+            border.color: AppTheme.border
+            border.width: 1
+        }
 
         onAccepted: {
             if (root.rowIndex !== -1 && root.viewModel) {
@@ -26,88 +33,84 @@ Item {
             }
         }
 
-        onRejected: {
-            root.rowIndex = -1
-        }
-
-        onClosed: {
-            root.rowIndex = -1
-        }
+        onRejected: root.rowIndex = -1
+        onClosed: root.rowIndex = -1
     }
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 22
+        spacing: 18
 
-        RowLayout {
+        Rectangle {
             Layout.fillWidth: true
-            Layout.preferredHeight: 90
+            Layout.preferredHeight: 88
+            radius: AppTheme.radiusXL
+            color: AppTheme.backgroundMainCard
+            border.color: AppTheme.border
+            border.width: 1
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 8
+            RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: 22
+                anchors.rightMargin: 18
+                spacing: 16
 
-                Text {
-                    text: "Transactions"
-                    color: AppTheme.textPrimary
-                    font.pixelSize: 36
-                    font.bold: true
-                }
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 4
 
-                Text {
-                    text: "Full transaction history"
-                    color: AppTheme.textSecondary
-                    font.pixelSize: 18
-                }
-            }
-
-            Item {
-                Layout.fillWidth: true
-            }
-
-            DatePicker {
-                Layout.preferredWidth: 285
-                Layout.preferredHeight: 40
-                Layout.alignment: Qt.AlignVCenter
-
-                onDateChanged: function(month, year) {
-                    if (!root.viewModel) {
-                        console.log("TransactionsPage: viewModel is undefined")
-                        return
+                    Text {
+                        text: "Transactions"
+                        color: AppTheme.textPrimary
+                        font.pixelSize: 28
+                        font.bold: true
                     }
 
-                    root.viewModel.loadData(month, year)
-                    root.viewModel.setDate(month, year)
-                }
-            }
-
-            Item {
-                Layout.preferredWidth: 5
-            }
-
-            CustomButton {
-                title: "Add Transaction"
-                custom_width: 160
-                custom_height: 40
-                Layout.alignment: Qt.AlignRight
-
-                onClicked: {
-                    if (!root.dialogPopup) {
-                        console.log("TransactionsPage: dialogPopup is undefined")
-                        return
+                    Text {
+                        text: "Review, edit and manage your monthly transaction history."
+                        color: AppTheme.textMuted
+                        font.pixelSize: 14
                     }
+                }
 
-                    root.dialogPopup.openForCreate()
+                DatePicker {
+                    Layout.preferredWidth: 285
+                    Layout.preferredHeight: 42
+                    Layout.alignment: Qt.AlignVCenter
+
+                    onDateChanged: function(month, year) {
+                        if (!root.viewModel) {
+                            console.log("TransactionsPage: viewModel is undefined")
+                            return
+                        }
+
+                        root.viewModel.loadData(month, year)
+                        root.viewModel.setDate(month, year)
+                    }
+                }
+
+                CustomButton {
+                    title: "+ Add Transaction"
+                    custom_width: 178
+                    custom_height: 42
+                    Layout.alignment: Qt.AlignVCenter
+
+                    onClicked: {
+                        if (!root.dialogPopup) {
+                            console.log("TransactionsPage: dialogPopup is undefined")
+                            return
+                        }
+
+                        root.dialogPopup.openForCreate()
+                    }
                 }
             }
         }
 
         TransactionTable {
             id: transactionTable
-
             Layout.fillWidth: true
             Layout.fillHeight: true
-
             viewModel: root.viewModel
 
             onEditTransactionClicked: function(row) {
@@ -120,8 +123,6 @@ Item {
                     console.log("TransactionsPage: edit row is undefined/null")
                     return
                 }
-
-                console.log("TransactionsPage: edit row:", JSON.stringify(row))
 
                 root.dialogPopup.openForEdit(row)
             }

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <QDate>
 
 #include "FinancialSummaryVm.hpp"
 #include "../../application/transaction/TransactionService.hpp"
@@ -12,9 +13,14 @@ namespace budgetpilot::presentation::viewmodels
     FinancialSummaryVm::FinancialSummaryVm(services::TransactionService &transaction_service,
                                            services::AccountService &account_service,
                                            QObject *parent)
-        : transaction_service_(transaction_service),
+        : QObject(parent),
+          transaction_service_(transaction_service),
           account_service_(account_service)
     {
+        const QDate today = QDate::currentDate();
+        selected_month_ = today.month();
+        selected_year_ = today.year();
+
         connect(
             &transaction_service_,
             &services::TransactionService::transaction_changed,
@@ -29,6 +35,11 @@ namespace budgetpilot::presentation::viewmodels
 
     void FinancialSummaryVm::set_current_balance(double value)
     {
+        if (current_balance_ == value)
+        {
+            return;
+        }
+
         current_balance_ = value;
     }
 

@@ -1,6 +1,9 @@
 #include "TransactionService.hpp"
 
+#include <cmath>
 #include <cstdint>
+#include <exception>
+#include <string>
 
 #include "src/domain/contracts/IRepository.hpp"
 #include "src/domain/models/Account.hpp"
@@ -12,8 +15,9 @@ namespace utilities = budgetpilot::domain::utilities;
 
 namespace budgetpilot::application::services
 {
-    TransactionService::TransactionService(contracts::IRepository<models::Account> &account_repository,
-                                           contracts::ITransactionRepository &transaction_repository)
+    TransactionService::TransactionService(
+        contracts::IRepository<models::Account> &account_repository,
+        contracts::ITransactionRepository &transaction_repository)
         : account_repository_(account_repository),
           transaction_repository_(transaction_repository)
     {
@@ -23,13 +27,12 @@ namespace budgetpilot::application::services
     {
         try
         {
-            bool should_increase = transaction.type == enums::Type::Income;
-            update_account(transaction.account_id, transaction.amount, should_increase);
             transaction_repository_.add(transaction);
+            synchronize_account_balance(transaction.account_id);
 
             emit transaction_changed();
 
-            return utilities::Response<void>::Success("Transaction added successfully");
+            return utilities::Response<void>::Success("Transaction added successfully.");
         }
         catch (const std::exception &ex)
         {
@@ -42,26 +45,26 @@ namespace budgetpilot::application::services
     {
         try
         {
-            const auto old_transaction_opt = transaction_repository_.get_one(transaction.id);
-
-            if (!old_transaction_opt.has_value())
-                return utilities::Response<void>::Failed(std::string{"Transaction with id: "} + std::to_string(transaction.id) + " not found!");
-
-            const auto old_amount = old_transaction_opt.value().amount;
-            const auto difference = transaction.amount - old_amount;
-
-            const auto new_amount = difference == 0
-                                        ? old_amount
-                                        : difference;
-
-            bool should_increase = transaction.type == enums::Type::Income;
-            update_account(transaction.account_id, new_amount, should_increase);
+            const auto old_transaction = transaction_repository_.get_one(transaction.id);
+            if (!old_transaction.has_value())
+            {
+                return utilities::Response<void>::Failed(
+                    std::string{"Transaction with id: "} + std::to_string(transaction.id) + " not found.");
+            }
 
             transaction_repository_.update(transaction);
 
+            // Recalculate instead of applying a difference. This handles amount, type,
+            // account and category changes correctly.
+            synchronize_account_balance(old_transaction->account_id);
+            if (old_transaction->account_id != transaction.account_id)
+            {
+                synchronize_account_balance(transaction.account_id);
+            }
+
             emit transaction_changed();
 
-            return utilities::Response<void>::Success("Transaction updated successfully");
+            return utilities::Response<void>::Success("Transaction updated successfully.");
         }
         catch (const std::exception &ex)
         {
@@ -75,17 +78,19 @@ namespace budgetpilot::application::services
     {
         try
         {
-            const auto &transactions = transaction_repository_.get_all_by_month(month, year);
-            if (transactions.capacity() <= 0)
+            auto transactions = transaction_repository_.get_all_by_month(month, year);
+            if (transactions.empty())
+            {
                 return utilities::Response<std::vector<models::Transaction>>::Failed(
                     std::string{"No transaction data found for the period "} +
                     std::to_string(month) +
                     "-" +
                     std::to_string(year));
+            }
 
-            return utilities::Response<std::vector<models::Transaction>>::Success(transactions);
+            return utilities::Response<std::vector<models::Transaction>>::Success(std::move(transactions));
         }
-        catch (std::exception &ex)
+        catch (const std::exception &ex)
         {
             return utilities::Response<std::vector<models::Transaction>>::Failed(
                 std::string{"Failed to get transactions: "} + ex.what());
@@ -97,17 +102,19 @@ namespace budgetpilot::application::services
     {
         try
         {
-            const auto &transactions = transaction_repository_.get_by_month(month, year, limit);
-            if (transactions.capacity() <= 0)
+            auto transactions = transaction_repository_.get_by_month(month, year, limit);
+            if (transactions.empty())
+            {
                 return utilities::Response<std::vector<models::Transaction>>::Failed(
                     std::string{"No transaction data found for the period "} +
                     std::to_string(month) +
                     "-" +
                     std::to_string(year));
+            }
 
-            return utilities::Response<std::vector<models::Transaction>>::Success(transactions);
+            return utilities::Response<std::vector<models::Transaction>>::Success(std::move(transactions));
         }
-        catch (std::exception &ex)
+        catch (const std::exception &ex)
         {
             return utilities::Response<std::vector<models::Transaction>>::Failed(
                 std::string{"Failed to get transactions: "} + ex.what());
@@ -119,21 +126,22 @@ namespace budgetpilot::application::services
     {
         try
         {
-            const auto income_data = transaction_repository_.get_all_by_month_and_type(month, year, enums::Type::Income);
-
-            if (income_data.capacity() == 0)
+            auto income_data = transaction_repository_.get_all_by_month_and_type(month, year, enums::Type::Income);
+            if (income_data.empty())
+            {
                 return utilities::Response<std::vector<models::Transaction>>::Failed(
                     std::string{"No income data found for the period "} +
                     std::to_string(month) +
                     "-" +
                     std::to_string(year));
-            return utilities::Response<std::vector<models::Transaction>>::Success(
-                income_data);
+            }
+
+            return utilities::Response<std::vector<models::Transaction>>::Success(std::move(income_data));
         }
-        catch (std::exception &ex)
+        catch (const std::exception &ex)
         {
             return utilities::Response<std::vector<models::Transaction>>::Failed(
-                std::string{"Failed to load income data"} + ex.what());
+                std::string{"Failed to load income data: "} + ex.what());
         }
     }
 
@@ -142,22 +150,24 @@ namespace budgetpilot::application::services
     {
         try
         {
-            const auto income_data = transaction_repository_.get_all_by_month_and_type(
+            auto expense_data = transaction_repository_.get_all_by_month_and_type(
                 month, year, enums::Type::Expense);
 
-            if (income_data.capacity() == 0)
+            if (expense_data.empty())
+            {
                 return utilities::Response<std::vector<models::Transaction>>::Failed(
                     std::string{"No expense data found for the period "} +
                     std::to_string(month) +
                     "-" +
                     std::to_string(year));
-            return utilities::Response<std::vector<models::Transaction>>::Success(
-                income_data);
+            }
+
+            return utilities::Response<std::vector<models::Transaction>>::Success(std::move(expense_data));
         }
-        catch (std::exception &ex)
+        catch (const std::exception &ex)
         {
             return utilities::Response<std::vector<models::Transaction>>::Failed(
-                std::string{"Failed to load expense data"} + ex.what());
+                std::string{"Failed to load expense data: "} + ex.what());
         }
     }
 
@@ -165,8 +175,8 @@ namespace budgetpilot::application::services
     {
         try
         {
-            const auto &transaction_data = transaction_repository_.get_all_by_month(month, year);
-            if (transaction_data.capacity() == 0)
+            const auto transaction_data = transaction_repository_.get_all_by_month(month, year);
+            if (transaction_data.empty())
             {
                 return utilities::Response<double>::Failed(
                     std::string{"No transaction data found for the period "} +
@@ -186,10 +196,10 @@ namespace budgetpilot::application::services
 
             return utilities::Response<double>::Success(transaction_sum);
         }
-        catch (std::exception &ex)
+        catch (const std::exception &ex)
         {
             return utilities::Response<double>::Failed(
-                std::string{"Failed to load transaction data"} + ex.what());
+                std::string{"Failed to load transaction data: "} + ex.what());
         }
     }
 
@@ -197,40 +207,44 @@ namespace budgetpilot::application::services
     {
         try
         {
-            const auto transaction_opt = transaction_repository_.get_one(id);
-            if (!transaction_opt.has_value())
+            const auto transaction = transaction_repository_.get_one(id);
+            if (!transaction.has_value())
             {
-                return utilities::Response<void>::Failed(std::string{"Transaction with id: "} + std::to_string(id) + "not found!");
+                return utilities::Response<void>::Failed(
+                    std::string{"Transaction with id: "} + std::to_string(id) + " not found.");
             }
 
-            const models::Transaction *transaction = &transaction_opt.value();
-            bool should_increase = transaction->type == enums::Type::Expense;
-            update_account(transaction->account_id, transaction->amount, should_increase);
-
-            transaction_repository_.remove(transaction->id);
+            transaction_repository_.remove(id);
+            synchronize_account_balance(transaction->account_id);
 
             emit transaction_changed();
 
-            return utilities::Response<void>::Success("Transaction successfully deleted!");
+            return utilities::Response<void>::Success("Transaction successfully deleted.");
         }
-        catch (std::exception &ex)
+        catch (const std::exception &ex)
         {
             return utilities::Response<void>::Failed(
-                std::string{"Cannot delete the transaction "} + ex.what());
+                std::string{"Cannot delete the transaction: "} + ex.what());
         }
     }
 
-    void TransactionService::update_account(const std::uint64_t account_id, const double amount, bool increase)
+    void TransactionService::synchronize_account_balance(const std::uint64_t account_id)
     {
-        auto acc_opt = account_repository_.get_one(account_id);
-        // If we remove expense, then increase the balance otherwise decrease it
-        if (acc_opt.has_value())
+        auto account = account_repository_.get_one(account_id);
+        if (!account.has_value())
         {
-            acc_opt->amount += increase
-                                   ? amount
-                                   : -amount;
-
-            account_repository_.update(*acc_opt);
+            throw std::runtime_error("Account not found.");
         }
+
+        const double calculated_balance = transaction_repository_.get_balance_by_account_id(
+            static_cast<int>(account_id));
+
+        if (std::abs(account->amount - calculated_balance) <= 0.001)
+        {
+            return;
+        }
+
+        account->amount = calculated_balance;
+        account_repository_.update(*account);
     }
 }

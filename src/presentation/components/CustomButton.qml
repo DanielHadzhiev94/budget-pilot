@@ -4,37 +4,33 @@ import QtQuick.Layouts
 import BudgetPilot
 
 Button {
+    id: btn
 
     property string title: "Default text"
-    property int custom_height: 40
-    property int custom_width: 160
-
-    id: btn
+    property int custom_height: 42
+    property int custom_width: 164
 
     text: title
     hoverEnabled: true
-
-    Layout.rightMargin: 12
-    Layout.topMargin: 8
-    Layout.bottomMargin: 8
 
     Layout.preferredHeight: custom_height
     Layout.preferredWidth: custom_width
 
     background: Rectangle {
-        radius: 10
-        color: btn.hovered ? AppTheme.primaryLight : AppTheme.primarySoft
-        border.color: AppTheme.primary
+        radius: 12
+        color: btn.down ? AppTheme.primaryDark : btn.hovered ? AppTheme.primaryLight : AppTheme.primary
+        border.color: Qt.rgba(255, 255, 255, 0.10)
         border.width: 1
+
+        Behavior on color { ColorAnimation { duration: 120 } }
     }
 
     contentItem: Text {
         text: btn.text
-        color: AppTheme.textPrimary
+        color: "white"
         font.pixelSize: 14
         font.bold: true
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
 }
-

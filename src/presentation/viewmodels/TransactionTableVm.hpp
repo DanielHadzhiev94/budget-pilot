@@ -28,15 +28,11 @@ namespace budgetpilot::presentation::viewmodels {
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-        QVariant data(
-            const QModelIndex &index,
-            int role = Qt::DisplayRole
-        ) const override;
+        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
         Q_INVOKABLE void loadData(int month, int year);
         Q_INVOKABLE void deleteTransaction(int row);
         Q_INVOKABLE void setDate(int month, int year);
-
         Q_INVOKABLE QVariantMap transactionAt(int row) const;
 
     private:
@@ -52,20 +48,22 @@ namespace budgetpilot::presentation::viewmodels {
         };
 
         struct TransactionRow {
-            std::int64_t id;
+            std::uint64_t id{0};
+            std::uint64_t account_id{0};
+            std::uint64_t category_id{0};
             QString date;
             QString type;
             QString category;
             QString source;
             QString note;
-            double amount = 0.0;
+            double amount{0.0};
         };
 
-        QString formatDate(std::int64_t timestamp) const;
+        static QString formatDate(std::int64_t timestamp);
         QString getCategoryName(std::int64_t id) const;
 
-        int selected_month;
-        int selected_year;
+        int selected_month{1};
+        int selected_year{1970};
 
         std::vector<TransactionRow> transactions_;
 

@@ -1,24 +1,31 @@
 #pragma once
 
 #include <ctime>
+#include <stdexcept>
 
 namespace budgetpilot::domain::utilities
 {
     struct MonthYear
     {
-        int month;
-        int year;
+        int month{1};
+        int year{1970};
 
         static MonthYear current()
         {
-            std::time_t now = std::time(nullptr);
-            std::tm *localTime = std::localtime(&now);
+            const std::time_t now = std::time(nullptr);
+            const std::tm *local_time = std::localtime(&now);
+
+            if (local_time == nullptr)
+            {
+                throw std::runtime_error("Failed to read local time.");
+            }
 
             return {
-                localTime->tm_mon + 1,
-                localTime->tm_year + 1900};
+                local_time->tm_mon + 1,
+                local_time->tm_year + 1900};
         }
 
+        [[nodiscard]]
         MonthYear subtract_months(int months_to_subtract) const
         {
             int result_month = month - months_to_subtract;
@@ -27,12 +34,10 @@ namespace budgetpilot::domain::utilities
             while (result_month <= 0)
             {
                 result_month += 12;
-                result_year -= 1;
+                --result_year;
             }
 
-            return {
-                result_month,
-                result_year};
+            return {result_month, result_year};
         }
     };
 }

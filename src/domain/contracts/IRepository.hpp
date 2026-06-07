@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+#include <optional>
 #include <vector>
 
 namespace budgetpilot::domain::contracts {
@@ -15,4 +17,4 @@ namespace budgetpilot::domain::contracts {
         virtual std::vector<T> get_all() = 0;
         virtual std::optional<T> get_one(const std::uint64_t &id) = 0;
     };
-};
+}

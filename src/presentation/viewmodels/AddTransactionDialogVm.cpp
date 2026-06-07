@@ -11,7 +11,8 @@ namespace budgetpilot::presentation::viewmodels {
                                                    services::AccountService &account_service,
                                                    services::CategoryService &category_service,
                                                    QObject *parent)
-        : transaction_service_(transactionService),
+        : QObject(parent),
+          transaction_service_(transactionService),
           account_service_(account_service),
           category_service_(category_service) {
     }
@@ -80,6 +81,16 @@ namespace budgetpilot::presentation::viewmodels {
 
         if (amount <= 0.0) {
             setErrorMessage("Amount must be greater than zero.");
+            return false;
+        }
+
+        if (account_id <= 0) {
+            setErrorMessage("Please select a valid account.");
+            return false;
+        }
+
+        if (category_id <= 0) {
+            setErrorMessage("Please select a valid category.");
             return false;
         }
 

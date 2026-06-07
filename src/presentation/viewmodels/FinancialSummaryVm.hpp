@@ -8,7 +8,7 @@ namespace budgetpilot::application::services {
 }
 
 namespace budgetpilot::domain::models {
-    class Transaction;
+    struct Transaction;
 }
 
 namespace services = budgetpilot::application::services;

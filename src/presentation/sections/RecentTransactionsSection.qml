@@ -11,10 +11,10 @@ Rectangle {
     property var viewModel
 
     // Root layout sizes
-    property int tableWidth: 720
+    property int tableWidth: 960
     property int tableHeight: 460
     property int rootTopMargin: 0
-    property int rootLeftMargin: 20
+    property int rootLeftMargin: 0
     property int rootRadius: 16
     property int borderWidth: 1
 
@@ -66,8 +66,8 @@ Rectangle {
     Layout.topMargin: root.rootTopMargin
     Layout.leftMargin: root.rootLeftMargin
 
-    color: AppTheme.backgroundMainCard
-    radius: root.rootRadius
+    color: AppTheme.surface
+    radius: AppTheme.radiusXL
     border.color: AppTheme.border
     border.width: root.borderWidth
     clip: true
@@ -110,7 +110,7 @@ Rectangle {
             Layout.fillHeight: true
 
             radius: root.tableContainerRadius
-            color: AppTheme.background
+            color: AppTheme.tableSurface
             border.color: AppTheme.border
             border.width: root.borderWidth
             clip: true
@@ -124,7 +124,7 @@ Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: root.tableHeaderHeight
 
-                    color: AppTheme.backgroundAlt
+                    color: AppTheme.tableHeaderSurface
 
                     RowLayout {
                         anchors.fill: parent
@@ -363,7 +363,7 @@ Rectangle {
             }
 
             contentItem: Text {
-                text: "View all transactions ->"
+                text: "View all transactions →"
                 color: viewAllButton.hovered
                     ? AppTheme.primary
                     : AppTheme.textPrimary

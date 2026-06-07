@@ -2,7 +2,6 @@
 
 #include <vector>
 
-#include "AccountsService.hpp"
 #include "src/domain/models/Account.hpp"
 #include "src/domain/utilities/Response.hpp"
 
