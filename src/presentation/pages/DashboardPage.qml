@@ -7,7 +7,7 @@ Rectangle {
     id: root
 
     required property var dialogPopup
-    signal viewAllTransactionsClicked()
+    signal viewAllTransactionsClicked
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -15,7 +15,7 @@ Rectangle {
 
     function openAddTransactionDialog() {
         if (root.dialogPopup) {
-            root.dialogPopup.openForCreate()
+            root.dialogPopup.openForCreate();
         }
     }
 
@@ -56,15 +56,18 @@ Rectangle {
                     }
                 }
 
+                Item {
+                    Layout.fillWidth: true
+                }
                 DatePicker {
                     Layout.preferredWidth: 285
                     Layout.preferredHeight: 42
                     Layout.alignment: Qt.AlignVCenter
 
-                    onDateChanged: function(month, year) {
-                        financialSummaryVM.set_date(month, year)
-                        financialSummaryVM.load_data(month, year)
-                        recentTransactionsVM.load_data(month, year)
+                    onDateChanged: function (month, year) {
+                        financialSummaryVM.set_date(month, year);
+                        financialSummaryVM.load_data(month, year);
+                        recentTransactionsVM.load_data(month, year);
                     }
                 }
 

@@ -99,14 +99,18 @@ Item {
                     lineHeight: 1.15
                 }
 
-                Item { Layout.fillHeight: true }
+                Item {
+                    Layout.fillHeight: true
+                }
 
                 RowLayout {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 42
                     spacing: 10
 
-                    Item { Layout.fillWidth: true }
+                    Item {
+                        Layout.fillWidth: true
+                    }
 
                     Button {
                         id: cancelDeleteButton
@@ -165,8 +169,8 @@ Item {
 
         onAccepted: {
             if (root.rowIndex !== -1 && root.viewModel) {
-                root.viewModel.deleteTransaction(root.rowIndex)
-                root.rowIndex = -1
+                root.viewModel.deleteTransaction(root.rowIndex);
+                root.rowIndex = -1;
             }
         }
 
@@ -210,19 +214,23 @@ Item {
                     }
                 }
 
+                Item {
+                    Layout.fillWidth: true
+                }
+
                 DatePicker {
                     Layout.preferredWidth: 285
                     Layout.preferredHeight: 42
                     Layout.alignment: Qt.AlignVCenter
 
-                    onDateChanged: function(month, year) {
+                    onDateChanged: function (month, year) {
                         if (!root.viewModel) {
-                            console.log("TransactionsPage: viewModel is undefined")
-                            return
+                            console.log("TransactionsPage: viewModel is undefined");
+                            return;
                         }
 
-                        root.viewModel.loadData(month, year)
-                        root.viewModel.setDate(month, year)
+                        root.viewModel.loadData(month, year);
+                        root.viewModel.setDate(month, year);
                     }
                 }
 
@@ -234,11 +242,11 @@ Item {
 
                     onClicked: {
                         if (!root.dialogPopup) {
-                            console.log("TransactionsPage: dialogPopup is undefined")
-                            return
+                            console.log("TransactionsPage: dialogPopup is undefined");
+                            return;
                         }
 
-                        root.dialogPopup.openForCreate()
+                        root.dialogPopup.openForCreate();
                     }
                 }
             }
@@ -250,28 +258,28 @@ Item {
             Layout.fillHeight: true
             viewModel: root.viewModel
 
-            onEditTransactionClicked: function(row) {
+            onEditTransactionClicked: function (row) {
                 if (!root.dialogPopup) {
-                    console.log("TransactionsPage: dialogPopup is undefined")
-                    return
+                    console.log("TransactionsPage: dialogPopup is undefined");
+                    return;
                 }
 
                 if (row === undefined || row === null) {
-                    console.log("TransactionsPage: edit row is undefined/null")
-                    return
+                    console.log("TransactionsPage: edit row is undefined/null");
+                    return;
                 }
 
-                root.dialogPopup.openForEdit(row)
+                root.dialogPopup.openForEdit(row);
             }
 
-            onDeleteTransactionClicked: function(rowIndex) {
+            onDeleteTransactionClicked: function (rowIndex) {
                 if (rowIndex === undefined || rowIndex === null || rowIndex < 0) {
-                    console.log("TransactionsPage: invalid delete rowIndex:", rowIndex)
-                    return
+                    console.log("TransactionsPage: invalid delete rowIndex:", rowIndex);
+                    return;
                 }
 
-                root.rowIndex = rowIndex
-                deleteDialog.open()
+                root.rowIndex = rowIndex;
+                deleteDialog.open();
             }
         }
     }
