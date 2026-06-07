@@ -9,19 +9,23 @@
 
 struct sqlite3;
 
-namespace budgetpilot::domain::models {
+namespace budgetpilot::domain::models
+{
     struct Transaction;
     struct Category;
 }
 
-namespace budgetpilot::infrastructure::persistence {
+namespace budgetpilot::infrastructure::persistence
+{
     class Statement;
 }
 
 namespace models = budgetpilot::domain::models;
 
-namespace budgetpilot::infrastructure::repositories {
-    class TransactionRepository final : public domain::contracts::ITransactionRepository {
+namespace budgetpilot::infrastructure::repositories
+{
+    class TransactionRepository final : public domain::contracts::ITransactionRepository
+    {
     public:
         explicit TransactionRepository(sqlite3 &connection);
 
@@ -42,7 +46,13 @@ namespace budgetpilot::infrastructure::repositories {
         std::vector<models::Transaction> get_by_month(int month, int year, int limit) override;
 
         [[nodiscard]]
+        double get_balance_by_account_id(int account_id) override;
+
+        [[nodiscard]]
         std::vector<models::Transaction> get_all_by_month_and_type(int month, int year, enums::Type type) override;
+
+        [[nodiscard]]
+        std::vector<models::Transaction> get_by_date_and_account_id(int month, int year, int account_id) override;
 
     private:
         using TimePoint = std::chrono::system_clock::time_point;
