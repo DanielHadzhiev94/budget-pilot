@@ -165,18 +165,7 @@ Rectangle {
             delegate: Rectangle {
                 implicitWidth: root.columnWidth(column)
                 implicitHeight: root.rowHeight
-                color: rowMouseArea.containsMouse
-                    ? AppTheme.tableRowHover
-                    : row % 2 === 0 ? "transparent" : AppTheme.tableRowAlt
-
-                Behavior on color { ColorAnimation { duration: 100 } }
-
-                MouseArea {
-                    id: rowMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    acceptedButtons: Qt.NoButton
-                }
+                color: row % 2 === 0 ? "transparent" : AppTheme.tableRowAlt
 
                 Rectangle {
                     anchors.left: parent.left

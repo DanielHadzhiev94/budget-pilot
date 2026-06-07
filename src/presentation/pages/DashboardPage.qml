@@ -84,11 +84,26 @@ Rectangle {
             Layout.preferredHeight: 160
         }
 
-        RecentTransactionsSection {
-            viewModel: recentTransactionsVM
+        RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            onViewAllTransactionsClicked: root.viewAllTransactionsClicked()
+            spacing: 20
+
+            RecentTransactionsSection {
+                viewModel: recentTransactionsVM
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredWidth: 620
+                Layout.minimumWidth: 560
+                onViewAllTransactionsClicked: root.viewAllTransactionsClicked()
+            }
+
+            ExpenseCategoryPreviewSection {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredWidth: 440
+                Layout.minimumWidth: 360
+            }
         }
     }
 }

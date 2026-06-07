@@ -86,6 +86,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/Dialog.qml
         src/presentation/sections/FinancialSummarySection.qml
         src/presentation/sections/RecentTransactionsSection.qml
+        src/presentation/sections/ExpenseCategoryPreviewSection.qml
         src/presentation/sections/TransactionTableSection.qml
         src/presentation/pages/DashboardPage.qml
         src/presentation/pages/TransactionsPage.qml
