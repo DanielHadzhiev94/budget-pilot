@@ -23,7 +23,8 @@ namespace repository = budgetpilot::infrastructure::repositories;
 namespace persistence = budgetpilot::infrastructure::persistence;
 namespace viewmodels = budgetpilot::presentation::viewmodels;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QGuiApplication app(argc, argv);
 
     // Initialization of the database
@@ -33,7 +34,7 @@ int main(int argc, char *argv[]) {
     persistence::DbContext dbContext{dbPath};
     dbContext.initialize();
 
-    //Repositories
+    // Repositories
     repository::AccountRepository account_repository{*dbContext.getConnection()};
     repository::TransactionRepository transaction_repository{*dbContext.getConnection()};
     repository::CategoryRepository category_repository{*dbContext.getConnection()};
@@ -41,13 +42,15 @@ int main(int argc, char *argv[]) {
     // Services
     services::TransactionService transaction_service{
         account_repository,
-        transaction_repository
+        transaction_repository};
+
+    services::AccountService account_service{
+        account_repository,
+        transaction_repository,
     };
 
-    services::AccountService account_service
-    {
-        account_repository,
-    };
+    // Synchronize accounts upon loading
+    account_service.synchronize_accounts();
 
     services::CategoryService category_service{
         category_repository,
@@ -59,7 +62,8 @@ int main(int argc, char *argv[]) {
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
         &app,
-        []() { QCoreApplication::exit(-1); },
+        []()
+        { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
 
     QQuickStyle::setStyle("Basic");
@@ -67,8 +71,7 @@ int main(int argc, char *argv[]) {
     // Initializing of the ViewModels
     viewmodels::FinancialSummaryVm financialSummaryViewModel{
         transaction_service,
-        account_service
-    };
+        account_service};
 
     viewmodels::AddTransactionDialogVm addDialogViewModel{
         transaction_service,
@@ -78,13 +81,11 @@ int main(int argc, char *argv[]) {
 
     viewmodels::RecentTransactionVm recentTransactionsViewModel{
         transaction_service,
-        category_service
-    };
+        category_service};
 
     viewmodels::TransactionTableVm transactionTableViewModel{
         transaction_service,
-        category_service
-    };
+        category_service};
 
     engine.rootContext()->setContextProperty("financialSummaryVM", &financialSummaryViewModel);
     engine.rootContext()->setContextProperty("addTransactionVM", &addDialogViewModel);
