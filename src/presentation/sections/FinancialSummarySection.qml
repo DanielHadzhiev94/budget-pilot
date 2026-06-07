@@ -38,7 +38,7 @@ Rectangle {
             BudgetCard {
                 title: "Expense This Month"
                 mainValue: "€ " + viewModel.expense.toFixed(2)
-                mainValueColor: AppTheme.warning
+                mainValueColor: AppTheme.danger
                 subtitle: "vs last month"
                 iconSource: AppTheme.expenseIcon
                 iconSize: 30

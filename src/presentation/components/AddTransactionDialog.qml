@@ -22,8 +22,8 @@ Dialog {
         typeInput.currentIndex = 0;
         root.transactionType = "Expense";
 
-        categoryInput.currentIndex = -1;
-        accountInput.currentIndex = -1;
+        categoryInput.currentIndex = 0 ?? -1;
+        accountInput.currentIndex = 0 ?? -1;
 
         sourceInput.text = "";
         noteInput.text = "";
