@@ -50,7 +50,8 @@ int main(int argc, char *argv[])
     };
 
     // Synchronize accounts upon loading
-    account_service.synchronize_accounts();
+    const auto &msg = account_service.synchronize_accounts().message();
+    std::cout << msg << "\n";
 
     services::CategoryService category_service{
         category_repository,
