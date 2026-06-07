@@ -9,6 +9,8 @@ ApplicationWindow {
     visible: true
     width: 1440
     height: 900
+    minimumWidth: 1120
+    minimumHeight: 720
     title: "BudgetPilot"
 
     property int currentPage: 0
@@ -21,8 +23,7 @@ ApplicationWindow {
             anchors.fill: parent
             spacing: 0
 
-            Header {
-            }
+            Header {}
 
             RowLayout {
                 Layout.fillWidth: true
@@ -30,28 +31,25 @@ ApplicationWindow {
                 spacing: 0
 
                 Sidebar {
-                    Layout.preferredWidth: 240
+                    Layout.preferredWidth: 248
                     Layout.fillHeight: true
-
                     selectedIndex: appRoot.currentPage
-
-                    onItemSelected: function(index) {
-                        appRoot.currentPage = index
-                    }
+                    onItemSelected: function(index) { appRoot.currentPage = index }
                 }
 
-                Loader {
+                Rectangle {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
+                    color: AppTheme.backgroundAlt
 
-                    sourceComponent: {
-                        switch (appRoot.currentPage) {
-                            case 0:
-                                return dashboardPage
-                            case 1:
-                                return transactionsPage
-                            default:
-                                return dashboardPage
+                    Loader {
+                        anchors.fill: parent
+                        sourceComponent: {
+                            switch (appRoot.currentPage) {
+                                case 0: return dashboardPage
+                                case 1: return transactionsPage
+                                default: return dashboardPage
+                            }
                         }
                     }
                 }
@@ -66,21 +64,14 @@ ApplicationWindow {
 
     Component {
         id: dashboardPage
-
         DashboardPage {
             dialogPopup: addTransactionDialog
-
-            onViewAllTransactionsClicked: {
-                appRoot.currentPage = 1
-            }
+            onViewAllTransactionsClicked: appRoot.currentPage = 1
         }
     }
 
     Component {
         id: transactionsPage
-
-        TransactionsPage {
-            popup: addTransactionDialog
-        }
+        TransactionsPage { popup: addTransactionDialog }
     }
 }

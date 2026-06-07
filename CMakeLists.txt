@@ -14,17 +14,17 @@ qt_standard_project_setup(REQUIRES 6.10)
 qt_add_executable(appBudgetPilot
         src/presentation/main.cpp
 
-        src/infrastructure/persistence/dbcontext.hpp
-        src/infrastructure/persistence/dbcontext.cpp
+        src/infrastructure/persistence/DbContext.hpp
+        src/infrastructure/persistence/DbContext.cpp
 
-        src/domain/models/transaction.hpp
-        src/domain/models/category.hpp
-        src/domain/models/account.hpp
+        src/domain/models/Transaction.hpp
+        src/domain/models/Category.hpp
+        src/domain/models/Account.hpp
 
         src/domain/contracts/IRepository.hpp
 
-        src/infrastructure/persistence/statement.hpp
-        src/infrastructure/persistence/statement.cpp
+        src/infrastructure/persistence/Statement.hpp
+        src/infrastructure/persistence/Statement.cpp
 
         src/infrastructure/repositories/TransactionRepository.hpp
         src/infrastructure/repositories/TransactionRepository.cpp
@@ -34,8 +34,8 @@ qt_add_executable(appBudgetPilot
 
         src/infrastructure/repositories/CategoryRepository.hpp
         src/infrastructure/repositories/CategoryRepository.cpp
-        src/presentation/viewmodels/FinancialSummaryVM.hpp
-        src/presentation/viewmodels/FinancialSummaryVM.cpp
+        src/presentation/viewmodels/FinancialSummaryVm.hpp
+        src/presentation/viewmodels/FinancialSummaryVm.cpp
         src/application/transaction/TransactionService.hpp
         src/domain/utilities/Response.hpp
         src/application/transaction/TransactionService.cpp
@@ -86,6 +86,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/Dialog.qml
         src/presentation/sections/FinancialSummarySection.qml
         src/presentation/sections/RecentTransactionsSection.qml
+        src/presentation/sections/ExpenseCategoryPreviewSection.qml
         src/presentation/sections/TransactionTableSection.qml
         src/presentation/pages/DashboardPage.qml
         src/presentation/pages/TransactionsPage.qml

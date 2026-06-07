@@ -4,7 +4,7 @@
 
 #include "../../domain/models/Transaction.hpp"
 #include "../../infrastructure/persistence/Statement.hpp"
-#include "../../domain/utilities/Timeconverter.hpp"
+#include "../../domain/utilities/TimeConverter.hpp"
 
 using namespace budgetpilot::domain::models;
 namespace utilities = budgetpilot::domain::utilities;
@@ -30,8 +30,8 @@ namespace budgetpilot::infrastructure::repositories
         sqlite3_bind_int(stmt.get(), 2, static_cast<int>(transaction.category_id));
         sqlite3_bind_int(stmt.get(), 3, static_cast<int>(transaction.type));
         sqlite3_bind_double(stmt.get(), 4, transaction.amount);
-        sqlite3_bind_text(stmt.get(), 5, transaction.source.value().c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(stmt.get(), 6, transaction.note.value().c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt.get(), 5, transaction.source.value_or("").c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt.get(), 6, transaction.note.value_or("").c_str(), -1, SQLITE_TRANSIENT);
 
         auto seconds = utilities::TimeConverter::convert_to_seconds(transaction.transaction_date);
         sqlite3_bind_int64(stmt.get(), 7, seconds);
@@ -124,9 +124,16 @@ namespace budgetpilot::infrastructure::repositories
         const persistence::Statement stmt(&connection_, sql);
         std::vector<Transaction> transactions{};
 
-        while (sqlite3_step(stmt.get()) != SQLITE_DONE)
+        int result{};
+
+        while ((result = sqlite3_step(stmt.get())) == SQLITE_ROW)
         {
-            transactions.push_back(std::move(build_transaction_(stmt)));
+            transactions.push_back(build_transaction_(stmt));
+        }
+
+        if (result != SQLITE_DONE)
+        {
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
 
         return transactions;
@@ -213,9 +220,16 @@ namespace budgetpilot::infrastructure::repositories
         sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
         sqlite3_bind_int(stmt.get(), 3, limit);
 
-        while (sqlite3_step(stmt.get()) != SQLITE_DONE)
+        int result{};
+
+        while ((result = sqlite3_step(stmt.get())) == SQLITE_ROW)
         {
-            transactions.push_back(std::move(build_transaction_(stmt)));
+            transactions.push_back(build_transaction_(stmt));
+        }
+
+        if (result != SQLITE_DONE)
+        {
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
 
         return transactions;
@@ -271,9 +285,16 @@ namespace budgetpilot::infrastructure::repositories
         sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
         sqlite3_bind_int(stmt.get(), 3, static_cast<int>(type));
 
-        while (sqlite3_step(stmt.get()) != SQLITE_DONE)
+        int result{};
+
+        while ((result = sqlite3_step(stmt.get())) == SQLITE_ROW)
         {
-            transactions.push_back(std::move(build_transaction_(stmt)));
+            transactions.push_back(build_transaction_(stmt));
+        }
+
+        if (result != SQLITE_DONE)
+        {
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
 
         return transactions;
@@ -300,9 +321,16 @@ namespace budgetpilot::infrastructure::repositories
         sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
         sqlite3_bind_int(stmt.get(), 3, account_id);
 
-        while (sqlite3_step(stmt.get()) != SQLITE_DONE)
+        int result{};
+
+        while ((result = sqlite3_step(stmt.get())) == SQLITE_ROW)
         {
-            transactions.push_back(std::move(build_transaction_(stmt)));
+            transactions.push_back(build_transaction_(stmt));
+        }
+
+        if (result != SQLITE_DONE)
+        {
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
 
         return transactions;
@@ -327,7 +355,7 @@ namespace budgetpilot::infrastructure::repositories
         transaction.transaction_date = utilities::TimeConverter::from_unix(sqlite3_column_int(stmt.get(), 7));
 
         const unsigned char *created_at = sqlite3_column_text(stmt.get(), 8);
-        transaction.created_at = reinterpret_cast<const char *>(created_at);
+        transaction.created_at = created_at ? reinterpret_cast<const char *>(created_at) : "";
 
         return transaction;
     }

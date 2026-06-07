@@ -11,20 +11,20 @@ Rectangle {
     property var viewModel
 
     // Root layout sizes
-    property int tableWidth: 720
-    property int tableHeight: 460
+    property int tableWidth: 620
+    property int tableHeight: 430
     property int rootTopMargin: 0
-    property int rootLeftMargin: 20
+    property int rootLeftMargin: 0
     property int rootRadius: 16
     property int borderWidth: 1
 
     // Inner layout sizes
-    property int contentMargin: 18
-    property int contentSpacing: 14
+    property int contentMargin: 16
+    property int contentSpacing: 12
     property int sectionHeaderHeight: 34
     property int tableContainerRadius: 12
-    property int tableHeaderHeight: 44
-    property int rowHeight: 48
+    property int tableHeaderHeight: 42
+    property int rowHeight: 46
     property int rowHorizontalMargin: 16
     property int separatorHeight: 1
 
@@ -38,11 +38,11 @@ Rectangle {
     property int emptySubtitleFontSize: 13
 
     // Column sizes
-    property int columnSpacing: 18
-    property int dateColumnSize: 150
-    property int typeColumnSize: 126
-    property int categoryColumnSize: 105
-    property int amountColumnSize: 115
+    property int columnSpacing: 14
+    property int dateColumnSize: 108
+    property int typeColumnSize: 104
+    property int categoryColumnSize: 125
+    property int amountColumnSize: 108
 
     // Type badge sizes
     property int typeBadgeWidth: 92
@@ -51,7 +51,6 @@ Rectangle {
 
     // Colors
     property color zebraRowColor: Qt.rgba(255, 255, 255, 0.035)
-    property color hoverRowColor: Qt.rgba(255, 255, 255, 0.07)
     property color incomeBadgeColor: Qt.rgba(0.1, 0.8, 0.45, 0.12)
     property color expenseBadgeColor: Qt.rgba(1.0, 0.25, 0.25, 0.12)
 
@@ -66,8 +65,8 @@ Rectangle {
     Layout.topMargin: root.rootTopMargin
     Layout.leftMargin: root.rootLeftMargin
 
-    color: AppTheme.backgroundMainCard
-    radius: root.rootRadius
+    color: AppTheme.surface
+    radius: AppTheme.radiusXL
     border.color: AppTheme.border
     border.width: root.borderWidth
     clip: true
@@ -86,7 +85,7 @@ Rectangle {
                 spacing: 2
 
                 Text {
-                    text: "Recent 15 Transactions"
+                    text: "Recent transactions"
                     color: AppTheme.textPrimary
                     font.pixelSize: root.titleFontSize
                     font.bold: true
@@ -110,7 +109,7 @@ Rectangle {
             Layout.fillHeight: true
 
             radius: root.tableContainerRadius
-            color: AppTheme.background
+            color: AppTheme.tableSurface
             border.color: AppTheme.border
             border.width: root.borderWidth
             clip: true
@@ -124,7 +123,7 @@ Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: root.tableHeaderHeight
 
-                    color: AppTheme.backgroundAlt
+                    color: AppTheme.tableHeaderSurface
 
                     RowLayout {
                         anchors.fill: parent
@@ -157,15 +156,6 @@ Rectangle {
                             font.pixelSize: root.headerFontSize
                             font.bold: true
                             Layout.preferredWidth: root.categoryColumnSize
-                            verticalAlignment: Text.AlignVCenter
-                        }
-
-                        Text {
-                            text: "Source"
-                            color: AppTheme.textSecondary
-                            font.pixelSize: root.headerFontSize
-                            font.bold: true
-                            Layout.fillWidth: true
                             verticalAlignment: Text.AlignVCenter
                         }
 
@@ -238,23 +228,7 @@ Rectangle {
                         width: ListView.view.width
                         height: root.rowHeight
 
-                        color: mouseArea.containsMouse
-                            ? root.hoverRowColor
-                            : row.index % 2 === 0
-                                ? "transparent"
-                                : root.zebraRowColor
-
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: 120
-                            }
-                        }
-
-                        MouseArea {
-                            id: mouseArea
-                            anchors.fill: parent
-                            hoverEnabled: true
-                        }
+                        color: row.index % 2 === 0 ? "transparent" : root.zebraRowColor
 
                         RowLayout {
                             anchors.fill: parent
@@ -312,15 +286,6 @@ Rectangle {
                             }
 
                             Text {
-                                text: row.modelData.source
-                                color: AppTheme.textSecondary
-                                font.pixelSize: root.rowFontSize
-                                Layout.fillWidth: true
-                                verticalAlignment: Text.AlignVCenter
-                                elide: Text.ElideRight
-                            }
-
-                            Text {
                                 text: row.modelData.type === "Income"
                                     ? "+ €" + Number(row.modelData.amount).toFixed(2)
                                     : "- €" + Number(row.modelData.amount).toFixed(2)
@@ -363,7 +328,7 @@ Rectangle {
             }
 
             contentItem: Text {
-                text: "View all transactions ->"
+                text: "View all transactions →"
                 color: viewAllButton.hovered
                     ? AppTheme.primary
                     : AppTheme.textPrimary

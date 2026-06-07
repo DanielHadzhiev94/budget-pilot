@@ -8,13 +8,11 @@ Rectangle {
 
     Layout.fillWidth: true
     Layout.fillHeight: true
-
     color: AppTheme.backgroundAlt
 
     TransactionTableSection {
         viewModel: transactionTableVM
         dialogPopup: popup
-
         anchors.fill: parent
         anchors.margins: 24
     }

@@ -2,11 +2,13 @@
 
 #include <QObject>
 
+#include <cstdint>
+
 #include "src/domain/models/Transaction.hpp"
 #include "src/domain/utilities/Response.hpp"
 
 namespace budgetpilot::domain::models {
-    class Account;
+    struct Account;
 }
 
 namespace budgetpilot::domain::contracts {
@@ -25,8 +27,9 @@ namespace budgetpilot::application::services {
         Q_OBJECT
 
     public:
-        explicit TransactionService(contracts::IRepository<models::Account> &account_repository,
-                                    contracts::ITransactionRepository &transaction_repository
+        explicit TransactionService(
+            contracts::IRepository<models::Account> &account_repository,
+            contracts::ITransactionRepository &transaction_repository
         );
 
         [[nodiscard]]
@@ -36,23 +39,22 @@ namespace budgetpilot::application::services {
         utilities::Response<void> update_transaction(const models::Transaction &transaction);
 
         [[nodiscard]]
-        utilities::Response<std::vector<models::Transaction> > load_all_by_month(const int month, const int year);
+        utilities::Response<std::vector<models::Transaction>> load_all_by_month(int month, int year);
 
         [[nodiscard]]
-        utilities::Response<std::vector<models::Transaction>>load_by_month(const int month, const int year, const int limit);
+        utilities::Response<std::vector<models::Transaction>> load_by_month(int month, int year, int limit);
 
         [[nodiscard]]
-        utilities::Response<std::vector<models::Transaction> > load_income(
-            const int month, const int year) const;
+        utilities::Response<std::vector<models::Transaction>> load_income(int month, int year) const;
 
         [[nodiscard]]
-        utilities::Response<std::vector<models::Transaction> > load_expense(
-            const int month, const int year) const;
+        utilities::Response<std::vector<models::Transaction>> load_expense(int month, int year) const;
 
         [[nodiscard]]
         utilities::Response<double> calculate_monthly_saving_rate(int month, int year);
 
-        utilities::Response<void> delete_transaction(const std::uint64_t id);
+        [[nodiscard]]
+        utilities::Response<void> delete_transaction(std::uint64_t id);
 
     signals:
         void transaction_changed();
@@ -60,6 +62,7 @@ namespace budgetpilot::application::services {
     private:
         contracts::IRepository<models::Account> &account_repository_;
         contracts::ITransactionRepository &transaction_repository_;
-        void update_account(const std::uint64_t account_id, const double amount, bool increase);
+
+        void synchronize_account_balance(std::uint64_t account_id);
     };
 }

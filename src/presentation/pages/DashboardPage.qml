@@ -7,82 +7,106 @@ Rectangle {
     id: root
 
     required property var dialogPopup
-
-    signal viewAllTransactionsClicked()
+    signal viewAllTransactionsClicked
 
     Layout.fillWidth: true
     Layout.fillHeight: true
-
     color: AppTheme.backgroundAlt
 
     function openAddTransactionDialog() {
         if (root.dialogPopup) {
-            root.dialogPopup.openForCreate()
+            root.dialogPopup.openForCreate();
         }
     }
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 15
+        anchors.margins: 24
+        spacing: 20
 
         Rectangle {
-            radius: 12
+            Layout.fillWidth: true
+            Layout.preferredHeight: 86
+            radius: AppTheme.radiusXL
             color: AppTheme.backgroundMainCard
             border.color: AppTheme.border
             border.width: 1
 
-            Layout.fillWidth: true
-            Layout.preferredHeight: 60
-            Layout.leftMargin: 20
-            Layout.rightMargin: 20
-            Layout.topMargin: 20
-
             RowLayout {
                 anchors.fill: parent
-                anchors.leftMargin: 12
-                anchors.rightMargin: 12
-                spacing: 12
+                anchors.leftMargin: 22
+                anchors.rightMargin: 18
+                spacing: 16
 
-                DatePicker {
-                    onDateChanged: function(month, year) {
-                        financialSummaryVM.set_date(month, year)
-                        financialSummaryVM.load_data(month, year)
-                        recentTransactionsVM.load_data(month, year)
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 4
+
+                    Text {
+                        text: "Dashboard"
+                        color: AppTheme.textPrimary
+                        font.pixelSize: 28
+                        font.bold: true
+                    }
+
+                    Text {
+                        text: "Track your balance, monthly income and expenses."
+                        color: AppTheme.textMuted
+                        font.pixelSize: 14
                     }
                 }
 
                 Item {
                     Layout.fillWidth: true
                 }
+                DatePicker {
+                    Layout.preferredWidth: 285
+                    Layout.preferredHeight: 42
+                    Layout.alignment: Qt.AlignVCenter
+
+                    onDateChanged: function (month, year) {
+                        financialSummaryVM.set_date(month, year);
+                        financialSummaryVM.load_data(month, year);
+                        recentTransactionsVM.load_data(month, year);
+                    }
+                }
 
                 CustomButton {
-                    text: "Add Transaction"
-
-                    onClicked: {
-                        root.openAddTransactionDialog()
-                    }
+                    title: "+ Add Transaction"
+                    custom_width: 178
+                    custom_height: 42
+                    Layout.alignment: Qt.AlignVCenter
+                    onClicked: root.openAddTransactionDialog()
                 }
             }
         }
 
         FinancialSummarySection {
             viewModel: financialSummaryVM
-
             Layout.fillWidth: true
             Layout.preferredHeight: 160
         }
 
-        RecentTransactionsSection {
-            viewModel: recentTransactionsVM
-
-            onViewAllTransactionsClicked: {
-                root.viewAllTransactionsClicked()
-            }
-        }
-
-        Item {
+        RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            spacing: 20
+
+            RecentTransactionsSection {
+                viewModel: recentTransactionsVM
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredWidth: 620
+                Layout.minimumWidth: 560
+                onViewAllTransactionsClicked: root.viewAllTransactionsClicked()
+            }
+
+            ExpenseCategoryPreviewSection {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredWidth: 440
+                Layout.minimumWidth: 360
+            }
         }
     }
 }

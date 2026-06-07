@@ -16,6 +16,7 @@ namespace budgetpilot::infrastructure::persistence
     void DbContext::initialize()
     {
         open();
+        execute("PRAGMA foreign_keys = ON;");
         createTable();
         seedCategories();
     }
@@ -90,14 +91,13 @@ namespace budgetpilot::infrastructure::persistence
         execute(account_query);
         execute(category_query);
         execute(transaction_query);
-        execute("PRAGMA foreign_keys = ON;");
     }
 
     void DbContext::seedCategories() const
     {
         const char *category_seed = R"(
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Salary', 1);
-        INSERT OR IGNORE INTO categories (name, type) VALUES ('Other', 1);
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Other Income', 1);
 
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Food', 2);
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Apartment', 2);
@@ -105,7 +105,7 @@ namespace budgetpilot::infrastructure::persistence
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Car', 2);
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Health', 2);
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Entertainment', 2);
-        INSERT OR IGNORE INTO categories (name, type) VALUES ('Other', 2);
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Other Expense', 2);
        )";
 
         const char *acc_seed = R"(

@@ -35,6 +35,18 @@ Rectangle {
         root.dateChanged(root.selectedMonth, root.selectedYear)
     }
 
+    function setDate(month, year) {
+        const monthIndex = Math.max(0, Math.min(11, Number(month) - 1))
+        const yearIndex = root.years.indexOf(Number(year))
+
+        monthBox.currentIndex = monthIndex
+        if (yearIndex >= 0) {
+            yearBox.currentIndex = yearIndex
+        }
+
+        root.emitDateChanged()
+    }
+
     Component.onCompleted: {
         root.emitDateChanged()
     }

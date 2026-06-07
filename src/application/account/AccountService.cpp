@@ -1,9 +1,9 @@
 #include "AccountsService.hpp"
 
+#include <cmath>
 #include <exception>
 #include <string>
 #include <vector>
-#include <ctime>
 
 #include "src/domain/contracts/IRepository.hpp"
 #include "src/domain/contracts/ITransactionRepository.hpp"
@@ -28,9 +28,7 @@ namespace budgetpilot::application::services
         try
         {
             auto accounts = account_repository_.get_all();
-
-            return utilities::Response<std::vector<models::Account>>::Success(
-                std::move(accounts));
+            return utilities::Response<std::vector<models::Account>>::Success(std::move(accounts));
         }
         catch (const std::exception &ex)
         {
@@ -41,61 +39,85 @@ namespace budgetpilot::application::services
 
     utilities::Response<void> AccountService::synchronize_accounts()
     {
-        bool updated = false;
-        auto accounts = account_repository_.get_all();
-
-        for (auto &acc : accounts)
+        try
         {
-            const double transactions_amount = transaction_repository_.get_balance_by_account_id(acc.id);
+            bool updated = false;
+            auto accounts = account_repository_.get_all();
 
-            if (transactions_amount != acc.amount)
+            for (auto &account : accounts)
             {
-                acc.amount = transactions_amount;
-                account_repository_.update(acc);
+                const double calculated_balance = transaction_repository_.get_balance_by_account_id(
+                    static_cast<int>(account.id));
+
+                if (std::abs(calculated_balance - account.amount) <= 0.001)
+                {
+                    continue;
+                }
+
+                account.amount = calculated_balance;
+                account_repository_.update(account);
                 updated = true;
             }
-        }
 
-        return utilities::Response<void>::Success(updated
-                                                      ? "There are differents found, acounts updated"
-                                                      : "No update of the accounts amount needed.");
+            return utilities::Response<void>::Success(
+                updated
+                    ? "Differences found, accounts updated."
+                    : "No account amount update needed.");
+        }
+        catch (const std::exception &ex)
+        {
+            return utilities::Response<void>::Failed(
+                std::string{"Failed to synchronize accounts: "} + ex.what());
+        }
     }
 
     utilities::Response<void> AccountService::synchronize_accounts_for_last_three_months()
     {
-        bool updated = false;
-        auto accounts = account_repository_.get_all();
-
-        // Get current month and year dynamically
-        auto current_date = domain::utilities::MonthYear::current();
-
-        for (auto &acc : accounts)
+        try
         {
-            std::int32_t counter = 0;
-            std::int32_t transactions_amount = 0;
-            while (counter < 3)
-            {
-                auto date = current_date.subtract_months(counter);
-                const auto transactions = transaction_repository_.get_by_date_and_account_id(date.month, date.year, acc.id);
-                for (const auto transaction : transactions)
-                {
-                    transactions_amount += transaction.type == enums::Type::Income
-                                               ? transaction.amount
-                                               : -transaction.amount;
-                }
-                counter++;
-            }
+            bool updated = false;
+            auto accounts = account_repository_.get_all();
+            const auto current_date = domain::utilities::MonthYear::current();
 
-            if (transactions_amount != acc.amount)
+            for (auto &account : accounts)
             {
-                acc.amount = transactions_amount;
-                account_repository_.update(acc);
+                double calculated_balance = 0.0;
+
+                for (std::int32_t counter = 0; counter < 3; ++counter)
+                {
+                    const auto date = current_date.subtract_months(counter);
+                    const auto transactions = transaction_repository_.get_by_date_and_account_id(
+                        date.month,
+                        date.year,
+                        static_cast<int>(account.id));
+
+                    for (const auto &transaction : transactions)
+                    {
+                        calculated_balance += transaction.type == enums::Type::Income
+                                                  ? transaction.amount
+                                                  : -transaction.amount;
+                    }
+                }
+
+                if (std::abs(calculated_balance - account.amount) <= 0.001)
+                {
+                    continue;
+                }
+
+                account.amount = calculated_balance;
+                account_repository_.update(account);
                 updated = true;
             }
-        }
 
-        return utilities::Response<void>::Success(updated
-                                                      ? "There are differents found, acounts updated"
-                                                      : "No update of the accounts amount needed.");
+            return utilities::Response<void>::Success(
+                updated
+                    ? "Differences found, accounts updated."
+                    : "No account amount update needed.");
+        }
+        catch (const std::exception &ex)
+        {
+            return utilities::Response<void>::Failed(
+                std::string{"Failed to synchronize accounts for the last three months: "} + ex.what());
+        }
     }
 }

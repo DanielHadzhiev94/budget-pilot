@@ -1,10 +1,12 @@
 #pragma once
-#include <cstdint>
-#include<chrono>
 
-using TimePoint = std::chrono::system_clock::time_point;
+#include <chrono>
+#include <cstdint>
+#include <ctime>
 
 namespace budgetpilot::domain::utilities {
+    using TimePoint = std::chrono::system_clock::time_point;
+
     class TimeConverter {
     public:
         TimeConverter() = delete;
@@ -15,34 +17,32 @@ namespace budgetpilot::domain::utilities {
             ).count();
         }
 
-        static std::chrono::system_clock::time_point from_unix(std::int64_t value) {
-            return std::chrono::system_clock::time_point{
-                std::chrono::seconds{value}
-            };
+        static TimePoint from_unix(std::int64_t value) {
+            return TimePoint{std::chrono::seconds{value}};
         }
 
-        static std::int64_t next_month_to_unix_seconds(int selectedMonth, int selectedYear) {
-            auto next_month = selectedMonth + 1;
-            if (next_month > 12) {
-                next_month = 1;
+        static std::int64_t next_month_to_unix_seconds(int selected_month, int selected_year) {
+            ++selected_month;
+
+            if (selected_month > 12) {
+                selected_month = 1;
+                ++selected_year;
             }
 
-            return to_unix_seconds(next_month, selectedYear);
+            return to_unix_seconds(selected_month, selected_year);
         }
 
-
-        static std::int64_t to_unix_seconds(int selectedMonth, int selectedYear) {
+        static std::int64_t to_unix_seconds(int selected_month, int selected_year) {
             std::tm date{};
-
-            date.tm_year = selectedYear - 1900; // years since 1900
-            date.tm_mon = selectedMonth - 1; // months are 0-based: January = 0
-            date.tm_mday = 1; // first day of month
+            date.tm_year = selected_year - 1900;
+            date.tm_mon = selected_month - 1;
+            date.tm_mday = 1;
             date.tm_hour = 0;
             date.tm_min = 0;
             date.tm_sec = 0;
+            date.tm_isdst = -1;
 
-            std::time_t timestamp = std::mktime(&date);
-
+            const std::time_t timestamp = std::mktime(&date);
             return static_cast<std::int64_t>(timestamp);
         }
     };
