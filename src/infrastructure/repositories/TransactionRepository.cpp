@@ -221,6 +221,35 @@ namespace budgetpilot::infrastructure::repositories
         return transactions;
     }
 
+    double TransactionRepository::get_balance_by_account_id(int account_id)
+    {
+        const auto *sql = R"(
+        SELECT 
+            COALESCE(SUM(
+                CASE 
+                    WHEN type = 1 THEN amount
+                    WHEN type = 2 THEN -amount
+                    ELSE 0
+                END
+            ), 0)
+        FROM transactions
+        WHERE account_id = ?;
+    )";
+
+        persistence::Statement stmt(&connection_, sql);
+
+        sqlite3_bind_int(stmt.get(), 1, account_id);
+
+        const int result = sqlite3_step(stmt.get());
+
+        if (result == SQLITE_ROW)
+        {
+            return sqlite3_column_double(stmt.get(), 0);
+        }
+
+        throw std::runtime_error(sqlite3_errmsg(&connection_));
+    }
+
     std::vector<Transaction> TransactionRepository::get_all_by_month_and_type(int month, int year, enums::Type type)
     {
         const auto *sql = R"(

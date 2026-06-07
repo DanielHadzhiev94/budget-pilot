@@ -32,6 +32,9 @@ namespace budgetpilot::application::services
         [[nodiscard]]
         utilities::Response<void> synchronize_accounts();
 
+        [[nodiscard]]
+        utilities::Response<void> synchronize_accounts_for_last_three_months();
+
     private:
         domain::contracts::IRepository<models::Account> &account_repository_;
         domain::contracts::ITransactionRepository &transaction_repository_;

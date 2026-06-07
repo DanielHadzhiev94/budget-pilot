@@ -44,6 +44,28 @@ namespace budgetpilot::application::services
         bool updated = false;
         auto accounts = account_repository_.get_all();
 
+        for (auto &acc : accounts)
+        {
+            const double transactions_amount = transaction_repository_.get_balance_by_account_id(acc.id);
+
+            if (transactions_amount != acc.amount)
+            {
+                acc.amount = transactions_amount;
+                account_repository_.update(acc);
+                updated = true;
+            }
+        }
+
+        return utilities::Response<void>::Success(updated
+                                                      ? "There are differents found, acounts updated"
+                                                      : "No update of the accounts amount needed.");
+    }
+
+    utilities::Response<void> AccountService::synchronize_accounts_for_last_three_months()
+    {
+        bool updated = false;
+        auto accounts = account_repository_.get_all();
+
         // Get current month and year dynamically
         auto current_date = domain::utilities::MonthYear::current();
 
