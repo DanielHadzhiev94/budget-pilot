@@ -9,12 +9,15 @@
 using namespace budgetpilot::domain::models;
 namespace utilities = budgetpilot::domain::utilities;
 
-namespace budgetpilot::infrastructure::repositories {
+namespace budgetpilot::infrastructure::repositories
+{
     TransactionRepository::TransactionRepository(sqlite3 &connection)
-        : connection_(connection) {
+        : connection_(connection)
+    {
     }
 
-    void TransactionRepository::add(const Transaction &transaction) {
+    void TransactionRepository::add(const Transaction &transaction)
+    {
         const auto *sql = R"(
             INSERT INTO transactions (account_id, category_id, type, amount, source, note, transaction_date)
             VALUES (?, ? ,? ,?, ?, ?, ?)
@@ -34,12 +37,14 @@ namespace budgetpilot::infrastructure::repositories {
         sqlite3_bind_int64(stmt.get(), 7, seconds);
 
         const int result = sqlite3_step(stmt.get());
-        if (result != SQLITE_DONE) {
+        if (result != SQLITE_DONE)
+        {
             throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
     }
 
-    void TransactionRepository::update(const Transaction &transaction) {
+    void TransactionRepository::update(const Transaction &transaction)
+    {
         const auto *sql = R"(
         UPDATE transactions
         SET account_id = ?,
@@ -64,16 +69,14 @@ namespace budgetpilot::infrastructure::repositories {
             5,
             transaction.source.value_or("").c_str(),
             -1,
-            SQLITE_TRANSIENT
-        );
+            SQLITE_TRANSIENT);
 
         sqlite3_bind_text(
             stmt.get(),
             6,
             transaction.note.value_or("").c_str(),
             -1,
-            SQLITE_TRANSIENT
-        );
+            SQLITE_TRANSIENT);
 
         auto seconds = utilities::TimeConverter::convert_to_seconds(transaction.transaction_date);
         sqlite3_bind_int64(stmt.get(), 7, seconds);
@@ -81,16 +84,19 @@ namespace budgetpilot::infrastructure::repositories {
 
         const int result = sqlite3_step(stmt.get());
 
-        if (result != SQLITE_DONE) {
+        if (result != SQLITE_DONE)
+        {
             throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
 
-        if (sqlite3_changes(&connection_) == 0) {
+        if (sqlite3_changes(&connection_) == 0)
+        {
             throw std::runtime_error("No transaction was updated. Invalid transaction id?");
         }
     }
 
-    void TransactionRepository::remove(const std::uint64_t &id) {
+    void TransactionRepository::remove(const std::uint64_t &id)
+    {
         const auto *sql = R"(
                              DELETE FROM transactions
                              WHERE id = ?
@@ -101,12 +107,14 @@ namespace budgetpilot::infrastructure::repositories {
         sqlite3_bind_int64(stmt.get(), 1, id);
 
         const int result = sqlite3_step(stmt.get());
-        if (result != SQLITE_DONE) {
+        if (result != SQLITE_DONE)
+        {
             throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
     }
 
-    std::vector<Transaction> TransactionRepository::get_all() {
+    std::vector<Transaction> TransactionRepository::get_all()
+    {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
@@ -116,14 +124,16 @@ namespace budgetpilot::infrastructure::repositories {
         const persistence::Statement stmt(&connection_, sql);
         std::vector<Transaction> transactions{};
 
-        while (sqlite3_step(stmt.get()) != SQLITE_DONE) {
+        while (sqlite3_step(stmt.get()) != SQLITE_DONE)
+        {
             transactions.push_back(std::move(build_transaction_(stmt)));
         }
 
         return transactions;
     }
 
-    std::optional<Transaction> TransactionRepository::get_one(const std::uint64_t &id) {
+    std::optional<Transaction> TransactionRepository::get_one(const std::uint64_t &id)
+    {
         const auto sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
@@ -135,18 +145,21 @@ namespace budgetpilot::infrastructure::repositories {
 
         const int result = sqlite3_step(stmt.get());
 
-        if (result == SQLITE_ROW) {
+        if (result == SQLITE_ROW)
+        {
             return build_transaction_(stmt);
         }
 
-        if (result == SQLITE_DONE) {
+        if (result == SQLITE_DONE)
+        {
             return std::nullopt;
         }
 
         throw std::runtime_error(sqlite3_errmsg(&connection_));
     }
 
-    std::vector<Transaction> TransactionRepository::get_all_by_month(int month, int year) {
+    std::vector<Transaction> TransactionRepository::get_all_by_month(int month, int year)
+    {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
@@ -166,18 +179,21 @@ namespace budgetpilot::infrastructure::repositories {
 
         int result{};
 
-        while ((result = sqlite3_step(stmt.get())) == SQLITE_ROW) {
+        while ((result = sqlite3_step(stmt.get())) == SQLITE_ROW)
+        {
             transactions.push_back(build_transaction_(stmt));
         }
 
-        if (result != SQLITE_DONE) {
+        if (result != SQLITE_DONE)
+        {
             throw std::runtime_error(sqlite3_errmsg(&connection_));
         }
 
         return transactions;
     }
 
-    std::vector<Transaction> TransactionRepository::get_by_month(int month, int year, int limit) {
+    std::vector<Transaction> TransactionRepository::get_by_month(int month, int year, int limit)
+    {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
@@ -197,14 +213,16 @@ namespace budgetpilot::infrastructure::repositories {
         sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
         sqlite3_bind_int(stmt.get(), 3, limit);
 
-        while (sqlite3_step(stmt.get()) != SQLITE_DONE) {
+        while (sqlite3_step(stmt.get()) != SQLITE_DONE)
+        {
             transactions.push_back(std::move(build_transaction_(stmt)));
         }
 
         return transactions;
     }
 
-    std::vector<Transaction> TransactionRepository::get_all_by_month_and_type(int month, int year, enums::Type type) {
+    std::vector<Transaction> TransactionRepository::get_all_by_month_and_type(int month, int year, enums::Type type)
+    {
         const auto *sql = R"(
                     SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
                     FROM transactions
@@ -224,14 +242,45 @@ namespace budgetpilot::infrastructure::repositories {
         sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
         sqlite3_bind_int(stmt.get(), 3, static_cast<int>(type));
 
-        while (sqlite3_step(stmt.get()) != SQLITE_DONE) {
+        while (sqlite3_step(stmt.get()) != SQLITE_DONE)
+        {
             transactions.push_back(std::move(build_transaction_(stmt)));
         }
 
         return transactions;
     }
 
-    Transaction TransactionRepository::build_transaction_(const persistence::Statement &stmt) {
+    std::vector<models::Transaction> TransactionRepository::get_by_date_and_account_id(int month, int year, int account_id)
+    {
+        const auto *sql = R"(
+                    SELECT id, account_id, category_id, type, amount, source, note, transaction_date, created_at
+                    FROM transactions
+                    WHERE transaction_date >=?
+                        AND transaction_date < ?
+                        AND account_id = ?
+                    ORDER BY created_at DESC
+                    )";
+
+        const persistence::Statement stmt(&connection_, sql);
+        std::vector<Transaction> transactions{};
+
+        const auto current_month_seconds = utilities::TimeConverter::to_unix_seconds(month, year);
+        const auto next_month_seconds = utilities::TimeConverter::next_month_to_unix_seconds(month, year);
+
+        sqlite3_bind_int64(stmt.get(), 1, current_month_seconds);
+        sqlite3_bind_int64(stmt.get(), 2, next_month_seconds);
+        sqlite3_bind_int(stmt.get(), 3, account_id);
+
+        while (sqlite3_step(stmt.get()) != SQLITE_DONE)
+        {
+            transactions.push_back(std::move(build_transaction_(stmt)));
+        }
+
+        return transactions;
+    }
+
+    Transaction TransactionRepository::build_transaction_(const persistence::Statement &stmt)
+    {
         Transaction transaction{};
 
         transaction.id = sqlite3_column_int64(stmt.get(), 0);
