@@ -21,8 +21,8 @@ QtObject {
     readonly property color primarySoft: "#18345E"
     readonly property color primarySubtle: "#12233D"
 
-    readonly property color success: "#22C55E"
-    readonly property color successSoft: "#123524"
+    readonly property color success: "#008000"
+    readonly property color successSoft: "#0F3D0F"
 
     readonly property color danger: "#F87171"
     readonly property color dangerStrong: "#EF4444"

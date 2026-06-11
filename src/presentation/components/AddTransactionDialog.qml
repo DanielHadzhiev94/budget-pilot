@@ -372,43 +372,140 @@ Dialog {
                                     font.bold: true
                                 }
 
+                                RowLayout {
+                                    ComboBox {
+                                        id: categoryInput
+
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: 44
+
+                                        model: root.viewModel.categories
+                                        textRole: "name"
+                                        valueRole: "id"
+
+                                        background: Rectangle {
+                                            radius: 11
+                                            color: AppTheme.backgroundAlt
+                                            border.color: categoryInput.activeFocus ? AppTheme.primary : AppTheme.border
+                                            border.width: 1
+                                        }
+
+                                        contentItem: Text {
+                                            text: categoryInput.displayText
+                                            color: AppTheme.textPrimary
+                                            font.pixelSize: 14
+                                            verticalAlignment: Text.AlignVCenter
+                                            leftPadding: 13
+                                            rightPadding: categoryInput.indicator.width + 13
+                                            elide: Text.ElideRight
+                                        }
+
+                                        indicator: Text {
+                                            x: categoryInput.width - width - 13
+                                            y: categoryInput.topPadding + (categoryInput.availableHeight - height) / 2
+                                            text: "▾"
+                                            color: AppTheme.textSecondary
+                                            font.pixelSize: 12
+                                        }
+
+                                        delegate: ItemDelegate {
+                                            width: categoryInput.width
+                                            height: 38
+
+                                            background: Rectangle {
+                                                radius: 8
+                                                color: highlighted ? AppTheme.backgroundAlt : "transparent"
+                                            }
+
+                                            contentItem: Text {
+                                                text: modelData.name
+                                                color: AppTheme.textPrimary
+                                                font.pixelSize: 14
+                                                verticalAlignment: Text.AlignVCenter
+                                                leftPadding: 10
+                                                elide: Text.ElideRight
+                                            }
+                                        }
+
+                                        popup: Popup {
+                                            y: categoryInput.height + 6
+                                            width: categoryInput.width
+                                            implicitHeight: Math.min(contentItem.implicitHeight, 220)
+                                            padding: 4
+
+                                            background: Rectangle {
+                                                radius: 10
+                                                color: AppTheme.backgroundMainCard
+                                                border.color: AppTheme.border
+                                                border.width: 1
+                                            }
+
+                                            contentItem: ListView {
+                                                clip: true
+                                                implicitHeight: contentHeight
+                                                model: categoryInput.popup.visible ? categoryInput.delegateModel : null
+                                                currentIndex: categoryInput.highlightedIndex
+                                            }
+                                        }
+                                    }
+
+                                    AddButton {
+                                        id: addCategory
+                                    }
+                                }
+                            }
+                        }
+
+                        // Account
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 6
+
+                            Text {
+                                text: "Account"
+                                color: AppTheme.textSecondary
+                                font.pixelSize: 12
+                                font.bold: true
+                            }
+
+                            RowLayout {
                                 ComboBox {
-                                    id: categoryInput
+                                    id: accountInput
 
                                     Layout.fillWidth: true
                                     Layout.preferredHeight: 44
 
-                                    model: root.viewModel.categories
+                                    model: root.viewModel.accounts
                                     textRole: "name"
                                     valueRole: "id"
 
                                     background: Rectangle {
                                         radius: 11
                                         color: AppTheme.backgroundAlt
-                                        border.color: categoryInput.activeFocus ? AppTheme.primary : AppTheme.border
+                                        border.color: accountInput.activeFocus ? AppTheme.primary : AppTheme.border
                                         border.width: 1
                                     }
 
                                     contentItem: Text {
-                                        text: categoryInput.displayText
+                                        text: accountInput.displayText
                                         color: AppTheme.textPrimary
                                         font.pixelSize: 14
                                         verticalAlignment: Text.AlignVCenter
                                         leftPadding: 13
-                                        rightPadding: categoryInput.indicator.width + 13
+                                        rightPadding: accountInput.indicator.width + 13
                                         elide: Text.ElideRight
                                     }
 
                                     indicator: Text {
-                                        x: categoryInput.width - width - 13
-                                        y: categoryInput.topPadding + (categoryInput.availableHeight - height) / 2
+                                        x: accountInput.width - width - 13
+                                        y: accountInput.topPadding + (accountInput.availableHeight - height) / 2
                                         text: "▾"
                                         color: AppTheme.textSecondary
                                         font.pixelSize: 12
                                     }
 
                                     delegate: ItemDelegate {
-                                        width: categoryInput.width
+                                        width: accountInput.width
                                         height: 38
 
                                         background: Rectangle {
@@ -427,8 +524,8 @@ Dialog {
                                     }
 
                                     popup: Popup {
-                                        y: categoryInput.height + 6
-                                        width: categoryInput.width
+                                        y: accountInput.height + 6
+                                        width: accountInput.width
                                         implicitHeight: Math.min(contentItem.implicitHeight, 220)
                                         padding: 4
 
@@ -442,99 +539,14 @@ Dialog {
                                         contentItem: ListView {
                                             clip: true
                                             implicitHeight: contentHeight
-                                            model: categoryInput.popup.visible ? categoryInput.delegateModel : null
-                                            currentIndex: categoryInput.highlightedIndex
+                                            model: accountInput.popup.visible ? accountInput.delegateModel : null
+                                            currentIndex: accountInput.highlightedIndex
                                         }
                                     }
                                 }
-                            }
-                        }
 
-                        // Account
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 6
-
-                            Text {
-                                text: "Account"
-                                color: AppTheme.textSecondary
-                                font.pixelSize: 12
-                                font.bold: true
-                            }
-
-                            ComboBox {
-                                id: accountInput
-
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: 44
-
-                                model: root.viewModel.accounts
-                                textRole: "name"
-                                valueRole: "id"
-
-                                background: Rectangle {
-                                    radius: 11
-                                    color: AppTheme.backgroundAlt
-                                    border.color: accountInput.activeFocus ? AppTheme.primary : AppTheme.border
-                                    border.width: 1
-                                }
-
-                                contentItem: Text {
-                                    text: accountInput.displayText
-                                    color: AppTheme.textPrimary
-                                    font.pixelSize: 14
-                                    verticalAlignment: Text.AlignVCenter
-                                    leftPadding: 13
-                                    rightPadding: accountInput.indicator.width + 13
-                                    elide: Text.ElideRight
-                                }
-
-                                indicator: Text {
-                                    x: accountInput.width - width - 13
-                                    y: accountInput.topPadding + (accountInput.availableHeight - height) / 2
-                                    text: "▾"
-                                    color: AppTheme.textSecondary
-                                    font.pixelSize: 12
-                                }
-
-                                delegate: ItemDelegate {
-                                    width: accountInput.width
-                                    height: 38
-
-                                    background: Rectangle {
-                                        radius: 8
-                                        color: highlighted ? AppTheme.backgroundAlt : "transparent"
-                                    }
-
-                                    contentItem: Text {
-                                        text: modelData.name
-                                        color: AppTheme.textPrimary
-                                        font.pixelSize: 14
-                                        verticalAlignment: Text.AlignVCenter
-                                        leftPadding: 10
-                                        elide: Text.ElideRight
-                                    }
-                                }
-
-                                popup: Popup {
-                                    y: accountInput.height + 6
-                                    width: accountInput.width
-                                    implicitHeight: Math.min(contentItem.implicitHeight, 220)
-                                    padding: 4
-
-                                    background: Rectangle {
-                                        radius: 10
-                                        color: AppTheme.backgroundMainCard
-                                        border.color: AppTheme.border
-                                        border.width: 1
-                                    }
-
-                                    contentItem: ListView {
-                                        clip: true
-                                        implicitHeight: contentHeight
-                                        model: accountInput.popup.visible ? accountInput.delegateModel : null
-                                        currentIndex: accountInput.highlightedIndex
-                                    }
+                                AddButton {
+                                    id: addAccount
                                 }
                             }
                         }
@@ -733,7 +745,6 @@ Dialog {
                         contentItem: Text {
                             text: saveButton.text
                             color: "white"
-                            font.pixelSize: 14
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
