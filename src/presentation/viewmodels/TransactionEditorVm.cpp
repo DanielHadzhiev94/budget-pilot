@@ -1,4 +1,4 @@
-#include "AddTransactionDialogVm.hpp"
+#include "TransactionEditorVm.hpp"
 #include "src/domain/models/Transaction.hpp"
 #include "src/domain/utilities/Mapper.hpp"
 
@@ -6,40 +6,49 @@ namespace services = budgetpilot::application::services;
 namespace models = budgetpilot::domain::models;
 namespace utilities = budgetpilot::domain::utilities;
 
-namespace budgetpilot::presentation::viewmodels {
-    AddTransactionDialogVm::AddTransactionDialogVm(services::TransactionService &transactionService,
-                                                   services::AccountService &account_service,
-                                                   services::CategoryService &category_service,
-                                                   QObject *parent)
+namespace budgetpilot::presentation::viewmodels
+{
+    TransactionEditorVm::TransactionEditorVm(services::TransactionService &transactionService,
+                                             services::AccountService &account_service,
+                                             services::CategoryService &category_service,
+                                             QObject *parent)
         : QObject(parent),
           transaction_service_(transactionService),
           account_service_(account_service),
-          category_service_(category_service) {
+          category_service_(category_service)
+    {
     }
 
-    QVariantList AddTransactionDialogVm::accounts() const {
+    QVariantList TransactionEditorVm::accounts() const
+    {
         return accounts_;
     }
 
-    QVariantList AddTransactionDialogVm::categories() const {
+    QVariantList TransactionEditorVm::categories() const
+    {
         return categories_;
     }
 
-    QString AddTransactionDialogVm::errorMessage() const {
+    QString TransactionEditorVm::errorMessage() const
+    {
         return error_message_;
     }
 
-    bool AddTransactionDialogVm::isSaving() const {
+    bool TransactionEditorVm::isSaving() const
+    {
         return is_saving_;
     }
 
-    void AddTransactionDialogVm::loadAccounts() {
+    void TransactionEditorVm::loadAccounts()
+    {
         accounts_.clear();
 
         const auto accounts_response = account_service_.load_accounts();
 
-        if (accounts_response.is_successful()) {
-            for (auto &account: accounts_response.data()) {
+        if (accounts_response.is_successful())
+        {
+            for (auto &account : accounts_response.data())
+            {
                 QVariantMap item;
                 item["name"] = QString::fromStdString(account.name);
                 item["id"] = static_cast<qlonglong>(account.id);
@@ -50,12 +59,15 @@ namespace budgetpilot::presentation::viewmodels {
         emit accountsChanged();
     }
 
-    void AddTransactionDialogVm::loadCategories() {
+    void TransactionEditorVm::loadCategories()
+    {
         categories_.clear();
 
         const auto categories_response = category_service_.load_category();
-        if (categories_response.is_successful()) {
-            for (auto &category: categories_response.data()) {
+        if (categories_response.is_successful())
+        {
+            for (auto &category : categories_response.data())
+            {
                 QVariantMap item;
                 item["name"] = QString::fromStdString(category.name);
                 item["id"] = static_cast<qlonglong>(category.id);
@@ -66,7 +78,7 @@ namespace budgetpilot::presentation::viewmodels {
         emit categoriesChanged();
     }
 
-    bool AddTransactionDialogVm::saveTransaction(
+    bool TransactionEditorVm::saveTransaction(
         bool is_edit,
         std::uint64_t id,
         const double amount,
@@ -75,21 +87,24 @@ namespace budgetpilot::presentation::viewmodels {
         const std::int64_t &category_id,
         const QString &source,
         const QDate &date,
-        const QString &note
-    ) {
+        const QString &note)
+    {
         setErrorMessage("");
 
-        if (amount <= 0.0) {
+        if (amount <= 0.0)
+        {
             setErrorMessage("Amount must be greater than zero.");
             return false;
         }
 
-        if (account_id <= 0) {
+        if (account_id <= 0)
+        {
             setErrorMessage("Please select a valid account.");
             return false;
         }
 
-        if (category_id <= 0) {
+        if (category_id <= 0)
+        {
             setErrorMessage("Please select a valid category.");
             return false;
         }
@@ -108,9 +123,12 @@ namespace budgetpilot::presentation::viewmodels {
         transaction.account_id = account_id;
         transaction.category_id = category_id;
 
-        if (type == "Income") {
+        if (type == "Income")
+        {
             transaction.type = enums::Type::Income;
-        } else {
+        }
+        else
+        {
             transaction.type = enums::Type::Expense;
         }
 
@@ -120,7 +138,8 @@ namespace budgetpilot::presentation::viewmodels {
 
         setIsSaving(false);
 
-        if (!response.is_successful()) {
+        if (!response.is_successful())
+        {
             setErrorMessage(QString::fromStdString(response.message()));
             return false;
         }
@@ -129,13 +148,16 @@ namespace budgetpilot::presentation::viewmodels {
         return true;
     }
 
-    void AddTransactionDialogVm::loadInitialData() {
+    void TransactionEditorVm::loadInitialData()
+    {
         loadAccounts();
         loadCategories();
     }
 
-    void AddTransactionDialogVm::setErrorMessage(const QString &message) {
-        if (error_message_ == message) {
+    void TransactionEditorVm::setErrorMessage(const QString &message)
+    {
+        if (error_message_ == message)
+        {
             return;
         }
 
@@ -143,8 +165,10 @@ namespace budgetpilot::presentation::viewmodels {
         emit errorMessageChanged();
     }
 
-    void AddTransactionDialogVm::setIsSaving(bool isSaving) {
-        if (is_saving_ == isSaving) {
+    void TransactionEditorVm::setIsSaving(bool isSaving)
+    {
+        if (is_saving_ == isSaving)
+        {
             return;
         }
 

@@ -72,13 +72,17 @@ Dialog {
 
     function openForEdit(row) {
         if (row === undefined || row === null) {
-            console.log("AddTransactionDialog: invalid edit row");
+            console.log("TransactionDialog: invalid edit row");
             return;
         }
 
         root.viewModel.loadInitialData();
         applyTransactionToForm(row);
         root.open();
+    }
+
+    function openCreateDialog() {
+        createDialog.open();
     }
 
     modal: true
@@ -451,6 +455,7 @@ Dialog {
 
                                     AddButton {
                                         id: addCategory
+                                        onClicked: openCreateDialog()
                                     }
                                 }
                             }
@@ -767,5 +772,9 @@ Dialog {
                 }
             }
         }
+    }
+
+    CreationModal {
+        id: createDialog
     }
 }

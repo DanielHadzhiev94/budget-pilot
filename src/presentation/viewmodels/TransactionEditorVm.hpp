@@ -12,7 +12,7 @@
 namespace services = budgetpilot::application::services;
 
 namespace budgetpilot::presentation::viewmodels {
-    class AddTransactionDialogVm : public QObject {
+    class TransactionEditorVm : public QObject {
         Q_OBJECT
 
         Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
@@ -21,7 +21,7 @@ namespace budgetpilot::presentation::viewmodels {
         Q_PROPERTY(QVariantList categories READ categories NOTIFY categoriesChanged);
 
     public:
-        explicit AddTransactionDialogVm(
+        explicit TransactionEditorVm(
             services::TransactionService &transactionService,
             services::AccountService &account_service,
             services::CategoryService &category_service,

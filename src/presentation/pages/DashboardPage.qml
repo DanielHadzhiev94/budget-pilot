@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import BudgetPilot
 
@@ -13,7 +12,7 @@ Rectangle {
     Layout.fillHeight: true
     color: AppTheme.backgroundAlt
 
-    function openAddTransactionDialog() {
+    function openTransactionDialog() {
         if (root.dialogPopup) {
             root.dialogPopup.openForCreate();
         }
@@ -76,7 +75,7 @@ Rectangle {
                     custom_width: 178
                     custom_height: 42
                     Layout.alignment: Qt.AlignVCenter
-                    onClicked: root.openAddTransactionDialog()
+                    onClicked: root.openTransactionDialog()
                 }
             }
         }

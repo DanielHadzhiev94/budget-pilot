@@ -39,8 +39,8 @@ qt_add_executable(appBudgetPilot
         src/application/transaction/TransactionService.hpp
         src/domain/utilities/Response.hpp
         src/application/transaction/TransactionService.cpp
-        src/presentation/viewmodels/AddTransactionDialogVm.hpp
-        src/presentation/viewmodels/AddTransactionDialogVm.cpp
+        src/presentation/viewmodels/TransactionEditorVm.hpp
+        src/presentation/viewmodels/TransactionEditorVm.cpp
         src/domain/utilities/Mapper.hpp
         src/application/account/AccountsService.hpp
         src/application/account/AccountService.cpp
@@ -77,7 +77,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/CustomButton.qml
         src/presentation/components/DatePicker.qml
         src/presentation/components/BudgetCard.qml
-        src/presentation/components/AddTransactionDialog.qml
+        src/presentation/components/TransactionDialog.qml
         src/presentation/components/SidebarItem.qml
         src/presentation/components/TransactionTable.qml
         src/presentation/components/TransactionTableHeader.qml
@@ -85,6 +85,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/components/TypeBadge.qml
         src/presentation/components/Dialog.qml
         src/presentation/components/AddButton.qml
+        src/presentation/modals/CreationModal.qml
         src/presentation/sections/FinancialSummarySection.qml
         src/presentation/sections/RecentTransactionsSection.qml
         src/presentation/sections/ExpenseCategoryPreviewSection.qml
