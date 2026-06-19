@@ -244,27 +244,10 @@ Dialog {
                                 font.bold: true
                             }
 
-                            TextField {
+                            CustomTextField {
                                 id: amountInput
 
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: 44
-
-                                placeholderText: "0.00"
-                                color: AppTheme.textPrimary
-                                placeholderTextColor: AppTheme.textSecondary
-                                font.pixelSize: 15
-                                selectionColor: AppTheme.primary
-
-                                leftPadding: 13
-                                rightPadding: 13
-
-                                background: Rectangle {
-                                    radius: 11
-                                    color: AppTheme.backgroundAlt
-                                    border.color: amountInput.activeFocus ? AppTheme.primary : AppTheme.border
-                                    border.width: 1
-                                }
+                                custom_placeholder_text: "0.00"
                             }
                         }
 
@@ -568,27 +551,11 @@ Dialog {
                                 font.bold: true
                             }
 
-                            TextField {
+                            CustomTextField {
                                 id: sourceInput
 
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: 44
-
-                                placeholderText: root.transactionType === "Income" ? "Salary, bonus, freelance..." : "Lidl, rent, Amazon..."
-                                color: AppTheme.textPrimary
-                                placeholderTextColor: AppTheme.textSecondary
-                                font.pixelSize: 14
-                                selectionColor: AppTheme.primary
-
-                                leftPadding: 13
-                                rightPadding: 13
-
-                                background: Rectangle {
-                                    radius: 11
-                                    color: AppTheme.backgroundAlt
-                                    border.color: sourceInput.activeFocus ? AppTheme.primary : AppTheme.border
-                                    border.width: 1
-                                }
+                                custom_placeholder_text: root.transactionType === "Income" ? "Salary, bonus, freelance..." : "Lidl, rent, Amazon..."
+                                custom_font_size: 14
                             }
                         }
 
