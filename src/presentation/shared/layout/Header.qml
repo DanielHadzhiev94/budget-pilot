@@ -31,7 +31,7 @@ Rectangle {
             border.width: 1
 
             Image {
-                source: "../images/rico_robot.png"
+                source: AppTheme.ricoRobotIcon
                 width: 32
                 height: 32
                 anchors.centerIn: parent
@@ -59,6 +59,8 @@ Rectangle {
             }
         }
 
-        Item { Layout.fillWidth: true }
+        Item {
+            Layout.fillWidth: true
+        }
     }
 }

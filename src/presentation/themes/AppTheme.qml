@@ -81,8 +81,9 @@ QtObject {
     readonly property int fontHeading: 28
     readonly property int fontDisplay: 38
 
-    property string balanceIcon: "../images/balance.png"
-    property string incomeIcon: "../images/income.png"
-    property string expenseIcon: "../images/expense.png"
-    property string rateIcon: "../images/rate.png"
+    property string ricoRobotIcon: "../../images/rico_robot.png"
+    property string balanceIcon: "../../images/balance.png"
+    property string incomeIcon: "../../images/income.png"
+    property string expenseIcon: "../../images/expense.png"
+    property string rateIcon: "../../images/rate.png"
 }

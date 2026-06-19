@@ -18,7 +18,7 @@ Item {
             mainValueColor: AppTheme.primaryLight
             subtitle: "Calculated account balance"
             iconSource: AppTheme.balanceIcon
-            iconSize: 42
+            iconSize: 62
         }
 
         BudgetCard {
