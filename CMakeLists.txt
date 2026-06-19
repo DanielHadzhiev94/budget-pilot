@@ -92,6 +92,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/features/transactions/TransactionTableSection.qml
         src/presentation/pages/DashboardPage.qml
         src/presentation/pages/TransactionsPage.qml
+        src/presentation/shared/inputs/CustomTextField.qml
 
         RESOURCES
         src/presentation/images/rico_robot.png

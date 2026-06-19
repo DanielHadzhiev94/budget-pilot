@@ -10,6 +10,9 @@ Button {
     property int custom_height: 42
     property int custom_width: 164
 
+    property color custom_hover_color_1: AppTheme.primaryLight
+    property color custom_hover_color_2: AppTheme.primary
+
     text: title
     hoverEnabled: true
 
@@ -18,11 +21,15 @@ Button {
 
     background: Rectangle {
         radius: 12
-        color: btn.down ? AppTheme.primaryDark : btn.hovered ? AppTheme.primaryLight : AppTheme.primary
+        color: btn.down ? AppTheme.primaryDark : btn.hovered ? custom_hover_color_1 : custom_hover_color_2
         border.color: Qt.rgba(255, 255, 255, 0.10)
         border.width: 1
 
-        Behavior on color { ColorAnimation { duration: 120 } }
+        Behavior on color {
+            ColorAnimation {
+                duration: 120
+            }
+        }
     }
 
     contentItem: Text {

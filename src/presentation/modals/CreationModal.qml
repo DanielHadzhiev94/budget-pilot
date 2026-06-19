@@ -10,7 +10,7 @@ Dialog {
     anchors.centerIn: parent
 
     width: 420
-    padding: 0
+    padding: 20
 
     property string categoryName: categoryField.text
     property bool isExpense: expenseButton.checked
@@ -48,22 +48,10 @@ Dialog {
             font.bold: true
         }
 
-        TextField {
+        CustomTextField {
             id: categoryField
 
-            Layout.fillWidth: true
-            placeholderText: "e.g. Groceries"
-
-            selectByMouse: true
-
-            background: Rectangle {
-                radius: 12
-                color: AppTheme.backgroundInput
-                border.width: 1
-                border.color: categoryField.activeFocus ? AppTheme.primary : AppTheme.border
-            }
-
-            color: AppTheme.textPrimary
+            custom_placeholder_text: "e.g. Groceries"
         }
 
         Label {
@@ -107,14 +95,22 @@ Dialog {
                 Layout.fillWidth: true
             }
 
-            Button {
+            CustomButton {
+                custom_height: 42
+                custom_width: 112
+                custom_hover_color_1: AppTheme.backgroundAlt
+                custom_hover_color_2: AppTheme.transparent
                 text: "Cancel"
 
                 onClicked: root.close()
             }
 
-            Button {
+            CustomButton {
+                custom_height: 42
+                custom_width: 112
+
                 text: "Create"
+
                 enabled: categoryField.text.trim().length > 0
 
                 onClicked: {
