@@ -1,7 +1,8 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import BudgetPilot
 
 Dialog {
     id: root
@@ -12,8 +13,13 @@ Dialog {
     width: 420
     padding: 20
 
-    property string categoryName: categoryField.text
-    property bool isExpense: expenseButton.checked
+    property string category_name: categoryField.text
+    property bool is_expense: expenseButton.checked
+
+    property string custom_title: "Custom Modal Title"
+    property string custom_field_title: "Custom field title"
+
+    property string custom_placeholder_text: "Custom placeholder text"
 
     background: Rectangle {
         radius: 18
@@ -31,7 +37,7 @@ Dialog {
             anchors.margins: 20
 
             Text {
-                text: "Add Category"
+                text: root.custom_title
                 font.pixelSize: 22
                 font.bold: true
                 color: AppTheme.textPrimary
@@ -43,7 +49,7 @@ Dialog {
         spacing: 18
 
         Label {
-            text: "Category name"
+            text: root.custom_field_title
             color: AppTheme.textPrimary
             font.bold: true
         }
@@ -51,7 +57,7 @@ Dialog {
         CustomTextField {
             id: categoryField
 
-            custom_placeholder_text: "e.g. Groceries"
+            custom_placeholder_text: root.custom_placeholder_text
         }
 
         Label {

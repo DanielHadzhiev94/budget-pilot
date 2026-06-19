@@ -743,5 +743,9 @@ Dialog {
 
     CreationModal {
         id: createDialog
+
+        custom_title: "Add Category"
+        custom_field_title: "Category Name"
+        custom_placeholder_text: "g.e Grocery"
     }
 }
