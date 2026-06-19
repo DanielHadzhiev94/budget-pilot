@@ -71,25 +71,25 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/Main.qml
         src/presentation/themes/AppTheme.qml
 
-        src/presentation/components/Sidebar.qml
+        src/presentation/shared/navigation/Sidebar.qml
 
-        src/presentation/components/Header.qml
-        src/presentation/components/CustomButton.qml
-        src/presentation/components/DatePicker.qml
-        src/presentation/components/BudgetCard.qml
-        src/presentation/components/TransactionDialog.qml
-        src/presentation/components/SidebarItem.qml
-        src/presentation/components/TransactionTable.qml
-        src/presentation/components/TransactionTableHeader.qml
-        src/presentation/components/TransactionActionButton.qml
-        src/presentation/components/TypeBadge.qml
-        src/presentation/components/Dialog.qml
-        src/presentation/components/AddButton.qml
+        src/presentation/shared/layout/Header.qml
+        src/presentation/shared/controls/CustomButton.qml
+        src/presentation/features/transactions/editor/DatePicker.qml
+        src/presentation/shared/cards/BudgetCard.qml
+        src/presentation/features/transactions/editor/TransactionDialog.qml
+        src/presentation/shared/navigation/SidebarItem.qml
+        src/presentation/features/transactions/table/TransactionTable.qml
+        src/presentation/features/transactions/table/TransactionTableHeader.qml
+        src/presentation/features/transactions/table/TransactionActionButton.qml
+        src/presentation/features/transactions/table/TypeBadge.qml
+        src/presentation/shared/layout/Dialog.qml
+        src/presentation/shared/controls/AddButton.qml
         src/presentation/modals/CreationModal.qml
-        src/presentation/sections/FinancialSummarySection.qml
-        src/presentation/sections/RecentTransactionsSection.qml
-        src/presentation/sections/ExpenseCategoryPreviewSection.qml
-        src/presentation/sections/TransactionTableSection.qml
+        src/presentation/features/dashboard/FinancialSummarySection.qml
+        src/presentation/features/dashboard/RecentTransactionsSection.qml
+        src/presentation/features/dashboard/ExpenseCategoryPreviewSection.qml
+        src/presentation/features/transactions/TransactionTableSection.qml
         src/presentation/pages/DashboardPage.qml
         src/presentation/pages/TransactionsPage.qml
 
