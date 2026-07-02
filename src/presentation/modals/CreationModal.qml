@@ -7,55 +7,79 @@ import QtQuick.Layouts
 Dialog {
     id: root
 
+    // ===== Layout =====
+    readonly property int dialogWidth: 420
+    readonly property int dialogPadding: 20
+    readonly property int dialogRadius: 18
+
+    readonly property int headerHeight: 70
+    readonly property int footerHeight: 90
+
+    readonly property int margin: 20
+    readonly property int contentSpacing: 18
+    readonly property int controlSpacing: 12
+
+    // ===== Typography =====
+    readonly property int titleFontSize: 22
+    readonly property int labelFontSize: 15
+
+    // ===== Controls =====
+    readonly property int buttonWidth: 112
+    readonly property int buttonHeight: 42
+
     modal: true
     anchors.centerIn: parent
 
-    width: 420
-    padding: 20
+    width: dialogWidth
+    padding: dialogPadding
 
     property string category_name: categoryField.text
     property bool is_expense: expenseButton.checked
 
     property string custom_title: "Custom Modal Title"
     property string custom_field_title: "Custom field title"
-
     property string custom_placeholder_text: "Custom placeholder text"
 
     background: Rectangle {
-        radius: 18
+        radius: dialogRadius
         color: AppTheme.backgroundMainCard
         border.width: 1
         border.color: AppTheme.border
     }
 
     header: Rectangle {
-        implicitHeight: 70
+        implicitHeight: headerHeight
         color: "transparent"
 
         RowLayout {
             anchors.fill: parent
-            anchors.margins: 20
+            anchors.margins: margin
 
             Text {
                 text: root.custom_title
-                font.pixelSize: 22
-                font.bold: true
                 color: AppTheme.textPrimary
+
+                font.pixelSize: titleFontSize
+                font.bold: true
             }
         }
     }
 
     contentItem: ColumnLayout {
-        spacing: 18
+        spacing: contentSpacing
 
         Label {
             text: root.custom_field_title
             color: AppTheme.textPrimary
+
+            font.pixelSize: labelFontSize
             font.bold: true
         }
 
         CustomTextField {
             id: categoryField
+
+            Layout.fillWidth: true
 
             custom_placeholder_text: root.custom_placeholder_text
         }
@@ -63,11 +87,13 @@ Dialog {
         Label {
             text: "Type"
             color: AppTheme.textPrimary
+
+            font.pixelSize: labelFontSize
             font.bold: true
         }
 
         RowLayout {
-            spacing: 12
+            spacing: controlSpacing
 
             ButtonGroup {
                 id: typeGroup
@@ -75,45 +101,51 @@ Dialog {
 
             RadioButton {
                 id: expenseButton
+
                 text: "Expense"
                 checked: true
+
                 ButtonGroup.group: typeGroup
             }
 
             RadioButton {
                 id: incomeButton
+
                 text: "Income"
+
                 ButtonGroup.group: typeGroup
             }
         }
     }
 
     footer: Rectangle {
-        implicitHeight: 90
+        implicitHeight: footerHeight
         color: "transparent"
 
         RowLayout {
             anchors.fill: parent
-            anchors.margins: 20
-            spacing: 12
+            anchors.margins: margin
+            spacing: controlSpacing
 
             Item {
                 Layout.fillWidth: true
             }
 
             CustomButton {
-                custom_height: 42
-                custom_width: 112
+                custom_width: buttonWidth
+                custom_height: buttonHeight
+
                 custom_hover_color_1: AppTheme.backgroundAlt
                 custom_hover_color_2: AppTheme.transparent
+
                 text: "Cancel"
 
                 onClicked: root.close()
             }
 
             CustomButton {
-                custom_height: 42
-                custom_width: 112
+                custom_width: buttonWidth
+                custom_height: buttonHeight
 
                 text: "Create"
 
@@ -122,8 +154,8 @@ Dialog {
                 onClicked: {
                     // TODO:
                     // categoryService.createCategory(
-                    //      categoryField.text,
-                    //      expenseButton.checked
+                    //     categoryField.text,
+                    //     expenseButton.checked
                     // )
 
                     root.accept();
