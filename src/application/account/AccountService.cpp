@@ -23,6 +23,20 @@ namespace budgetpilot::application::services
     {
     }
 
+    utilities::Response<void> AccountService::create_account(const models::Account account)
+    {
+        try
+        {
+            account_repository_.add(account);
+            return utilities::Response<void>::Success("Account created");
+        }
+        catch (const std::exception &ex)
+        {
+            return utilities::Response<void>::Failed(
+                std::string{"Failed to create account: "} + ex.what());
+        }
+    }
+
     utilities::Response<std::vector<models::Account>> AccountService::load_accounts() const
     {
         try

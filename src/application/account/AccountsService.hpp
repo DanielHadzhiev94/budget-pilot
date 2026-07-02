@@ -13,6 +13,11 @@ namespace budgetpilot::domain::contracts
     class ITransactionRepository;
 }
 
+namespace budgetpilot::domain::models
+{
+    class Account;
+}
+
 namespace utilities = budgetpilot::domain::utilities;
 namespace models = budgetpilot::domain::models;
 
@@ -24,6 +29,9 @@ namespace budgetpilot::application::services
         explicit AccountService(
             domain::contracts::IRepository<models::Account> &account_repository,
             domain::contracts::ITransactionRepository &transaction_repository);
+
+        [[nodiscard]]
+        utilities::Response<void> create_account(models::Account);
 
         [[nodiscard]]
         utilities::Response<std::vector<models::Account>> load_accounts() const;
