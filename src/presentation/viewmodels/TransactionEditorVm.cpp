@@ -148,6 +148,55 @@ namespace budgetpilot::presentation::viewmodels
         return true;
     }
 
+    bool TransactionEditorVm::createCategory(const QString &name, const bool isExpense)
+    {
+        setErrorMessage("");
+
+        const auto trimmed_name = name.trimmed();
+        if (trimmed_name.isEmpty())
+        {
+            setErrorMessage("Category name cannot be empty.");
+            return false;
+        }
+
+        models::Category category{};
+        category.name = trimmed_name.toStdString();
+        category.type = isExpense ? enums::Type::Expense : enums::Type::Income;
+
+        const auto response = category_service_.create_category(category);
+        if (!response.is_successful())
+        {
+            setErrorMessage(QString::fromStdString(response.message()));
+            return false;
+        }
+
+        loadCategories();
+        return true;
+    }
+
+    bool TransactionEditorVm::createAccount(const QString &name)
+    {
+        setErrorMessage("");
+
+        const auto trimmed_name = name.trimmed();
+        if (trimmed_name.isEmpty())
+        {
+            setErrorMessage("Account name cannot be empty.");
+            return false;
+        }
+
+        const auto response = account_service_.create_account(
+            models::Account{trimmed_name.toStdString(), 0.0});
+        if (!response.is_successful())
+        {
+            setErrorMessage(QString::fromStdString(response.message()));
+            return false;
+        }
+
+        loadAccounts();
+        return true;
+    }
+
     void TransactionEditorVm::loadInitialData()
     {
         loadAccounts();

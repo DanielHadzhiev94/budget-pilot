@@ -52,6 +52,8 @@ namespace budgetpilot::presentation::viewmodels {
             const QString &note
         );
 
+        Q_INVOKABLE bool createCategory(const QString &name, bool isExpense);
+        Q_INVOKABLE bool createAccount(const QString &name);
         Q_INVOKABLE void loadInitialData();
 
     signals:

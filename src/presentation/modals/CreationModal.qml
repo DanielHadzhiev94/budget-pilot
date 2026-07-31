@@ -7,6 +7,8 @@ import QtQuick.Layouts
 Dialog {
     id: root
 
+    required property var viewModel
+
     // ===== Layout =====
     readonly property int dialogWidth: 420
     readonly property int dialogPadding: 20
@@ -33,12 +35,17 @@ Dialog {
     width: dialogWidth
     padding: dialogPadding
 
-    property string category_name: categoryField.text
-    property bool is_expense: expenseButton.checked
+    property string entityType: "category"
+    readonly property bool isCategory: entityType === "category"
+    readonly property string custom_title: isCategory ? "Add Category" : "Add Account"
+    readonly property string custom_field_title: isCategory ? "Category Name" : "Account Name"
+    readonly property string custom_placeholder_text: isCategory ? "e.g. Groceries" : "e.g. Checking account"
 
-    property string custom_title: "Custom Modal Title"
-    property string custom_field_title: "Custom field title"
-    property string custom_placeholder_text: "Custom placeholder text"
+    onOpened: {
+        categoryField.text = ""
+        expenseButton.checked = true
+        categoryField.forceActiveFocus()
+    }
 
     background: Rectangle {
         radius: dialogRadius
@@ -85,6 +92,16 @@ Dialog {
         }
 
         Label {
+            Layout.fillWidth: true
+            visible: root.viewModel.errorMessage.length > 0
+            text: root.viewModel.errorMessage
+            color: AppTheme.danger
+            font.pixelSize: 13
+            wrapMode: Text.WordWrap
+        }
+
+        Label {
+            visible: root.isCategory
             text: "Type"
             color: AppTheme.textPrimary
 
@@ -93,6 +110,7 @@ Dialog {
         }
 
         RowLayout {
+            visible: root.isCategory
             spacing: controlSpacing
 
             ButtonGroup {
@@ -152,17 +170,15 @@ Dialog {
                 enabled: categoryField.text.trim().length > 0
 
                 onClicked: {
-                    // TODO:
-                    // categoryService.createCategory(
-                    //     categoryField.text,
-                    //     expenseButton.checked
-                    // )
+                    const created = root.isCategory
+                        ? root.viewModel.createCategory(categoryField.text, expenseButton.checked)
+                        : root.viewModel.createAccount(categoryField.text)
 
-                    root.accept();
+                    if (created) {
+                        root.accept()
+                    }
                 }
             }
         }
     }
-
-    Component.onCompleted: categoryField.forceActiveFocus()
 }

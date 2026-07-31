@@ -23,6 +23,9 @@ namespace budgetpilot::application::services {
         );
 
         [[nodiscard]]
+        utilities::Response<void> create_category(models::Category category);
+
+        [[nodiscard]]
         utilities::Response<std::vector<models::Category> > load_category() const;
 
         [[nodiscard]]

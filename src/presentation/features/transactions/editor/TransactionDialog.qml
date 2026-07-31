@@ -81,7 +81,8 @@ Dialog {
         root.open();
     }
 
-    function openCreateDialog() {
+    function openCreateDialog(entityType) {
+        createDialog.entityType = entityType;
         createDialog.open();
     }
 
@@ -438,7 +439,7 @@ Dialog {
 
                                     AddButton {
                                         id: addCategory
-                                        onClicked: openCreateDialog()
+                                        onClicked: openCreateDialog("category")
                                     }
                                 }
                             }
@@ -535,6 +536,7 @@ Dialog {
 
                                 AddButton {
                                     id: addAccount
+                                    onClicked: openCreateDialog("account")
                                 }
                             }
                         }
@@ -744,8 +746,6 @@ Dialog {
     CreationModal {
         id: createDialog
 
-        custom_title: "Add Category"
-        custom_field_title: "Category Name"
-        custom_placeholder_text: "g.e Grocery"
+        viewModel: root.viewModel
     }
 }

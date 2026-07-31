@@ -12,6 +12,17 @@ namespace budgetpilot::application::services {
         : category_repository_(category_repository) {
     }
 
+    utilities::Response<void> CategoryService::create_category(models::Category category) {
+        try {
+            category_repository_.add(category);
+            return utilities::Response<void>::Success("Category created");
+        } catch (const std::exception &ex) {
+            return utilities::Response<void>::Failed(
+                std::string{"Failed to create category: "} + ex.what()
+            );
+        }
+    }
+
     utilities::Response<std::vector<domain::models::Category> > CategoryService::load_category() const {
         try {
             const auto categories = category_repository_.get_all();
