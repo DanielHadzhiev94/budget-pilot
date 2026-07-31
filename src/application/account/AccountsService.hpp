@@ -34,6 +34,9 @@ namespace budgetpilot::application::services
         utilities::Response<void> create_account(models::Account);
 
         [[nodiscard]]
+        utilities::Response<void> delete_account(std::uint64_t id);
+
+        [[nodiscard]]
         utilities::Response<std::vector<models::Account>> load_accounts() const;
 
         [[nodiscard]]

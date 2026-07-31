@@ -198,6 +198,36 @@ namespace budgetpilot::presentation::viewmodels
         return true;
     }
 
+    bool TransactionEditorVm::deleteCategory(const std::uint64_t id)
+    {
+        setErrorMessage("");
+        const auto response = category_service_.delete_category(id);
+        if (!response.is_successful())
+        {
+            setErrorMessage(QString::fromStdString(response.message()));
+            return false;
+        }
+
+        loadCategories();
+        transaction_service_.notify_transaction_changed();
+        return true;
+    }
+
+    bool TransactionEditorVm::deleteAccount(const std::uint64_t id)
+    {
+        setErrorMessage("");
+        const auto response = account_service_.delete_account(id);
+        if (!response.is_successful())
+        {
+            setErrorMessage(QString::fromStdString(response.message()));
+            return false;
+        }
+
+        loadAccounts();
+        transaction_service_.notify_transaction_changed();
+        return true;
+    }
+
     void TransactionEditorVm::loadInitialData()
     {
         loadAccounts();

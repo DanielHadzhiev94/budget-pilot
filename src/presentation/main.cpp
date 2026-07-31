@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 
     services::CategoryService category_service{
         category_repository,
+        transaction_repository,
     };
 
     // Starting Qt engine

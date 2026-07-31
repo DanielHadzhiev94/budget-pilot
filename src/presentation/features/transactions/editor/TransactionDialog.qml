@@ -16,6 +16,9 @@ Dialog {
     property bool isEditMode: false
     property int editingTransactionId: -1
     property var editingTransaction: null
+    property string entityToDelete: ""
+    property int entityIdToDelete: -1
+    property string entityNameToDelete: ""
 
     function clearData() {
         isEditMode = false;
@@ -89,6 +92,13 @@ Dialog {
         createDialog.entityType = entityType;
         createDialog.defaultIsExpense = root.transactionType !== "Income";
         createDialog.open();
+    }
+
+    function confirmEntityDeletion(entityType, entityId, entityName) {
+        root.entityToDelete = entityType;
+        root.entityIdToDelete = entityId;
+        root.entityNameToDelete = entityName;
+        deleteEntityDialog.open();
     }
 
     modal: true
@@ -412,13 +422,43 @@ Dialog {
                                                 color: highlighted ? AppTheme.backgroundAlt : "transparent"
                                             }
 
-                                            contentItem: Text {
-                                                text: modelData.name
-                                                color: AppTheme.textPrimary
-                                                font.pixelSize: 14
-                                                verticalAlignment: Text.AlignVCenter
-                                                leftPadding: 10
-                                                elide: Text.ElideRight
+                                            contentItem: RowLayout {
+                                                spacing: 4
+
+                                                Text {
+                                                    Layout.fillWidth: true
+                                                    text: modelData.name
+                                                    color: AppTheme.textPrimary
+                                                    font.pixelSize: 14
+                                                    verticalAlignment: Text.AlignVCenter
+                                                    leftPadding: 10
+                                                    elide: Text.ElideRight
+                                                }
+
+                                                Button {
+                                                    text: "×"
+                                                    Layout.preferredWidth: 28
+                                                    Layout.preferredHeight: 28
+                                                    enabled: modelData.name !== "Other Expense" && modelData.name !== "Other Income"
+
+                                                    contentItem: Text {
+                                                        text: parent.text
+                                                        color: parent.enabled ? AppTheme.danger : AppTheme.textMuted
+                                                        font.pixelSize: 20
+                                                        horizontalAlignment: Text.AlignHCenter
+                                                        verticalAlignment: Text.AlignVCenter
+                                                    }
+
+                                                    background: Rectangle {
+                                                        radius: 6
+                                                        color: parent.hovered ? AppTheme.dangerSoft : "transparent"
+                                                    }
+
+                                                    onClicked: {
+                                                        categoryInput.popup.close()
+                                                        root.confirmEntityDeletion("category", modelData.id, modelData.name)
+                                                    }
+                                                }
                                             }
                                         }
 
@@ -500,23 +540,52 @@ Dialog {
                                         font.pixelSize: 12
                                     }
 
-                                    delegate: ItemDelegate {
-                                        width: accountInput.width
-                                        height: 38
+                                        delegate: ItemDelegate {
+                                            width: accountInput.width
+                                            height: 38
 
                                         background: Rectangle {
                                             radius: 8
                                             color: highlighted ? AppTheme.backgroundAlt : "transparent"
                                         }
 
-                                        contentItem: Text {
-                                            text: modelData.name
-                                            color: AppTheme.textPrimary
-                                            font.pixelSize: 14
-                                            verticalAlignment: Text.AlignVCenter
-                                            leftPadding: 10
-                                            elide: Text.ElideRight
-                                        }
+                                            contentItem: RowLayout {
+                                                spacing: 4
+
+                                                Text {
+                                                    Layout.fillWidth: true
+                                                    text: modelData.name
+                                                    color: AppTheme.textPrimary
+                                                    font.pixelSize: 14
+                                                    verticalAlignment: Text.AlignVCenter
+                                                    leftPadding: 10
+                                                    elide: Text.ElideRight
+                                                }
+
+                                                Button {
+                                                    text: "×"
+                                                    Layout.preferredWidth: 28
+                                                    Layout.preferredHeight: 28
+
+                                                    contentItem: Text {
+                                                        text: parent.text
+                                                        color: AppTheme.danger
+                                                        font.pixelSize: 20
+                                                        horizontalAlignment: Text.AlignHCenter
+                                                        verticalAlignment: Text.AlignVCenter
+                                                    }
+
+                                                    background: Rectangle {
+                                                        radius: 6
+                                                        color: parent.hovered ? AppTheme.dangerSoft : "transparent"
+                                                    }
+
+                                                    onClicked: {
+                                                        accountInput.popup.close()
+                                                        root.confirmEntityDeletion("account", modelData.id, modelData.name)
+                                                    }
+                                                }
+                                            }
                                     }
 
                                     popup: Popup {
@@ -754,5 +823,85 @@ Dialog {
         id: createDialog
 
         viewModel: root.viewModel
+    }
+
+    Dialog {
+        id: deleteEntityDialog
+
+        modal: true
+        anchors.centerIn: parent
+        width: 420
+        padding: 20
+
+        background: Rectangle {
+            radius: 18
+            color: AppTheme.backgroundMainCard
+            border.color: AppTheme.border
+            border.width: 1
+        }
+
+        contentItem: ColumnLayout {
+            spacing: 16
+
+            Text {
+                Layout.fillWidth: true
+                text: "Delete " + root.entityToDelete
+                color: AppTheme.textPrimary
+                font.pixelSize: 20
+                font.bold: true
+            }
+
+            Text {
+                Layout.fillWidth: true
+                text: root.entityToDelete === "category"
+                    ? "Delete ‘" + root.entityNameToDelete + "’? Transactions using it will be reassigned to the matching Other category."
+                    : "Delete ‘" + root.entityNameToDelete + "’? Its transactions will also be permanently deleted."
+                color: AppTheme.textSecondary
+                font.pixelSize: 14
+                wrapMode: Text.WordWrap
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 12
+
+                Item { Layout.fillWidth: true }
+
+                Button {
+                    text: "Cancel"
+                    onClicked: deleteEntityDialog.reject()
+                }
+
+                Button {
+                    text: "Delete"
+
+                    contentItem: Text {
+                        text: parent.text
+                        color: AppTheme.danger
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    onClicked: deleteEntityDialog.accept()
+                }
+            }
+        }
+
+        onAccepted: {
+            if (root.entityToDelete === "category") {
+                root.viewModel.deleteCategory(root.entityIdToDelete)
+            } else {
+                root.viewModel.deleteAccount(root.entityIdToDelete)
+            }
+
+            root.entityIdToDelete = -1
+            root.entityNameToDelete = ""
+        }
+
+        onRejected: {
+            root.entityIdToDelete = -1
+            root.entityNameToDelete = ""
+        }
     }
 }

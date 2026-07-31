@@ -14,5 +14,7 @@ namespace budgetpilot::domain::contracts
         virtual double get_balance_by_account_id(int account_id) = 0;
         virtual std::vector<models::Transaction> get_all_by_month_and_type(int month, int year, enums::Type type) = 0;
         virtual std::vector<models::Transaction> get_by_date_and_account_id(int month, int year, int account_id) = 0;
+        virtual void replace_category_id(std::uint64_t category_id, std::uint64_t replacement_category_id) = 0;
+        virtual void remove_by_account_id(std::uint64_t account_id) = 0;
     };
 }

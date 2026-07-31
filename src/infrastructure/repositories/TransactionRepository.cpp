@@ -113,6 +113,42 @@ namespace budgetpilot::infrastructure::repositories
         }
     }
 
+    void TransactionRepository::replace_category_id(
+        const std::uint64_t category_id,
+        const std::uint64_t replacement_category_id)
+    {
+        const auto *sql = R"(
+            UPDATE transactions
+            SET category_id = ?
+            WHERE category_id = ?
+        )";
+
+        const persistence::Statement stmt(&connection_, sql);
+        sqlite3_bind_int64(stmt.get(), 1, static_cast<sqlite3_int64>(replacement_category_id));
+        sqlite3_bind_int64(stmt.get(), 2, static_cast<sqlite3_int64>(category_id));
+
+        if (sqlite3_step(stmt.get()) != SQLITE_DONE)
+        {
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
+        }
+    }
+
+    void TransactionRepository::remove_by_account_id(const std::uint64_t account_id)
+    {
+        const auto *sql = R"(
+            DELETE FROM transactions
+            WHERE account_id = ?
+        )";
+
+        const persistence::Statement stmt(&connection_, sql);
+        sqlite3_bind_int64(stmt.get(), 1, static_cast<sqlite3_int64>(account_id));
+
+        if (sqlite3_step(stmt.get()) != SQLITE_DONE)
+        {
+            throw std::runtime_error(sqlite3_errmsg(&connection_));
+        }
+    }
+
     std::vector<Transaction> TransactionRepository::get_all()
     {
         const auto *sql = R"(

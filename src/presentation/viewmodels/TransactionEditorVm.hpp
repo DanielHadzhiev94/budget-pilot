@@ -54,6 +54,8 @@ namespace budgetpilot::presentation::viewmodels {
 
         Q_INVOKABLE bool createCategory(const QString &name, bool isExpense);
         Q_INVOKABLE bool createAccount(const QString &name);
+        Q_INVOKABLE bool deleteCategory(std::uint64_t id);
+        Q_INVOKABLE bool deleteAccount(std::uint64_t id);
         Q_INVOKABLE void loadInitialData();
 
     signals:
