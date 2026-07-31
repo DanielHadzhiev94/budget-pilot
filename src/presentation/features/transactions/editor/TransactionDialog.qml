@@ -8,6 +8,10 @@ Dialog {
 
     required property var viewModel
     property string transactionType: "Expense"
+    readonly property var filteredCategories: root.viewModel.categories.filter(function(category) {
+        const categoryType = root.transactionType === "Income" ? 1 : 2
+        return Number(category.type) === categoryType
+    })
 
     property bool isEditMode: false
     property int editingTransactionId: -1
@@ -83,6 +87,7 @@ Dialog {
 
     function openCreateDialog(entityType) {
         createDialog.entityType = entityType;
+        createDialog.defaultIsExpense = root.transactionType !== "Income";
         createDialog.open();
     }
 
@@ -367,9 +372,11 @@ Dialog {
                                         Layout.fillWidth: true
                                         Layout.preferredHeight: 44
 
-                                        model: root.viewModel.categories
+                                        model: root.filteredCategories
                                         textRole: "name"
                                         valueRole: "id"
+
+                                        onModelChanged: currentIndex = count > 0 ? 0 : -1
 
                                         background: Rectangle {
                                             radius: 11

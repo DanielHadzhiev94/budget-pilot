@@ -36,6 +36,7 @@ Dialog {
     padding: dialogPadding
 
     property string entityType: "category"
+    property bool defaultIsExpense: true
     readonly property bool isCategory: entityType === "category"
     readonly property string custom_title: isCategory ? "Add Category" : "Add Account"
     readonly property string custom_field_title: isCategory ? "Category Name" : "Account Name"
@@ -43,7 +44,7 @@ Dialog {
 
     onOpened: {
         categoryField.text = ""
-        expenseButton.checked = true
+        expenseButton.checked = root.defaultIsExpense
         categoryField.forceActiveFocus()
     }
 

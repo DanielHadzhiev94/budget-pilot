@@ -71,6 +71,7 @@ namespace budgetpilot::presentation::viewmodels
                 QVariantMap item;
                 item["name"] = QString::fromStdString(category.name);
                 item["id"] = static_cast<qlonglong>(category.id);
+                item["type"] = static_cast<int>(category.type);
                 categories_.append(item);
             }
         }
