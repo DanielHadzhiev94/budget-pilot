@@ -21,8 +21,8 @@ QtObject {
     readonly property color primarySoft: "#18345E"
     readonly property color primarySubtle: "#12233D"
 
-    readonly property color success: "#22C55E"
-    readonly property color successSoft: "#123524"
+    readonly property color success: "#008000"
+    readonly property color successSoft: "#0F3D0F"
 
     readonly property color danger: "#F87171"
     readonly property color dangerStrong: "#EF4444"
@@ -81,8 +81,11 @@ QtObject {
     readonly property int fontHeading: 28
     readonly property int fontDisplay: 38
 
-    property string balanceIcon: "../images/balance.png"
-    property string incomeIcon: "../images/income.png"
-    property string expenseIcon: "../images/expense.png"
-    property string rateIcon: "../images/rate.png"
+    property string transparent: transparent
+
+    property string ricoRobotIcon: "../../images/rico_robot.png"
+    property string balanceIcon: "../../images/balance.png"
+    property string incomeIcon: "../../images/income.png"
+    property string expenseIcon: "../../images/expense.png"
+    property string rateIcon: "../../images/rate.png"
 }

@@ -54,6 +54,9 @@ namespace budgetpilot::infrastructure::repositories
         [[nodiscard]]
         std::vector<models::Transaction> get_by_date_and_account_id(int month, int year, int account_id) override;
 
+        void replace_category_id(std::uint64_t category_id, std::uint64_t replacement_category_id) override;
+        void remove_by_account_id(std::uint64_t account_id) override;
+
     private:
         using TimePoint = std::chrono::system_clock::time_point;
 

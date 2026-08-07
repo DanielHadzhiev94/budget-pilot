@@ -23,6 +23,41 @@ namespace budgetpilot::application::services
     {
     }
 
+    utilities::Response<void> AccountService::create_account(const models::Account account)
+    {
+        try
+        {
+            account_repository_.add(account);
+            return utilities::Response<void>::Success("Account created");
+        }
+        catch (const std::exception &ex)
+        {
+            return utilities::Response<void>::Failed(
+                std::string{"Failed to create account: "} + ex.what());
+        }
+    }
+
+    utilities::Response<void> AccountService::delete_account(const std::uint64_t id)
+    {
+        try
+        {
+            if (!account_repository_.get_one(id).has_value())
+            {
+                return utilities::Response<void>::Failed(
+                    std::string{"Account with id: "} + std::to_string(id) + " not found.");
+            }
+
+            transaction_repository_.remove_by_account_id(id);
+            account_repository_.remove(id);
+            return utilities::Response<void>::Success("Account and its transactions were deleted.");
+        }
+        catch (const std::exception &ex)
+        {
+            return utilities::Response<void>::Failed(
+                std::string{"Failed to delete account: "} + ex.what());
+        }
+    }
+
     utilities::Response<std::vector<models::Account>> AccountService::load_accounts() const
     {
         try

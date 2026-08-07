@@ -39,8 +39,8 @@ qt_add_executable(appBudgetPilot
         src/application/transaction/TransactionService.hpp
         src/domain/utilities/Response.hpp
         src/application/transaction/TransactionService.cpp
-        src/presentation/viewmodels/AddTransactionDialogVm.hpp
-        src/presentation/viewmodels/AddTransactionDialogVm.cpp
+        src/presentation/viewmodels/TransactionEditorVm.hpp
+        src/presentation/viewmodels/TransactionEditorVm.cpp
         src/domain/utilities/Mapper.hpp
         src/application/account/AccountsService.hpp
         src/application/account/AccountService.cpp
@@ -71,25 +71,30 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/Main.qml
         src/presentation/themes/AppTheme.qml
 
-        src/presentation/components/Sidebar.qml
+        src/presentation/shared/navigation/Sidebar.qml
 
-        src/presentation/components/Header.qml
-        src/presentation/components/CustomButton.qml
-        src/presentation/components/DatePicker.qml
-        src/presentation/components/BudgetCard.qml
-        src/presentation/components/AddTransactionDialog.qml
-        src/presentation/components/SidebarItem.qml
-        src/presentation/components/TransactionTable.qml
-        src/presentation/components/TransactionTableHeader.qml
-        src/presentation/components/TransactionActionButton.qml
-        src/presentation/components/TypeBadge.qml
-        src/presentation/components/Dialog.qml
-        src/presentation/sections/FinancialSummarySection.qml
-        src/presentation/sections/RecentTransactionsSection.qml
-        src/presentation/sections/ExpenseCategoryPreviewSection.qml
-        src/presentation/sections/TransactionTableSection.qml
+        src/presentation/shared/layout/Header.qml
+        src/presentation/shared/controls/CustomButton.qml
+        src/presentation/features/transactions/editor/DatePicker.qml
+        src/presentation/features/transactions/editor/EntitySelector.qml
+        src/presentation/features/transactions/editor/TransactionForm.qml
+        src/presentation/shared/cards/BudgetCard.qml
+        src/presentation/features/transactions/editor/TransactionDialog.qml
+        src/presentation/shared/navigation/SidebarItem.qml
+        src/presentation/features/transactions/table/TransactionTable.qml
+        src/presentation/features/transactions/table/TransactionTableHeader.qml
+        src/presentation/features/transactions/table/TransactionActionButton.qml
+        src/presentation/features/transactions/table/TypeBadge.qml
+        src/presentation/shared/layout/ConfirmationDialog.qml
+        src/presentation/shared/controls/AddButton.qml
+        src/presentation/modals/CreationModal.qml
+        src/presentation/features/dashboard/FinancialSummarySection.qml
+        src/presentation/features/dashboard/RecentTransactionsSection.qml
+        src/presentation/features/dashboard/ExpenseCategoryPreviewSection.qml
+        src/presentation/features/transactions/TransactionTableSection.qml
         src/presentation/pages/DashboardPage.qml
         src/presentation/pages/TransactionsPage.qml
+        src/presentation/shared/inputs/CustomTextField.qml
 
         RESOURCES
         src/presentation/images/rico_robot.png

@@ -56,6 +56,8 @@ namespace budgetpilot::application::services {
         [[nodiscard]]
         utilities::Response<void> delete_transaction(std::uint64_t id);
 
+        void notify_transaction_changed();
+
     signals:
         void transaction_changed();
 

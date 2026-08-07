@@ -228,6 +228,11 @@ namespace budgetpilot::application::services
         }
     }
 
+    void TransactionService::notify_transaction_changed()
+    {
+        emit transaction_changed();
+    }
+
     void TransactionService::synchronize_account_balance(const std::uint64_t account_id)
     {
         auto account = account_repository_.get_one(account_id);

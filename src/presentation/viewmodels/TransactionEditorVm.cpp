@@ -1,0 +1,258 @@
+#include "TransactionEditorVm.hpp"
+#include "src/domain/models/Transaction.hpp"
+#include "src/domain/utilities/Mapper.hpp"
+
+namespace services = budgetpilot::application::services;
+namespace models = budgetpilot::domain::models;
+namespace utilities = budgetpilot::domain::utilities;
+
+namespace budgetpilot::presentation::viewmodels
+{
+    TransactionEditorVm::TransactionEditorVm(services::TransactionService &transactionService,
+                                             services::AccountService &account_service,
+                                             services::CategoryService &category_service,
+                                             QObject *parent)
+        : QObject(parent),
+          transaction_service_(transactionService),
+          account_service_(account_service),
+          category_service_(category_service)
+    {
+    }
+
+    QVariantList TransactionEditorVm::accounts() const
+    {
+        return accounts_;
+    }
+
+    QVariantList TransactionEditorVm::categories() const
+    {
+        return categories_;
+    }
+
+    QString TransactionEditorVm::errorMessage() const
+    {
+        return error_message_;
+    }
+
+    bool TransactionEditorVm::isSaving() const
+    {
+        return is_saving_;
+    }
+
+    void TransactionEditorVm::loadAccounts()
+    {
+        accounts_.clear();
+
+        const auto accounts_response = account_service_.load_accounts();
+
+        if (accounts_response.is_successful())
+        {
+            for (auto &account : accounts_response.data())
+            {
+                QVariantMap item;
+                item["name"] = QString::fromStdString(account.name);
+                item["id"] = static_cast<qlonglong>(account.id);
+                accounts_.append(item);
+            }
+        }
+
+        emit accountsChanged();
+    }
+
+    void TransactionEditorVm::loadCategories()
+    {
+        categories_.clear();
+
+        const auto categories_response = category_service_.load_category();
+        if (categories_response.is_successful())
+        {
+            for (auto &category : categories_response.data())
+            {
+                QVariantMap item;
+                item["name"] = QString::fromStdString(category.name);
+                item["id"] = static_cast<qlonglong>(category.id);
+                item["type"] = static_cast<int>(category.type);
+                categories_.append(item);
+            }
+        }
+
+        emit categoriesChanged();
+    }
+
+    bool TransactionEditorVm::saveTransaction(
+        bool is_edit,
+        std::uint64_t id,
+        const double amount,
+        const QString &type,
+        const std::int64_t &account_id,
+        const std::int64_t &category_id,
+        const QString &source,
+        const QDate &date,
+        const QString &note)
+    {
+        setErrorMessage("");
+
+        if (amount <= 0.0)
+        {
+            setErrorMessage("Amount must be greater than zero.");
+            return false;
+        }
+
+        if (account_id <= 0)
+        {
+            setErrorMessage("Please select a valid account.");
+            return false;
+        }
+
+        if (category_id <= 0)
+        {
+            setErrorMessage("Please select a valid category.");
+            return false;
+        }
+
+        setIsSaving(true);
+
+        models::Transaction transaction{};
+
+        if (is_edit)
+            transaction.id = id;
+
+        transaction.amount = static_cast<double>(amount);
+        transaction.source = source.toStdString();
+        transaction.note = note.toStdString();
+        transaction.transaction_date = utilities::Mapper::qdate_to_timepoint(date);
+        transaction.account_id = account_id;
+        transaction.category_id = category_id;
+
+        if (type == "Income")
+        {
+            transaction.type = enums::Type::Income;
+        }
+        else
+        {
+            transaction.type = enums::Type::Expense;
+        }
+
+        const auto response = !is_edit
+                                  ? transaction_service_.create_transaction(transaction)
+                                  : transaction_service_.update_transaction(transaction);
+
+        setIsSaving(false);
+
+        if (!response.is_successful())
+        {
+            setErrorMessage(QString::fromStdString(response.message()));
+            return false;
+        }
+
+        emit transactionCreated();
+        return true;
+    }
+
+    bool TransactionEditorVm::createCategory(const QString &name, const bool isExpense)
+    {
+        setErrorMessage("");
+
+        const auto trimmed_name = name.trimmed();
+        if (trimmed_name.isEmpty())
+        {
+            setErrorMessage("Category name cannot be empty.");
+            return false;
+        }
+
+        models::Category category{};
+        category.name = trimmed_name.toStdString();
+        category.type = isExpense ? enums::Type::Expense : enums::Type::Income;
+
+        const auto response = category_service_.create_category(category);
+        if (!response.is_successful())
+        {
+            setErrorMessage(QString::fromStdString(response.message()));
+            return false;
+        }
+
+        loadCategories();
+        return true;
+    }
+
+    bool TransactionEditorVm::createAccount(const QString &name)
+    {
+        setErrorMessage("");
+
+        const auto trimmed_name = name.trimmed();
+        if (trimmed_name.isEmpty())
+        {
+            setErrorMessage("Account name cannot be empty.");
+            return false;
+        }
+
+        const auto response = account_service_.create_account(
+            models::Account{trimmed_name.toStdString(), 0.0});
+        if (!response.is_successful())
+        {
+            setErrorMessage(QString::fromStdString(response.message()));
+            return false;
+        }
+
+        loadAccounts();
+        return true;
+    }
+
+    bool TransactionEditorVm::deleteCategory(const std::uint64_t id)
+    {
+        setErrorMessage("");
+        const auto response = category_service_.delete_category(id);
+        if (!response.is_successful())
+        {
+            setErrorMessage(QString::fromStdString(response.message()));
+            return false;
+        }
+
+        loadCategories();
+        transaction_service_.notify_transaction_changed();
+        return true;
+    }
+
+    bool TransactionEditorVm::deleteAccount(const std::uint64_t id)
+    {
+        setErrorMessage("");
+        const auto response = account_service_.delete_account(id);
+        if (!response.is_successful())
+        {
+            setErrorMessage(QString::fromStdString(response.message()));
+            return false;
+        }
+
+        loadAccounts();
+        transaction_service_.notify_transaction_changed();
+        return true;
+    }
+
+    void TransactionEditorVm::loadInitialData()
+    {
+        loadAccounts();
+        loadCategories();
+    }
+
+    void TransactionEditorVm::setErrorMessage(const QString &message)
+    {
+        if (error_message_ == message)
+        {
+            return;
+        }
+
+        error_message_ = message;
+        emit errorMessageChanged();
+    }
+
+    void TransactionEditorVm::setIsSaving(bool isSaving)
+    {
+        if (is_saving_ == isSaving)
+        {
+            return;
+        }
+
+        is_saving_ = isSaving;
+        emit isSavingChanged();
+    }
+}

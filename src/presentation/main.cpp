@@ -13,7 +13,7 @@
 #include "src/application/account/AccountsService.hpp"
 #include "src/application/category/CategoryService.hpp"
 #include "src/application/transaction/TransactionService.hpp"
-#include "viewmodels/AddTransactionDialogVm.hpp"
+#include "viewmodels/TransactionEditorVm.hpp"
 #include "viewmodels/FinancialSummaryVm.hpp"
 #include "viewmodels/RecentTransactionVm.hpp"
 #include "viewmodels/TransactionTableVm.hpp"
@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 
     services::CategoryService category_service{
         category_repository,
+        transaction_repository,
     };
 
     // Starting Qt engine
@@ -74,7 +75,7 @@ int main(int argc, char *argv[])
         transaction_service,
         account_service};
 
-    viewmodels::AddTransactionDialogVm addDialogViewModel{
+    viewmodels::TransactionEditorVm addDialogViewModel{
         transaction_service,
         account_service,
         category_service,
