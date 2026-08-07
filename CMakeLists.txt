@@ -76,6 +76,8 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/shared/layout/Header.qml
         src/presentation/shared/controls/CustomButton.qml
         src/presentation/features/transactions/editor/DatePicker.qml
+        src/presentation/features/transactions/editor/EntitySelector.qml
+        src/presentation/features/transactions/editor/TransactionForm.qml
         src/presentation/shared/cards/BudgetCard.qml
         src/presentation/features/transactions/editor/TransactionDialog.qml
         src/presentation/shared/navigation/SidebarItem.qml
