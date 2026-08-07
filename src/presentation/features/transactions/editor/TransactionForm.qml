@@ -63,7 +63,7 @@ ScrollView {
             ColumnLayout {
                 Layout.fillWidth: true; spacing: 6
                 Text { text: "Amount"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
-                CustomTextField { id: amountInput; custom_placeholder_text: "0.00" }
+                CustomTextField { id: amountInput; placeholderText: "0.00" }
             }
             RowLayout {
                 Layout.fillWidth: true; spacing: 12
@@ -99,7 +99,10 @@ ScrollView {
             ColumnLayout {
                 Layout.fillWidth: true; spacing: 6
                 Text { text: form.transactionType === "Income" ? "Source" : "Merchant / Source"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
-                CustomTextField { id: sourceInput; custom_placeholder_text: form.transactionType === "Income" ? "Salary, bonus, freelance..." : "Lidl, rent, Amazon..."; custom_font_size: 14 }
+                CustomTextField {
+                    id: sourceInput
+                    placeholderText: form.transactionType === "Income" ? "Salary, bonus, freelance..." : "Lidl, rent, Amazon..."
+                }
             }
             ColumnLayout {
                 Layout.fillWidth: true; spacing: 6

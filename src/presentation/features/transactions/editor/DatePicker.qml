@@ -14,10 +14,10 @@ Rectangle {
         "September", "October", "November", "December"
     ]
 
-    readonly property var years: [
-        2022, 2023, 2024, 2025,
-        2026, 2027, 2028, 2029
-    ]
+    readonly property var years: {
+        const currentYear = new Date().getFullYear()
+        return Array.from({ length: 9 }, function(_, index) { return currentYear - 4 + index })
+    }
 
     readonly property int selectedMonth: monthBox.currentIndex + 1
     readonly property int selectedYear: root.years[yearBox.currentIndex]
@@ -27,7 +27,7 @@ Rectangle {
 
     radius: 10
     color: AppTheme.backgroundMainCard
-    border.color: Qt.rgba(120, 160, 220, 0.22)
+    border.color: AppTheme.border
     border.width: 1
     clip: true
 
@@ -75,7 +75,7 @@ Rectangle {
             Layout.preferredHeight: 26
             Layout.alignment: Qt.AlignVCenter
 
-            color: Qt.rgba(120, 160, 220, 0.18)
+            color: AppTheme.divider
         }
 
         StyledComboBox {
@@ -105,13 +105,13 @@ Rectangle {
             radius: 8
 
             color: control.down
-                ? Qt.rgba(80, 120, 255, 0.28)
+                ? AppTheme.primarySoft
                 : control.hovered
-                    ? Qt.rgba(80, 120, 255, 0.16)
+                    ? AppTheme.primarySubtle
                     : "transparent"
 
             border.color: control.down || control.hovered
-                ? Qt.rgba(120, 160, 255, 0.35)
+                ? AppTheme.primaryBorder
                 : "transparent"
 
             border.width: 1
@@ -163,7 +163,7 @@ Rectangle {
             background: Rectangle {
                 radius: 10
                 color: AppTheme.backgroundMainCard
-                border.color: Qt.rgba(120, 160, 220, 0.25)
+                border.color: AppTheme.border
                 border.width: 1
             }
 
@@ -209,13 +209,13 @@ Rectangle {
                 radius: 7
 
                 color: highlighted
-                    ? Qt.rgba(80, 120, 255, 0.28)
+                    ? AppTheme.primarySoft
                     : itemDelegate.hovered
-                        ? Qt.rgba(80, 120, 255, 0.22)
+                        ? AppTheme.primarySubtle
                         : "transparent"
 
                 border.color: itemDelegate.hovered || highlighted
-                    ? Qt.rgba(120, 160, 255, 0.34)
+                    ? AppTheme.primaryBorder
                     : "transparent"
 
                 border.width: 1

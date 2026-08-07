@@ -4,25 +4,25 @@ import QtQuick.Layouts
 import BudgetPilot
 
 Button {
-    id: btn
+    id: root
 
-    property string title: "Default text"
-    property int custom_height: 42
-    property int custom_width: 164
+    property string label: ""
+    property int preferredWidth: 164
+    property int preferredHeight: 42
+    property color normalColor: AppTheme.primary
+    property color hoverColor: AppTheme.primaryLight
+    property color pressedColor: AppTheme.primaryDark
 
-    property color custom_hover_color_1: AppTheme.primaryLight
-    property color custom_hover_color_2: AppTheme.primary
-
-    text: title
+    text: label
     hoverEnabled: true
 
-    Layout.preferredHeight: custom_height
-    Layout.preferredWidth: custom_width
+    Layout.preferredHeight: preferredHeight
+    Layout.preferredWidth: preferredWidth
 
     background: Rectangle {
         radius: 12
-        color: btn.down ? AppTheme.primaryDark : btn.hovered ? custom_hover_color_1 : custom_hover_color_2
-        border.color: Qt.rgba(255, 255, 255, 0.10)
+        color: root.down ? root.pressedColor : root.hovered ? root.hoverColor : root.normalColor
+        border.color: AppTheme.borderLight
         border.width: 1
 
         Behavior on color {
@@ -33,7 +33,7 @@ Button {
     }
 
     contentItem: Text {
-        text: btn.text
+        text: root.text
         color: "white"
         font.pixelSize: 14
         font.bold: true

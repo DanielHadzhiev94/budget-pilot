@@ -6,15 +6,15 @@ Rectangle {
 
     property string value: ""
 
-    readonly property bool isIncome: value === "Income"
+    readonly property bool isIncome: AppTheme.isIncome(value)
 
     width: 100
     height: 30
     radius: 15
 
     color: root.isIncome
-        ? Qt.rgba(0.0, 0.75, 0.42, 0.14)
-        : Qt.rgba(1.0, 0.20, 0.25, 0.15)
+        ? AppTheme.incomeBadge
+        : AppTheme.expenseBadge
 
     Text {
         anchors.centerIn: parent

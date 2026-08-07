@@ -20,6 +20,7 @@ QtObject {
     readonly property color primaryDark: "#2F6FE8"
     readonly property color primarySoft: "#18345E"
     readonly property color primarySubtle: "#12233D"
+    readonly property color primaryBorder: "#486FA8"
 
     readonly property color success: "#008000"
     readonly property color successSoft: "#0F3D0F"
@@ -52,6 +53,10 @@ QtObject {
     readonly property color inputBorder: "#2A3A50"
     readonly property color inputPlaceholder: "#64748B"
 
+    readonly property color incomeBadge: "#123D2B"
+    readonly property color expenseBadge: "#3A1A1A"
+    readonly property color rowHighlight: "#17243A"
+
     readonly property color chartBlue: "#4F8CFF"
     readonly property color chartGreen: "#22C55E"
     readonly property color chartOrange: "#F59E0B"
@@ -81,11 +86,19 @@ QtObject {
     readonly property int fontHeading: 28
     readonly property int fontDisplay: 38
 
-    property string transparent: transparent
+    readonly property url ricoRobotIcon: "../../images/rico_robot.png"
+    readonly property url balanceIcon: "../../images/balance.png"
+    readonly property url incomeIcon: "../../images/income.png"
+    readonly property url expenseIcon: "../../images/expense.png"
+    readonly property url rateIcon: "../../images/rate.png"
 
-    property string ricoRobotIcon: "../../images/rico_robot.png"
-    property string balanceIcon: "../../images/balance.png"
-    property string incomeIcon: "../../images/income.png"
-    property string expenseIcon: "../../images/expense.png"
-    property string rateIcon: "../../images/rate.png"
+    function isIncome(transactionType) {
+        return transactionType === "Income"
+    }
+
+    function formattedAmount(amount, transactionType) {
+        const numericAmount = Number(amount)
+        const value = isNaN(numericAmount) ? 0 : numericAmount
+        return (isIncome(transactionType) ? "+" : "-") + " €" + value.toFixed(2)
+    }
 }

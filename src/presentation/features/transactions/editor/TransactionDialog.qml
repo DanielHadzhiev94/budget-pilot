@@ -137,20 +137,19 @@ Dialog {
                 anchors.rightMargin: 24
                 spacing: 12
                 Item { Layout.fillWidth: true }
-                Button {
-                    text: "Cancel"
-                    Layout.preferredWidth: 104
-                    Layout.preferredHeight: 42
-                    background: Rectangle { radius: 11; color: parent.hovered ? AppTheme.backgroundAlt : "transparent"; border.color: AppTheme.border; border.width: 1 }
-                    contentItem: Text { text: parent.text; color: AppTheme.textPrimary; font.pixelSize: 14; font.bold: true; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+                CustomButton {
+                    label: "Cancel"
+                    preferredWidth: 104
+                    preferredHeight: 42
+                    normalColor: "transparent"
+                    hoverColor: AppTheme.backgroundAlt
+                    pressedColor: AppTheme.surfaceLight
                     onClicked: { root.clearData(); root.close() }
                 }
-                Button {
-                    text: root.isEditMode ? "Update" : "Save"
-                    Layout.preferredWidth: 112
-                    Layout.preferredHeight: 42
-                    background: Rectangle { radius: 11; color: parent.hovered ? AppTheme.primaryDark : AppTheme.primary; border.color: AppTheme.primary; border.width: 1 }
-                    contentItem: Text { text: parent.text; color: "white"; font.bold: true; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+                CustomButton {
+                    label: root.isEditMode ? "Update" : "Save"
+                    preferredWidth: 112
+                    preferredHeight: 42
                     onClicked: {
                         const data = transactionForm.transactionData()
                         const saved = root.viewModel.saveTransaction(root.isEditMode, root.isEditMode ? root.editingTransactionId : -1,

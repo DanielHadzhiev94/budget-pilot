@@ -16,7 +16,7 @@ Rectangle {
 
     radius: AppTheme.radiusXL
     color: cardColor
-    border.color: Qt.rgba(148 / 255, 163 / 255, 184 / 255, 0.16)
+    border.color: AppTheme.border
     border.width: 1
 
     implicitWidth: 270
@@ -27,7 +27,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.top: parent.top
         height: 1
-        color: Qt.rgba(255, 255, 255, 0.08)
+        color: AppTheme.borderLight
     }
 
     ColumnLayout {
@@ -44,7 +44,7 @@ Rectangle {
                 Layout.preferredHeight: root.iconBoxSize
                 radius: 14
                 color: AppTheme.primarySubtle
-                border.color: Qt.rgba(79 / 255, 140 / 255, 255 / 255, 0.18)
+                border.color: AppTheme.primaryBorder
                 border.width: 1
 
                 Image {

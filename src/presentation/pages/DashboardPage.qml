@@ -71,9 +71,9 @@ Rectangle {
                 }
 
                 CustomButton {
-                    title: "+ Add Transaction"
-                    custom_width: 178
-                    custom_height: 42
+                    label: "+ Add Transaction"
+                    preferredWidth: 178
+                    preferredHeight: 42
                     Layout.alignment: Qt.AlignVCenter
                     onClicked: root.openTransactionDialog()
                 }

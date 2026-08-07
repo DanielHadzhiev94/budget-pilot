@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import BudgetPilot
 
 Dialog {
     id: root
@@ -38,9 +39,9 @@ Dialog {
     property string entityType: "category"
     property bool defaultIsExpense: true
     readonly property bool isCategory: entityType === "category"
-    readonly property string custom_title: isCategory ? "Add Category" : "Add Account"
-    readonly property string custom_field_title: isCategory ? "Category Name" : "Account Name"
-    readonly property string custom_placeholder_text: isCategory ? "e.g. Groceries" : "e.g. Checking account"
+    readonly property string dialogTitle: isCategory ? "Add Category" : "Add Account"
+    readonly property string fieldTitle: isCategory ? "Category Name" : "Account Name"
+    readonly property string fieldPlaceholder: isCategory ? "e.g. Groceries" : "e.g. Checking account"
 
     onOpened: {
         categoryField.text = ""
@@ -64,7 +65,7 @@ Dialog {
             anchors.margins: margin
 
             Text {
-                text: root.custom_title
+                text: root.dialogTitle
                 color: AppTheme.textPrimary
 
                 font.pixelSize: titleFontSize
@@ -77,7 +78,7 @@ Dialog {
         spacing: contentSpacing
 
         Label {
-            text: root.custom_field_title
+            text: root.fieldTitle
             color: AppTheme.textPrimary
 
             font.pixelSize: labelFontSize
@@ -89,7 +90,7 @@ Dialog {
 
             Layout.fillWidth: true
 
-            custom_placeholder_text: root.custom_placeholder_text
+            placeholderText: root.fieldPlaceholder
         }
 
         Label {
@@ -151,22 +152,20 @@ Dialog {
             }
 
             CustomButton {
-                custom_width: buttonWidth
-                custom_height: buttonHeight
-
-                custom_hover_color_1: AppTheme.backgroundAlt
-                custom_hover_color_2: AppTheme.transparent
-
-                text: "Cancel"
+                label: "Cancel"
+                preferredWidth: buttonWidth
+                preferredHeight: buttonHeight
+                normalColor: "transparent"
+                hoverColor: AppTheme.backgroundAlt
+                pressedColor: AppTheme.surfaceLight
 
                 onClicked: root.close()
             }
 
             CustomButton {
-                custom_width: buttonWidth
-                custom_height: buttonHeight
-
-                text: "Create"
+                label: "Create"
+                preferredWidth: buttonWidth
+                preferredHeight: buttonHeight
 
                 enabled: categoryField.text.trim().length > 0
 

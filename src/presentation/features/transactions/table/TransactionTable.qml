@@ -101,36 +101,13 @@ Rectangle {
             color: AppTheme.tableHeaderSurface
             clip: true
 
-            Row {
+            TransactionTableHeader {
                 x: -tableView.contentX
                 width: root.totalTableWidth
-                height: root.headerHeight
-                spacing: 0
-
-                Repeater {
-                    model: root.columns.length
-
-                    delegate: Rectangle {
-                        width: root.columnWidth(index)
-                        height: root.headerHeight
-                        color: "transparent"
-
-                        Text {
-                            anchors.fill: parent
-                            anchors.leftMargin: root.cellPadding
-                            anchors.rightMargin: root.cellPadding
-                            text: root.columns[index].title
-                            color: AppTheme.textMuted
-                            font.pixelSize: 11
-                            font.bold: true
-                            font.capitalization: Font.AllUppercase
-                            font.letterSpacing: 0.5
-                            horizontalAlignment: root.columns[index].align
-                            verticalAlignment: Text.AlignVCenter
-                            elide: Text.ElideRight
-                        }
-                    }
-                }
+                columns: root.columns
+                cellPadding: root.cellPadding
+                headerHeight: root.headerHeight
+                columnWidthProvider: root.columnWidth
             }
 
             Rectangle {
@@ -217,8 +194,8 @@ Rectangle {
                         return isNaN(value) ? 0 : value;
                     }
 
-                    text: typeText === "Income" ? "+ €" + amountValue.toFixed(2) : "- €" + amountValue.toFixed(2)
-                    color: typeText === "Income" ? AppTheme.success : AppTheme.danger
+                    text: AppTheme.formattedAmount(amountValue, typeText)
+                    color: AppTheme.isIncome(typeText) ? AppTheme.success : AppTheme.danger
                     font.pixelSize: 14
                     font.bold: true
                     horizontalAlignment: Text.AlignRight

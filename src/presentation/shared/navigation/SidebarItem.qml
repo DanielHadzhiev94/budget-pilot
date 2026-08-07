@@ -18,7 +18,7 @@ Rectangle {
             ? AppTheme.sidebarItemHover
             : "transparent"
 
-    border.color: selected ? Qt.rgba(79 / 255, 140 / 255, 255 / 255, 0.35) : "transparent"
+    border.color: selected ? AppTheme.primaryBorder : "transparent"
     border.width: 1
 
     Behavior on color { ColorAnimation { duration: 120 } }
