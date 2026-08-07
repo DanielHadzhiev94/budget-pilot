@@ -83,7 +83,7 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/features/transactions/table/TransactionTableHeader.qml
         src/presentation/features/transactions/table/TransactionActionButton.qml
         src/presentation/features/transactions/table/TypeBadge.qml
-        src/presentation/shared/layout/Dialog.qml
+        src/presentation/shared/layout/ConfirmationDialog.qml
         src/presentation/shared/controls/AddButton.qml
         src/presentation/modals/CreationModal.qml
         src/presentation/features/dashboard/FinancialSummarySection.qml

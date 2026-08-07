@@ -825,68 +825,17 @@ Dialog {
         viewModel: root.viewModel
     }
 
-    Dialog {
+    ConfirmationDialog {
         id: deleteEntityDialog
 
-        modal: true
-        anchors.centerIn: parent
-        width: 420
-        padding: 20
-
-        background: Rectangle {
-            radius: 18
-            color: AppTheme.backgroundMainCard
-            border.color: AppTheme.border
-            border.width: 1
-        }
-
-        contentItem: ColumnLayout {
-            spacing: 16
-
-            Text {
-                Layout.fillWidth: true
-                text: "Delete " + root.entityToDelete
-                color: AppTheme.textPrimary
-                font.pixelSize: 20
-                font.bold: true
-            }
-
-            Text {
-                Layout.fillWidth: true
-                text: root.entityToDelete === "category"
-                    ? "Delete ‘" + root.entityNameToDelete + "’? Transactions using it will be reassigned to the matching Other category."
-                    : "Delete ‘" + root.entityNameToDelete + "’? Its transactions will also be permanently deleted."
-                color: AppTheme.textSecondary
-                font.pixelSize: 14
-                wrapMode: Text.WordWrap
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 12
-
-                Item { Layout.fillWidth: true }
-
-                Button {
-                    text: "Cancel"
-                    onClicked: deleteEntityDialog.reject()
-                }
-
-                Button {
-                    text: "Delete"
-
-                    contentItem: Text {
-                        text: parent.text
-                        color: AppTheme.danger
-                        font.bold: true
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-
-                    onClicked: deleteEntityDialog.accept()
-                }
-            }
-        }
+        dialogTitle: "Delete " + root.entityToDelete
+        subtitle: "This action cannot be undone."
+        message: root.entityToDelete === "category"
+            ? "Delete ‘" + root.entityNameToDelete + "’? Transactions using it will be reassigned to the matching Other category."
+            : "Delete ‘" + root.entityNameToDelete + "’? Its transactions will also be permanently deleted."
+        confirmText: "Delete"
+        iconText: "×"
+        destructive: true
 
         onAccepted: {
             if (root.entityToDelete === "category") {
