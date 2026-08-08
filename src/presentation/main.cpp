@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <exception>
 #include <QGuiApplication>
+#include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QStandardPaths>
 #include <QQuickStyle>
@@ -29,6 +30,7 @@ namespace viewmodels = budgetpilot::presentation::viewmodels;
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+    QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/qt/qml/BudgetPilot/images/rico_robot.png")));
 
     // Initialization of the database
     const QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);

@@ -17,6 +17,18 @@ qt_add_executable(appBudgetPilot
     ${BUDGETPILOT_INFRASTRUCTURE_SOURCES}
 )
 
+if(WIN32)
+    target_sources(appBudgetPilot PRIVATE app_icon.rc)
+endif()
+
+if(APPLE)
+    set(BUDGETPILOT_MACOS_ICON "${CMAKE_CURRENT_SOURCE_DIR}/images/BudgetPilot.icns")
+    set_source_files_properties(${BUDGETPILOT_MACOS_ICON} PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources"
+    )
+    target_sources(appBudgetPilot PRIVATE ${BUDGETPILOT_MACOS_ICON})
+endif()
+
 set_source_files_properties(themes/AppTheme.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(appBudgetPilot
@@ -72,6 +84,7 @@ target_link_libraries(appBudgetPilot
 set_target_properties(appBudgetPilot PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE_ICON_FILE BudgetPilot.icns
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
