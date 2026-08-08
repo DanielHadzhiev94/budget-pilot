@@ -87,6 +87,8 @@ QtObject {
     readonly property int fontHeading: 28
     readonly property int fontDisplay: 38
 
+    readonly property string appVersion: "v0.1.0 Beta"
+
     // Shared motion values keep feedback responsive and consistent.
     readonly property int motionFast: 120
     readonly property int motionNormal: 180

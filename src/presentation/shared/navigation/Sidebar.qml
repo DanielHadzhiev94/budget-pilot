@@ -45,6 +45,25 @@ Rectangle {
         }
 
         Item { Layout.fillHeight: true }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 30
+            radius: AppTheme.radiusSmall
+            color: AppTheme.surface
+            border.color: AppTheme.border
+            border.width: 1
+
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+                text: AppTheme.appVersion
+                color: AppTheme.textDisabled
+                font.pixelSize: 11
+                font.bold: true
+            }
+        }
     }
 
     Rectangle {
