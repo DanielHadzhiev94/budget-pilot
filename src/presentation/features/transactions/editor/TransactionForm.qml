@@ -11,6 +11,9 @@ ScrollView {
     readonly property var filteredCategories: viewModel.categories.filter(function(category) {
         return Number(category.type) === (form.transactionType === "Income" ? 1 : 2)
     })
+    readonly property bool isValid: Number(amountInput.text) > 0
+        && Number(accountInput.currentValue) > 0
+        && Number(categoryInput.currentValue) > 0
     signal createEntityRequested(string entityType)
     signal entityDeletionRequested(string entityType, int entityId, string entityName)
 
@@ -106,7 +109,7 @@ ScrollView {
             }
             ColumnLayout {
                 Layout.fillWidth: true; spacing: 6
-                Text { text: "Date"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
+                Text { text: "Transaction month"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
                 Rectangle {
                     Layout.fillWidth: true; Layout.preferredHeight: 44; radius: 11; color: AppTheme.backgroundAlt; border.color: AppTheme.border; border.width: 1
                     DatePicker {

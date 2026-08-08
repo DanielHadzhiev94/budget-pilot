@@ -52,7 +52,10 @@ Dialog {
     width: 460
     height: 620
     padding: 0
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    // Avoid accidentally discarding a partially completed transaction.
+    closePolicy: Popup.CloseOnEscape
+
+    onClosed: clearData()
 
     onOpened: {
         viewModel.loadInitialData()
@@ -147,9 +150,10 @@ Dialog {
                     onClicked: { root.clearData(); root.close() }
                 }
                 CustomButton {
-                    label: root.isEditMode ? "Update" : "Save"
+                    label: root.viewModel.isSaving ? "Saving…" : root.isEditMode ? "Update" : "Save"
                     preferredWidth: 112
                     preferredHeight: 42
+                    enabled: transactionForm.isValid && !root.viewModel.isSaving
                     onClicked: {
                         const data = transactionForm.transactionData()
                         const saved = root.viewModel.saveTransaction(root.isEditMode, root.isEditMode ? root.editingTransactionId : -1,

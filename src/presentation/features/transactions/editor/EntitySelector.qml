@@ -63,7 +63,14 @@ ColumnLayout {
             model: entitySelector.dropdownEntities
             textRole: "name"
             valueRole: "id"
-            onModelChanged: currentIndex = count > 0 ? 0 : -1
+            // Preserve a selection when data reloads; only choose a default when needed.
+            onModelChanged: {
+                if (count === 0) {
+                    currentIndex = -1
+                } else if (currentIndex < 0) {
+                    currentIndex = 0
+                }
+            }
 
             background: Rectangle {
                 radius: 11

@@ -35,6 +35,7 @@ Dialog {
 
     width: dialogWidth
     padding: dialogPadding
+    closePolicy: Popup.CloseOnEscape
 
     property string entityType: "category"
     property bool defaultIsExpense: true
