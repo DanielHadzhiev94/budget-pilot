@@ -49,6 +49,7 @@ qt_add_qml_module(appBudgetPilot
     features/transactions/table/TypeBadge.qml
     pages/DashboardPage.qml
     pages/TransactionsPage.qml
+    pages/ExpenseCategoriesPage.qml
 
     RESOURCES
     images/rico_robot.png

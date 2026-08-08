@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import BudgetPilot
 
@@ -6,9 +7,12 @@ Rectangle {
     id: root
 
     property var viewModel
+    signal viewAllCategoriesClicked()
+    readonly property var allCategoryTotals: root.viewModel && root.viewModel.expenseCategoryTotals
+        ? root.viewModel.expenseCategoryTotals : []
     readonly property var categoryTotals: root.viewModel && root.viewModel.expenseCategoryTotals
-        ? root.viewModel.expenseCategoryTotals.slice(0, 4) : []
-    readonly property real totalExpenses: categoryTotals.reduce(function(total, item) { return total + item.amount }, 0)
+        ? root.viewModel.expenseCategoryTotals.slice(0, 6) : []
+    readonly property real totalExpenses: allCategoryTotals.reduce(function(total, item) { return total + item.amount }, 0)
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -100,7 +104,20 @@ Rectangle {
                     }
                 }
                 Item { Layout.fillHeight: true }
-                Text { text: "All expenses in the selected month"; color: AppTheme.textMuted; font.pixelSize: 12; Layout.fillWidth: true; horizontalAlignment: Text.AlignHCenter }
+                Button {
+                    id: viewAllButton
+                    Layout.alignment: Qt.AlignRight
+                    background: Rectangle { color: "transparent" }
+                    contentItem: Text {
+                        text: "View all categories →"
+                        color: viewAllButton.hovered ? AppTheme.primary : AppTheme.textPrimary
+                        font.pixelSize: 14
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    onClicked: root.viewAllCategoriesClicked()
+                }
             }
 
             ColumnLayout {

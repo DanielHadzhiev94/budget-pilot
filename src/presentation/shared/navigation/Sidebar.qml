@@ -44,6 +44,15 @@ Rectangle {
             onClicked: root.itemSelected(1)
         }
 
+        SidebarItem {
+            title: "Expense categories"
+            iconText: "▤"
+            selected: root.selectedIndex === 2
+            Layout.fillWidth: true
+            Layout.preferredHeight: 44
+            onClicked: root.itemSelected(2)
+        }
+
         Item { Layout.fillHeight: true }
 
         Rectangle {
