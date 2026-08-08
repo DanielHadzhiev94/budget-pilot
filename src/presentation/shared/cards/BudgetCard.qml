@@ -22,14 +22,6 @@ Rectangle {
     implicitWidth: 270
     implicitHeight: 150
 
-    Rectangle {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        height: 1
-        color: AppTheme.borderLight
-    }
-
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 18
