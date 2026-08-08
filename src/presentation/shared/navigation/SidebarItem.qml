@@ -8,6 +8,7 @@ Rectangle {
     property string title: ""
     property string iconText: "•"
     property bool selected: false
+    property color animatedBorderColor: selected ? AppTheme.primaryBorder : "transparent"
 
     signal clicked()
 
@@ -18,22 +19,32 @@ Rectangle {
             ? AppTheme.sidebarItemHover
             : "transparent"
 
-    border.color: selected ? AppTheme.primaryBorder : "transparent"
+    border.color: animatedBorderColor
     border.width: 1
 
-    Behavior on color { ColorAnimation { duration: 120 } }
+    Behavior on color { ColorAnimation { duration: AppTheme.motionFast } }
+    Behavior on animatedBorderColor { ColorAnimation { duration: AppTheme.motionFast } }
 
     RowLayout {
         anchors.fill: parent
         anchors.leftMargin: 12
         anchors.rightMargin: 12
         spacing: 10
+        transform: Translate {
+            x: mouseArea.containsMouse && !root.selected ? 2 : 0
+
+            Behavior on x {
+                NumberAnimation { duration: AppTheme.motionFast; easing.type: Easing.OutCubic }
+            }
+        }
 
         Rectangle {
             Layout.preferredWidth: 26
             Layout.preferredHeight: 26
             radius: 9
             color: root.selected ? AppTheme.primary : AppTheme.surfaceLight
+
+            Behavior on color { ColorAnimation { duration: AppTheme.motionFast } }
 
             Text {
                 anchors.centerIn: parent
@@ -52,6 +63,8 @@ Rectangle {
             Layout.fillWidth: true
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
+
+            Behavior on color { ColorAnimation { duration: AppTheme.motionFast } }
         }
     }
 

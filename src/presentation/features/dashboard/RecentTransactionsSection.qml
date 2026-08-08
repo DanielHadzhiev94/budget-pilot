@@ -184,7 +184,15 @@ Rectangle {
                         width: ListView.view.width
                         height: root.rowHeight
 
-                        color: row.index % 2 === 0 ? "transparent" : AppTheme.tableRowAlt
+                        color: row.hovered
+                            ? AppTheme.tableRowHover
+                            : row.index % 2 === 0 ? "transparent" : AppTheme.tableRowAlt
+
+                        property bool hovered: rowMouseArea.containsMouse
+
+                        Behavior on color {
+                            ColorAnimation { duration: AppTheme.motionFast }
+                        }
 
                         RowLayout {
                             anchors.fill: parent
@@ -250,6 +258,13 @@ Rectangle {
                             color: AppTheme.border
                             opacity: 0.35
                         }
+
+                        MouseArea {
+                            id: rowMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            acceptedButtons: Qt.NoButton
+                        }
                     }
                 }
             }
@@ -275,6 +290,12 @@ Rectangle {
 
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
+            }
+
+            scale: pressed ? AppTheme.pressScale : hovered ? 1.02 : 1
+
+            Behavior on scale {
+                NumberAnimation { duration: AppTheme.motionFast; easing.type: Easing.OutCubic }
             }
 
             onClicked: {

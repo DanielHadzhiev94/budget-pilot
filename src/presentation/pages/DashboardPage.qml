@@ -7,10 +7,18 @@ Rectangle {
 
     required property var dialogPopup
     signal viewAllTransactionsClicked
+    property bool entered: false
 
     Layout.fillWidth: true
     Layout.fillHeight: true
     color: AppTheme.backgroundAlt
+    opacity: entered ? 1 : 0
+
+    Component.onCompleted: entered = true
+
+    Behavior on opacity {
+        NumberAnimation { duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
+    }
 
     function openTransactionDialog() {
         if (root.dialogPopup) {

@@ -20,9 +20,15 @@ TextField {
     rightPadding: 13
 
     background: Rectangle {
+        property color animatedBorderColor: root.activeFocus ? AppTheme.primary : AppTheme.inputBorder
+
         radius: 11
         color: AppTheme.inputBackground
-        border.color: root.activeFocus ? AppTheme.primary : AppTheme.inputBorder
+        border.color: animatedBorderColor
         border.width: 1
+
+        Behavior on animatedBorderColor {
+            ColorAnimation { duration: AppTheme.motionFast }
+        }
     }
 }

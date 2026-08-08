@@ -27,6 +27,20 @@ Dialog {
     readonly property color actionColor: destructive ? AppTheme.danger : AppTheme.primary
     readonly property color actionSoftColor: destructive ? AppTheme.dangerSoft : AppTheme.primaryLight
 
+    enter: Transition {
+        ParallelAnimation {
+            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
+            NumberAnimation { property: "scale"; from: 0.96; to: 1; duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
+        }
+    }
+
+    exit: Transition {
+        ParallelAnimation {
+            NumberAnimation { property: "opacity"; from: 1; to: 0; duration: AppTheme.motionFast; easing.type: Easing.InCubic }
+            NumberAnimation { property: "scale"; from: 1; to: 0.98; duration: AppTheme.motionFast; easing.type: Easing.InCubic }
+        }
+    }
+
     background: Rectangle {
         radius: AppTheme.radiusXL
         color: AppTheme.backgroundMainCard

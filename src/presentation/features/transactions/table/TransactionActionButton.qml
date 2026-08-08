@@ -15,9 +15,14 @@ Button {
     Layout.preferredHeight: 36
 
     hoverEnabled: true
+    scale: down ? AppTheme.pressScale : hovered ? 1.08 : 1
     Accessible.name: root.accessibleName
     ToolTip.visible: hovered
     ToolTip.text: root.accessibleName
+
+    Behavior on scale {
+        NumberAnimation { duration: AppTheme.motionFast; easing.type: Easing.OutCubic }
+    }
 
     function normalColor() {
         return danger
@@ -38,10 +43,16 @@ Button {
     }
 
     background: Rectangle {
+        property color animatedColor: root.hovered ? root.hoverColor() : root.normalColor()
+        property color animatedBorderColor: root.hovered ? root.hoverBorderColor() : AppTheme.border
+
         radius: 8
-        color: root.hovered ? root.hoverColor() : root.normalColor()
-        border.color: root.hovered ? root.hoverBorderColor() : AppTheme.border
+        color: animatedColor
+        border.color: animatedBorderColor
         border.width: 1
+
+        Behavior on animatedColor { ColorAnimation { duration: AppTheme.motionFast } }
+        Behavior on animatedBorderColor { ColorAnimation { duration: AppTheme.motionFast } }
     }
 
     contentItem: Text {

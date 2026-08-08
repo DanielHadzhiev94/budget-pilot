@@ -91,6 +91,10 @@ Rectangle {
                                 height: parent.height
                                 radius: parent.radius
                                 color: AppTheme.chartBlue
+
+                                Behavior on width {
+                                    NumberAnimation { duration: AppTheme.motionSlow; easing.type: Easing.OutCubic }
+                                }
                             }
                         }
                     }

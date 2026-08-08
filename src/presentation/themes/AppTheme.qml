@@ -87,6 +87,12 @@ QtObject {
     readonly property int fontHeading: 28
     readonly property int fontDisplay: 38
 
+    // Shared motion values keep feedback responsive and consistent.
+    readonly property int motionFast: 120
+    readonly property int motionNormal: 180
+    readonly property int motionSlow: 260
+    readonly property real pressScale: 0.97
+
     readonly property url ricoRobotIcon: "../../images/rico_robot.png"
     readonly property url balanceIcon: "../../images/balance.png"
     readonly property url incomeIcon: "../../images/income.png"

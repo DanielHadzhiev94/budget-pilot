@@ -21,6 +21,12 @@ Rectangle {
 
     implicitWidth: 270
     implicitHeight: 150
+    property bool hovered: cardMouseArea.containsMouse
+    scale: hovered ? 1.012 : 1
+
+    Behavior on scale {
+        NumberAnimation { duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -77,5 +83,12 @@ Rectangle {
             Layout.fillWidth: true
             elide: Text.ElideRight
         }
+    }
+
+    MouseArea {
+        id: cardMouseArea
+        anchors.fill: parent
+        hoverEnabled: true
+        acceptedButtons: Qt.NoButton
     }
 }

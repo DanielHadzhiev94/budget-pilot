@@ -15,6 +15,11 @@ Button {
 
     text: label
     hoverEnabled: true
+    scale: down ? AppTheme.pressScale : hovered ? 1.015 : 1
+
+    Behavior on scale {
+        NumberAnimation { duration: AppTheme.motionFast; easing.type: Easing.OutCubic }
+    }
 
     Layout.preferredHeight: preferredHeight
     Layout.preferredWidth: preferredWidth
@@ -27,7 +32,7 @@ Button {
 
         Behavior on color {
             ColorAnimation {
-                duration: 120
+                duration: AppTheme.motionFast
             }
         }
     }
