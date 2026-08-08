@@ -1,0 +1,9 @@
+set(BUDGETPILOT_APPLICATION_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/account/AccountsService.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/account/AccountService.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/category/CategoryService.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/category/CategoryService.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/transaction/TransactionService.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/transaction/TransactionService.cpp
+    PARENT_SCOPE
+)

@@ -1,0 +1,13 @@
+set(BUDGETPILOT_INFRASTRUCTURE_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/persistence/DbContext.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/persistence/DbContext.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/persistence/Statement.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/persistence/Statement.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/repositories/AccountRepository.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/repositories/AccountRepository.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/repositories/CategoryRepository.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/repositories/CategoryRepository.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/repositories/TransactionRepository.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/repositories/TransactionRepository.cpp
+    PARENT_SCOPE
+)

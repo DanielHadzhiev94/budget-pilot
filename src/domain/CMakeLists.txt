@@ -1,0 +1,13 @@
+set(BUDGETPILOT_DOMAIN_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/models/Account.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/models/Category.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/models/Enums.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/models/Transaction.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contracts/IRepository.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/contracts/ITransactionRepository.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utilities/Mapper.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utilities/MonthYear.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utilities/Response.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utilities/TimeConverter.hpp
+    PARENT_SCOPE
+)
