@@ -66,7 +66,7 @@ ScrollView {
             ColumnLayout {
                 Layout.fillWidth: true; spacing: 6
                 Text { text: "Amount"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
-                CustomTextField { id: amountInput; placeholderText: "0.00" }
+                AppTextField { id: amountInput; placeholderText: "0.00" }
             }
             RowLayout {
                 Layout.fillWidth: true; spacing: 12
@@ -102,7 +102,7 @@ ScrollView {
             ColumnLayout {
                 Layout.fillWidth: true; spacing: 6
                 Text { text: form.transactionType === "Income" ? "Source" : "Merchant / Source"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
-                CustomTextField {
+                AppTextField {
                     id: sourceInput
                     placeholderText: form.transactionType === "Income" ? "Salary, bonus, freelance..." : "Lidl, rent, Amazon..."
                 }
@@ -112,7 +112,7 @@ ScrollView {
                 Text { text: "Transaction month"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
                 Rectangle {
                     Layout.fillWidth: true; Layout.preferredHeight: 44; radius: 11; color: AppTheme.backgroundAlt; border.color: AppTheme.border; border.width: 1
-                    DatePicker {
+                    MonthPicker {
                         id: datePicker; anchors.fill: parent; anchors.margins: 2
                         function setDateFromString(value) { const date = new Date(value); if (!isNaN(date.getTime())) setDate(date.getMonth() + 1, date.getFullYear()) }
                     }

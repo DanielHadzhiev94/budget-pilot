@@ -74,8 +74,8 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/shared/navigation/Sidebar.qml
 
         src/presentation/shared/layout/Header.qml
-        src/presentation/shared/controls/CustomButton.qml
-        src/presentation/features/transactions/editor/DatePicker.qml
+        src/presentation/shared/controls/AppButton.qml
+        src/presentation/shared/inputs/MonthPicker.qml
         src/presentation/features/transactions/editor/EntitySelector.qml
         src/presentation/features/transactions/editor/TransactionForm.qml
         src/presentation/shared/cards/BudgetCard.qml
@@ -85,16 +85,16 @@ qt_add_qml_module(appBudgetPilot
         src/presentation/features/transactions/table/TransactionTableHeader.qml
         src/presentation/features/transactions/table/TransactionActionButton.qml
         src/presentation/features/transactions/table/TypeBadge.qml
-        src/presentation/shared/layout/ConfirmationDialog.qml
+        src/presentation/shared/dialogs/ConfirmationDialog.qml
         src/presentation/shared/controls/AddButton.qml
-        src/presentation/modals/CreationModal.qml
+        src/presentation/features/transactions/editor/EntityCreationDialog.qml
         src/presentation/features/dashboard/FinancialSummarySection.qml
         src/presentation/features/dashboard/RecentTransactionsSection.qml
         src/presentation/features/dashboard/ExpenseCategoryPreviewSection.qml
         src/presentation/features/transactions/TransactionTableSection.qml
         src/presentation/pages/DashboardPage.qml
         src/presentation/pages/TransactionsPage.qml
-        src/presentation/shared/inputs/CustomTextField.qml
+        src/presentation/shared/inputs/AppTextField.qml
 
         RESOURCES
         src/presentation/images/rico_robot.png

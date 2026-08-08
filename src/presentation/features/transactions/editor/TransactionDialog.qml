@@ -140,7 +140,7 @@ Dialog {
                 anchors.rightMargin: 24
                 spacing: 12
                 Item { Layout.fillWidth: true }
-                CustomButton {
+                AppButton {
                     label: "Cancel"
                     preferredWidth: 104
                     preferredHeight: 42
@@ -149,7 +149,7 @@ Dialog {
                     pressedColor: AppTheme.surfaceLight
                     onClicked: { root.clearData(); root.close() }
                 }
-                CustomButton {
+                AppButton {
                     label: root.viewModel.isSaving ? "Saving…" : root.isEditMode ? "Update" : "Save"
                     preferredWidth: 112
                     preferredHeight: 42
@@ -165,7 +165,7 @@ Dialog {
         }
     }
 
-    CreationModal { id: createDialog; viewModel: root.viewModel }
+    EntityCreationDialog { id: createDialog; viewModel: root.viewModel }
     ConfirmationDialog {
         id: deleteEntityDialog
         dialogTitle: "Delete " + root.entityToDelete

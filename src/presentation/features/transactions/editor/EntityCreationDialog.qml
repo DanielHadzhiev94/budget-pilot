@@ -86,7 +86,7 @@ Dialog {
             font.bold: true
         }
 
-        CustomTextField {
+        AppTextField {
             id: categoryField
 
             Layout.fillWidth: true
@@ -152,7 +152,7 @@ Dialog {
                 Layout.fillWidth: true
             }
 
-            CustomButton {
+            AppButton {
                 label: "Cancel"
                 preferredWidth: buttonWidth
                 preferredHeight: buttonHeight
@@ -163,7 +163,7 @@ Dialog {
                 onClicked: root.close()
             }
 
-            CustomButton {
+            AppButton {
                 label: "Create"
                 preferredWidth: buttonWidth
                 preferredHeight: buttonHeight
