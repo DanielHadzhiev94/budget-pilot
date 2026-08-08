@@ -22,8 +22,9 @@ QtObject {
     readonly property color primarySubtle: "#12233D"
     readonly property color primaryBorder: "#486FA8"
 
-    readonly property color success: "#008000"
-    readonly property color successSoft: "#0F3D0F"
+    // Brighter green keeps positive amounts readable on the dark surfaces.
+    readonly property color success: "#22C55E"
+    readonly property color successSoft: "#123D2B"
 
     readonly property color danger: "#F87171"
     readonly property color dangerStrong: "#EF4444"

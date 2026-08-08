@@ -1,6 +1,7 @@
 #include "RecentTransactionVm.hpp"
 
 #include <QDate>
+#include <QMap>
 #include <QVariantMap>
 
 #include "src/application/category/CategoryService.hpp"
@@ -27,6 +28,10 @@ namespace budgetpilot::presentation::viewmodels {
         return transactions_;
     }
 
+    QVariantList RecentTransactionVm::expenseCategoryTotals() const {
+        return expense_category_totals_;
+    }
+
     void RecentTransactionVm::load_data(int month, int year) {
         selected_month_ = month;
         selected_year_ = year;
@@ -49,6 +54,35 @@ namespace budgetpilot::presentation::viewmodels {
 
         transactions_ = std::move(new_transactions);
         emit transaction_changed();
+
+        // The dashboard preview needs the complete period, not the 15 items used
+        // by the recent-activity list above.
+        const auto expense_response = transaction_service_.load_expense(month, year);
+        QMap<QString, double> category_totals;
+
+        if (expense_response.is_successful()) {
+            for (const auto &transaction : expense_response.data()) {
+                const QString category = QString::fromStdString(
+                    get_category_name(static_cast<std::int64_t>(transaction.category_id)));
+                category_totals[category] += transaction.amount;
+            }
+        }
+
+        QVariantList new_expense_category_totals;
+        for (auto it = category_totals.cbegin(); it != category_totals.cend(); ++it) {
+            QVariantMap category;
+            category["name"] = it.key();
+            category["amount"] = it.value();
+            new_expense_category_totals.push_back(category);
+        }
+
+        std::sort(new_expense_category_totals.begin(), new_expense_category_totals.end(),
+                  [](const QVariant &left, const QVariant &right) {
+                      return left.toMap().value("amount").toDouble()
+                          > right.toMap().value("amount").toDouble();
+                  });
+        expense_category_totals_ = std::move(new_expense_category_totals);
+        emit expense_category_totals_changed();
     }
 
     std::string RecentTransactionVm::get_category_name(const std::int64_t id) {

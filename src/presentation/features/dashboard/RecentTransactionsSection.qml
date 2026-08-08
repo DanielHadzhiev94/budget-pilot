@@ -47,7 +47,7 @@ Rectangle {
                 }
 
                 Text {
-                    text: "Overview of your latest income and expenses"
+                    text: root.hasTransactions ? "Your latest income and expenses" : "Add your first entry to start tracking"
                     color: AppTheme.textSecondary
                     font.pixelSize: AppTheme.fontSmall
                 }
@@ -143,7 +143,7 @@ Rectangle {
                         spacing: 8
 
                         Text {
-                            text: "No transactions yet"
+                            text: "No transactions for this month"
                             color: AppTheme.textPrimary
                             font.pixelSize: AppTheme.fontMedium
                             font.bold: true
@@ -151,9 +151,10 @@ Rectangle {
                         }
 
                         Text {
-                            text: "Your transactions will appear here."
+                            text: "Choose another month or add a transaction to get started."
                             color: AppTheme.textSecondary
                             font.pixelSize: AppTheme.fontBody
+                            horizontalAlignment: Text.AlignHCenter
                             Layout.alignment: Qt.AlignHCenter
                         }
                     }

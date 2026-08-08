@@ -101,6 +101,7 @@ Rectangle {
             }
 
             ExpenseCategoryPreviewSection {
+                viewModel: recentTransactionsVM
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: 440
