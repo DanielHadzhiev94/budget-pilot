@@ -43,13 +43,27 @@ ApplicationWindow {
                     color: AppTheme.backgroundAlt
 
                     Loader {
+                        id: pageLoader
                         anchors.fill: parent
+                        opacity: status === Loader.Ready ? 1 : 0
+                        transform: Translate {
+                            id: pageSlide
+                            x: pageLoader.status === Loader.Ready ? 0 : 12
+
+                            Behavior on x {
+                                NumberAnimation { duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
+                            }
+                        }
                         sourceComponent: {
                             switch (appRoot.currentPage) {
                                 case 0: return dashboardPage
                                 case 1: return transactionsPage
                                 default: return dashboardPage
                             }
+                        }
+
+                        Behavior on opacity {
+                            NumberAnimation { duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
                         }
                     }
                 }

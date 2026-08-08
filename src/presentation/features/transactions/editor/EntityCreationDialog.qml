@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import BudgetPilot
 
 Dialog {
     id: root
@@ -34,18 +35,33 @@ Dialog {
 
     width: dialogWidth
     padding: dialogPadding
+    closePolicy: Popup.CloseOnEscape
 
     property string entityType: "category"
     property bool defaultIsExpense: true
     readonly property bool isCategory: entityType === "category"
-    readonly property string custom_title: isCategory ? "Add Category" : "Add Account"
-    readonly property string custom_field_title: isCategory ? "Category Name" : "Account Name"
-    readonly property string custom_placeholder_text: isCategory ? "e.g. Groceries" : "e.g. Checking account"
+    readonly property string dialogTitle: isCategory ? "Add Category" : "Add Account"
+    readonly property string fieldTitle: isCategory ? "Category Name" : "Account Name"
+    readonly property string fieldPlaceholder: isCategory ? "e.g. Groceries" : "e.g. Checking account"
 
     onOpened: {
         categoryField.text = ""
         expenseButton.checked = root.defaultIsExpense
         categoryField.forceActiveFocus()
+    }
+
+    enter: Transition {
+        ParallelAnimation {
+            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
+            NumberAnimation { property: "scale"; from: 0.96; to: 1; duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
+        }
+    }
+
+    exit: Transition {
+        ParallelAnimation {
+            NumberAnimation { property: "opacity"; from: 1; to: 0; duration: AppTheme.motionFast; easing.type: Easing.InCubic }
+            NumberAnimation { property: "scale"; from: 1; to: 0.98; duration: AppTheme.motionFast; easing.type: Easing.InCubic }
+        }
     }
 
     background: Rectangle {
@@ -64,7 +80,7 @@ Dialog {
             anchors.margins: margin
 
             Text {
-                text: root.custom_title
+                text: root.dialogTitle
                 color: AppTheme.textPrimary
 
                 font.pixelSize: titleFontSize
@@ -77,19 +93,19 @@ Dialog {
         spacing: contentSpacing
 
         Label {
-            text: root.custom_field_title
+            text: root.fieldTitle
             color: AppTheme.textPrimary
 
             font.pixelSize: labelFontSize
             font.bold: true
         }
 
-        CustomTextField {
+        AppTextField {
             id: categoryField
 
             Layout.fillWidth: true
 
-            custom_placeholder_text: root.custom_placeholder_text
+            placeholderText: root.fieldPlaceholder
         }
 
         Label {
@@ -150,23 +166,21 @@ Dialog {
                 Layout.fillWidth: true
             }
 
-            CustomButton {
-                custom_width: buttonWidth
-                custom_height: buttonHeight
-
-                custom_hover_color_1: AppTheme.backgroundAlt
-                custom_hover_color_2: AppTheme.transparent
-
-                text: "Cancel"
+            AppButton {
+                label: "Cancel"
+                preferredWidth: buttonWidth
+                preferredHeight: buttonHeight
+                normalColor: "transparent"
+                hoverColor: AppTheme.backgroundAlt
+                pressedColor: AppTheme.surfaceLight
 
                 onClicked: root.close()
             }
 
-            CustomButton {
-                custom_width: buttonWidth
-                custom_height: buttonHeight
-
-                text: "Create"
+            AppButton {
+                label: "Create"
+                preferredWidth: buttonWidth
+                preferredHeight: buttonHeight
 
                 enabled: categoryField.text.trim().length > 0
 

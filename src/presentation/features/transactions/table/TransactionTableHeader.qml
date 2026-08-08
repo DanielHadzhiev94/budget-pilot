@@ -32,10 +32,12 @@ Row {
                 anchors.rightMargin: root.cellPadding
 
                 text: modelData.title
-                color: AppTheme.textSecondary
+                color: AppTheme.textMuted
 
-                font.pixelSize: 14
+                font.pixelSize: 11
                 font.bold: true
+                font.capitalization: Font.AllUppercase
+                font.letterSpacing: 0.5
 
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter

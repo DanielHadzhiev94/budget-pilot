@@ -11,6 +11,9 @@ ScrollView {
     readonly property var filteredCategories: viewModel.categories.filter(function(category) {
         return Number(category.type) === (form.transactionType === "Income" ? 1 : 2)
     })
+    readonly property bool isValid: Number(amountInput.text) > 0
+        && Number(accountInput.currentValue) > 0
+        && Number(categoryInput.currentValue) > 0
     signal createEntityRequested(string entityType)
     signal entityDeletionRequested(string entityType, int entityId, string entityName)
 
@@ -63,7 +66,7 @@ ScrollView {
             ColumnLayout {
                 Layout.fillWidth: true; spacing: 6
                 Text { text: "Amount"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
-                CustomTextField { id: amountInput; custom_placeholder_text: "0.00" }
+                AppTextField { id: amountInput; placeholderText: "0.00" }
             }
             RowLayout {
                 Layout.fillWidth: true; spacing: 12
@@ -99,14 +102,17 @@ ScrollView {
             ColumnLayout {
                 Layout.fillWidth: true; spacing: 6
                 Text { text: form.transactionType === "Income" ? "Source" : "Merchant / Source"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
-                CustomTextField { id: sourceInput; custom_placeholder_text: form.transactionType === "Income" ? "Salary, bonus, freelance..." : "Lidl, rent, Amazon..."; custom_font_size: 14 }
+                AppTextField {
+                    id: sourceInput
+                    placeholderText: form.transactionType === "Income" ? "Salary, bonus, freelance..." : "Lidl, rent, Amazon..."
+                }
             }
             ColumnLayout {
                 Layout.fillWidth: true; spacing: 6
-                Text { text: "Date"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
+                Text { text: "Transaction month"; color: AppTheme.textSecondary; font.pixelSize: 12; font.bold: true }
                 Rectangle {
                     Layout.fillWidth: true; Layout.preferredHeight: 44; radius: 11; color: AppTheme.backgroundAlt; border.color: AppTheme.border; border.width: 1
-                    DatePicker {
+                    MonthPicker {
                         id: datePicker; anchors.fill: parent; anchors.margins: 2
                         function setDateFromString(value) { const date = new Date(value); if (!isNaN(date.getTime())) setDate(date.getMonth() + 1, date.getFullYear()) }
                     }

@@ -1,66 +1,66 @@
 import QtQuick
+import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import BudgetPilot
 
-Rectangle {
+Button {
     id: root
 
-    property string text: ""
+    property string iconText: ""
+    property string accessibleName: ""
     property color textColor: AppTheme.textPrimary
     property bool danger: false
-
-    signal clicked()
 
     Layout.preferredWidth: 38
     Layout.preferredHeight: 36
 
-    radius: 8
+    hoverEnabled: true
+    scale: down ? AppTheme.pressScale : hovered ? 1.08 : 1
+    Accessible.name: root.accessibleName
+    ToolTip.visible: hovered
+    ToolTip.text: root.accessibleName
 
-    color: mouseArea.containsMouse
-        ? root.hoverColor()
-        : root.normalColor()
-
-    border.color: mouseArea.containsMouse
-        ? root.hoverBorderColor()
-        : Qt.rgba(120, 160, 220, 0.22)
-
-    border.width: 1
+    Behavior on scale {
+        NumberAnimation { duration: AppTheme.motionFast; easing.type: Easing.OutCubic }
+    }
 
     function normalColor() {
         return danger
-            ? Qt.rgba(1.0, 0.20, 0.25, 0.08)
-            : Qt.rgba(255, 255, 255, 0.035)
+            ? AppTheme.dangerSoft
+            : "transparent"
     }
 
     function hoverColor() {
         return danger
-            ? Qt.rgba(1.0, 0.20, 0.25, 0.18)
-            : Qt.rgba(255, 255, 255, 0.09)
+            ? AppTheme.dangerSoft
+            : AppTheme.rowHighlight
     }
 
     function hoverBorderColor() {
         return danger
             ? AppTheme.danger
-            : Qt.rgba(150, 190, 255, 0.45)
+            : AppTheme.primaryBorder
     }
 
-    Text {
-        anchors.centerIn: parent
+    background: Rectangle {
+        property color animatedColor: root.hovered ? root.hoverColor() : root.normalColor()
+        property color animatedBorderColor: root.hovered ? root.hoverBorderColor() : AppTheme.border
 
-        text: root.text
+        radius: 8
+        color: animatedColor
+        border.color: animatedBorderColor
+        border.width: 1
+
+        Behavior on animatedColor { ColorAnimation { duration: AppTheme.motionFast } }
+        Behavior on animatedBorderColor { ColorAnimation { duration: AppTheme.motionFast } }
+    }
+
+    contentItem: Text {
+        text: root.iconText
         color: root.textColor
-
         font.pixelSize: 16
         font.bold: !root.danger
-    }
-
-    MouseArea {
-        id: mouseArea
-
-        anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: Qt.PointingHandCursor
-
-        onClicked: root.clicked()
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
     }
 }

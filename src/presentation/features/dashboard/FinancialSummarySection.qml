@@ -46,10 +46,10 @@ Item {
         BudgetCard {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            title: "Saving Rate"
-            mainValue: "€ " + viewModel.saving_rate.toFixed(2)
-            mainValueColor: AppTheme.purple
-            subtitle: "Income minus expenses"
+            title: "Net cash flow"
+            mainValue: (viewModel.saving_rate >= 0 ? "+ € " : "- € ") + Math.abs(viewModel.saving_rate).toFixed(2)
+            mainValueColor: viewModel.saving_rate >= 0 ? AppTheme.success : AppTheme.danger
+            subtitle: "Income minus expenses this month"
             iconSource: AppTheme.rateIcon
             iconSize: 32
         }

@@ -1,0 +1,5 @@
+add_subdirectory(domain)
+add_subdirectory(application)
+add_subdirectory(infrastructure)
+add_subdirectory(third_party)
+add_subdirectory(presentation)

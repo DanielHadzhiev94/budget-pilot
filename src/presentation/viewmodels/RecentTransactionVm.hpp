@@ -18,6 +18,7 @@ namespace budgetpilot::presentation::viewmodels {
         Q_OBJECT
 
         Q_PROPERTY(QVariantList transactions READ transactions NOTIFY transaction_changed)
+        Q_PROPERTY(QVariantList expenseCategoryTotals READ expenseCategoryTotals NOTIFY expense_category_totals_changed)
 
     public:
         explicit RecentTransactionVm(
@@ -29,13 +30,18 @@ namespace budgetpilot::presentation::viewmodels {
         [[nodiscard]]
         QVariantList transactions() const;
 
+        [[nodiscard]]
+        QVariantList expenseCategoryTotals() const;
+
         Q_INVOKABLE void load_data(int month, int year);
 
     signals:
         void transaction_changed();
+        void expense_category_totals_changed();
 
     private:
         QVariantList transactions_;
+        QVariantList expense_category_totals_;
         services::TransactionService &transaction_service_;
         services::CategoryService &category_service_;
 

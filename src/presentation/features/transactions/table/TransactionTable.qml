@@ -101,36 +101,13 @@ Rectangle {
             color: AppTheme.tableHeaderSurface
             clip: true
 
-            Row {
+            TransactionTableHeader {
                 x: -tableView.contentX
                 width: root.totalTableWidth
-                height: root.headerHeight
-                spacing: 0
-
-                Repeater {
-                    model: root.columns.length
-
-                    delegate: Rectangle {
-                        width: root.columnWidth(index)
-                        height: root.headerHeight
-                        color: "transparent"
-
-                        Text {
-                            anchors.fill: parent
-                            anchors.leftMargin: root.cellPadding
-                            anchors.rightMargin: root.cellPadding
-                            text: root.columns[index].title
-                            color: AppTheme.textMuted
-                            font.pixelSize: 11
-                            font.bold: true
-                            font.capitalization: Font.AllUppercase
-                            font.letterSpacing: 0.5
-                            horizontalAlignment: root.columns[index].align
-                            verticalAlignment: Text.AlignVCenter
-                            elide: Text.ElideRight
-                        }
-                    }
-                }
+                columns: root.columns
+                cellPadding: root.cellPadding
+                headerHeight: root.headerHeight
+                columnWidthProvider: root.columnWidth
             }
 
             Rectangle {
@@ -142,27 +119,29 @@ Rectangle {
             }
         }
 
-        TableView {
-            id: tableView
-
+        Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            model: root.viewModel
-            clip: true
-            boundsBehavior: Flickable.StopAtBounds
-            columnSpacing: 0
-            rowSpacing: 0
 
-            columnWidthProvider: function(column) { return root.columnWidth(column); }
-            rowHeightProvider: function(row) { return root.rowHeight; }
+            TableView {
+                id: tableView
+                anchors.fill: parent
+                model: root.viewModel
+                clip: true
+                boundsBehavior: Flickable.StopAtBounds
+                columnSpacing: 0
+                rowSpacing: 0
 
-            ScrollBar.horizontal: ScrollBar {
-                policy: root.totalTableWidth > tableView.width ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
-            }
+                columnWidthProvider: function(column) { return root.columnWidth(column); }
+                rowHeightProvider: function(row) { return root.rowHeight; }
 
-            ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
+                ScrollBar.horizontal: ScrollBar {
+                    policy: root.totalTableWidth > tableView.width ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+                }
 
-            delegate: Rectangle {
+                ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
+
+                delegate: Rectangle {
                 implicitWidth: root.columnWidth(column)
                 implicitHeight: root.rowHeight
                 color: row % 2 === 0 ? "transparent" : AppTheme.tableRowAlt
@@ -217,8 +196,8 @@ Rectangle {
                         return isNaN(value) ? 0 : value;
                     }
 
-                    text: typeText === "Income" ? "+ €" + amountValue.toFixed(2) : "- €" + amountValue.toFixed(2)
-                    color: typeText === "Income" ? AppTheme.success : AppTheme.danger
+                    text: AppTheme.formattedAmount(amountValue, typeText)
+                    color: AppTheme.isIncome(typeText) ? AppTheme.success : AppTheme.danger
                     font.pixelSize: 14
                     font.bold: true
                     horizontalAlignment: Text.AlignRight
@@ -234,7 +213,8 @@ Rectangle {
                     TransactionActionButton {
                         width: 32
                         height: 32
-                        text: "✎"
+                        iconText: "✎"
+                        accessibleName: "Edit transaction"
                         textColor: AppTheme.textPrimary
                         onClicked: root.editTransactionClicked(root.viewModel.transactionAt(row))
                     }
@@ -242,11 +222,38 @@ Rectangle {
                     TransactionActionButton {
                         width: 32
                         height: 32
-                        text: "×"
+                        iconText: "×"
+                        accessibleName: "Delete transaction"
                         textColor: AppTheme.danger
                         danger: true
                         onClicked: root.deleteTransactionClicked(row)
                     }
+                }
+                }
+            }
+
+            ColumnLayout {
+                anchors.centerIn: parent
+                width: Math.min(parent.width - 48, 320)
+                visible: tableView.rows === 0
+                spacing: AppTheme.spacingSmall
+
+                Text {
+                    Layout.fillWidth: true
+                    text: "No transactions for this month"
+                    color: AppTheme.textPrimary
+                    font.pixelSize: AppTheme.fontMedium
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    text: "Add a transaction to begin tracking this period."
+                    color: AppTheme.textMuted
+                    font.pixelSize: AppTheme.fontBody
+                    wrapMode: Text.WordWrap
+                    horizontalAlignment: Text.AlignHCenter
                 }
             }
         }

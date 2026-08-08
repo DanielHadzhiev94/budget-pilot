@@ -7,10 +7,18 @@ Rectangle {
 
     required property var dialogPopup
     signal viewAllTransactionsClicked
+    property bool entered: false
 
     Layout.fillWidth: true
     Layout.fillHeight: true
     color: AppTheme.backgroundAlt
+    opacity: entered ? 1 : 0
+
+    Component.onCompleted: entered = true
+
+    Behavior on opacity {
+        NumberAnimation { duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
+    }
 
     function openTransactionDialog() {
         if (root.dialogPopup) {
@@ -58,7 +66,7 @@ Rectangle {
                 Item {
                     Layout.fillWidth: true
                 }
-                DatePicker {
+                MonthPicker {
                     Layout.preferredWidth: 285
                     Layout.preferredHeight: 42
                     Layout.alignment: Qt.AlignVCenter
@@ -70,10 +78,10 @@ Rectangle {
                     }
                 }
 
-                CustomButton {
-                    title: "+ Add Transaction"
-                    custom_width: 178
-                    custom_height: 42
+                AppButton {
+                    label: "+ Add Transaction"
+                    preferredWidth: 178
+                    preferredHeight: 42
                     Layout.alignment: Qt.AlignVCenter
                     onClicked: root.openTransactionDialog()
                 }
@@ -101,6 +109,7 @@ Rectangle {
             }
 
             ExpenseCategoryPreviewSection {
+                viewModel: recentTransactionsVM
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: 440

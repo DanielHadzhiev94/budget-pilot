@@ -74,7 +74,7 @@ Item {
                     Layout.fillWidth: true
                 }
 
-                DatePicker {
+                MonthPicker {
                     Layout.preferredWidth: 285
                     Layout.preferredHeight: 42
                     Layout.alignment: Qt.AlignVCenter
@@ -90,10 +90,10 @@ Item {
                     }
                 }
 
-                CustomButton {
-                    title: "+ Add Transaction"
-                    custom_width: 178
-                    custom_height: 42
+                AppButton {
+                    label: "+ Add Transaction"
+                    preferredWidth: 178
+                    preferredHeight: 42
                     Layout.alignment: Qt.AlignVCenter
 
                     onClicked: {

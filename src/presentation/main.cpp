@@ -1,9 +1,12 @@
 #include <iostream>
+#include <cstdlib>
+#include <exception>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QStandardPaths>
 #include <QQuickStyle>
 #include <QDir>
+#include <QDebug>
 #include <qqmlcontext.h>
 
 #include "../infrastructure/persistence/DbContext.hpp"
@@ -28,11 +31,22 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     // Initialization of the database
-    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    const QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    if (appDataPath.isEmpty() || !QDir().mkpath(appDataPath)) {
+        qCritical() << "Could not create the application data directory:" << appDataPath;
+        return EXIT_FAILURE;
+    }
+
     QString dbFilePath = QDir(appDataPath).filePath("budgetpilot.db");
     std::string dbPath = dbFilePath.toStdString();
     persistence::DbContext dbContext{dbPath};
-    dbContext.initialize();
+
+    try {
+        dbContext.initialize();
+    } catch (const std::exception &error) {
+        qCritical() << "Could not initialize the database at" << dbFilePath << ":" << error.what();
+        return EXIT_FAILURE;
+    }
 
     // Repositories
     repository::AccountRepository account_repository{*dbContext.getConnection()};

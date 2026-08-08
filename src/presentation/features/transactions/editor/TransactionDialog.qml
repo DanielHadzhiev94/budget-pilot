@@ -52,12 +52,29 @@ Dialog {
     width: 460
     height: 620
     padding: 0
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    // Avoid accidentally discarding a partially completed transaction.
+    closePolicy: Popup.CloseOnEscape
+
+    onClosed: clearData()
 
     onOpened: {
         viewModel.loadInitialData()
         if (isEditMode && editingTransaction !== null) transactionForm.populate(editingTransaction)
         transactionForm.focusAmount()
+    }
+
+    enter: Transition {
+        ParallelAnimation {
+            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
+            NumberAnimation { property: "scale"; from: 0.96; to: 1; duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
+        }
+    }
+
+    exit: Transition {
+        ParallelAnimation {
+            NumberAnimation { property: "opacity"; from: 1; to: 0; duration: AppTheme.motionFast; easing.type: Easing.InCubic }
+            NumberAnimation { property: "scale"; from: 1; to: 0.98; duration: AppTheme.motionFast; easing.type: Easing.InCubic }
+        }
     }
 
     background: Rectangle {
@@ -137,20 +154,20 @@ Dialog {
                 anchors.rightMargin: 24
                 spacing: 12
                 Item { Layout.fillWidth: true }
-                Button {
-                    text: "Cancel"
-                    Layout.preferredWidth: 104
-                    Layout.preferredHeight: 42
-                    background: Rectangle { radius: 11; color: parent.hovered ? AppTheme.backgroundAlt : "transparent"; border.color: AppTheme.border; border.width: 1 }
-                    contentItem: Text { text: parent.text; color: AppTheme.textPrimary; font.pixelSize: 14; font.bold: true; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+                AppButton {
+                    label: "Cancel"
+                    preferredWidth: 104
+                    preferredHeight: 42
+                    normalColor: "transparent"
+                    hoverColor: AppTheme.backgroundAlt
+                    pressedColor: AppTheme.surfaceLight
                     onClicked: { root.clearData(); root.close() }
                 }
-                Button {
-                    text: root.isEditMode ? "Update" : "Save"
-                    Layout.preferredWidth: 112
-                    Layout.preferredHeight: 42
-                    background: Rectangle { radius: 11; color: parent.hovered ? AppTheme.primaryDark : AppTheme.primary; border.color: AppTheme.primary; border.width: 1 }
-                    contentItem: Text { text: parent.text; color: "white"; font.bold: true; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+                AppButton {
+                    label: root.viewModel.isSaving ? "Saving…" : root.isEditMode ? "Update" : "Save"
+                    preferredWidth: 112
+                    preferredHeight: 42
+                    enabled: transactionForm.isValid && !root.viewModel.isSaving
                     onClicked: {
                         const data = transactionForm.transactionData()
                         const saved = root.viewModel.saveTransaction(root.isEditMode, root.isEditMode ? root.editingTransactionId : -1,
@@ -162,7 +179,7 @@ Dialog {
         }
     }
 
-    CreationModal { id: createDialog; viewModel: root.viewModel }
+    EntityCreationDialog { id: createDialog; viewModel: root.viewModel }
     ConfirmationDialog {
         id: deleteEntityDialog
         dialogTitle: "Delete " + root.entityToDelete

@@ -27,7 +27,7 @@ Rectangle {
             Layout.preferredHeight: 42
             radius: 14
             color: AppTheme.primarySubtle
-            border.color: Qt.rgba(79 / 255, 140 / 255, 255 / 255, 0.28)
+            border.color: AppTheme.primaryBorder
             border.width: 1
 
             Image {
