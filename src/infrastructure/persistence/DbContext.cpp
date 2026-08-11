@@ -99,9 +99,8 @@ namespace budgetpilot::infrastructure::persistence
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Salary', 1);
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Other Income', 1);
 
-        INSERT OR IGNORE INTO categories (name, type) VALUES ('Food', 2);
+        INSERT OR IGNORE INTO categories (name, type) VALUES ('Groceries', 2);
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Apartment', 2);
-        INSERT OR IGNORE INTO categories (name, type) VALUES ('Transport', 2);
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Car', 2);
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Health', 2);
         INSERT OR IGNORE INTO categories (name, type) VALUES ('Entertainment', 2);
@@ -110,7 +109,6 @@ namespace budgetpilot::infrastructure::persistence
 
         const char *acc_seed = R"(
         INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('Bank', 0);
-        INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('PayPal', 0);
         INSERT OR IGNORE INTO accounts (name, initial_balance) VALUES('ICard', 0);)";
 
         execute(category_seed);
