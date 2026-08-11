@@ -7,6 +7,7 @@ Rectangle {
 
     required property var dialogPopup
     signal viewAllTransactionsClicked
+    signal viewAllCategoriesClicked
     property bool entered: false
 
     Layout.fillWidth: true
@@ -114,6 +115,7 @@ Rectangle {
                 Layout.fillHeight: true
                 Layout.preferredWidth: 440
                 Layout.minimumWidth: 360
+                onViewAllCategoriesClicked: root.viewAllCategoriesClicked()
             }
         }
     }

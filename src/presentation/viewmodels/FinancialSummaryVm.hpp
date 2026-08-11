@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QVariantList>
 
 namespace budgetpilot::application::services {
     class TransactionService;
@@ -18,6 +19,7 @@ namespace budgetpilot::presentation::viewmodels {
         Q_OBJECT
 
         Q_PROPERTY(double current_balance READ current_balance NOTIFY current_balance_changed)
+        Q_PROPERTY(QVariantList accounts READ accounts NOTIFY accounts_changed)
         Q_PROPERTY(double income READ income NOTIFY income_changed)
         Q_PROPERTY(double expense READ expense NOTIFY expense_changed)
         Q_PROPERTY(double saving_rate READ saving_rate NOTIFY saving_rate_changed)
@@ -31,6 +33,9 @@ namespace budgetpilot::presentation::viewmodels {
 
         [[nodiscard]]
         double current_balance() const;
+
+        [[nodiscard]]
+        QVariantList accounts() const;
 
         [[nodiscard]]
         double income() const;
@@ -47,6 +52,7 @@ namespace budgetpilot::presentation::viewmodels {
 
     signals:
         void current_balance_changed();
+        void accounts_changed();
         void income_changed();
         void expense_changed();
         void saving_rate_changed();
@@ -59,6 +65,7 @@ namespace budgetpilot::presentation::viewmodels {
         int selected_year_;
 
         double current_balance_{0.0};
+        QVariantList accounts_{};
         double income_{0.0};
         double expense_{0.0};
         double saving_rate_{0.0};

@@ -13,16 +13,32 @@ Rectangle {
     property color mainValueColor: AppTheme.success
     property int iconBoxSize: 48
     property int iconSize: 34
+    property bool clickable: false
+    property bool hoverHighlightEnabled: false
+    property bool hoverScaleEnabled: false
+    signal clicked
 
     radius: AppTheme.radiusXL
-    color: cardColor
-    border.color: AppTheme.border
+    color: hovered && hoverHighlightEnabled ? AppTheme.surfaceLight : cardColor
+    border.color: hovered && hoverHighlightEnabled
+                  ? AppTheme.primaryBorder
+                  : AppTheme.border
     border.width: 1
 
     implicitWidth: 270
     implicitHeight: 150
     property bool hovered: cardMouseArea.containsMouse
-    scale: hovered ? 1.012 : 1
+    scale: cardMouseArea.pressed && clickable
+           ? AppTheme.pressScale
+           : (hovered && hoverScaleEnabled ? 1.012 : 1)
+
+    Behavior on color {
+        ColorAnimation { duration: AppTheme.motionNormal }
+    }
+
+    Behavior on border.color {
+        ColorAnimation { duration: AppTheme.motionNormal }
+    }
 
     Behavior on scale {
         NumberAnimation { duration: AppTheme.motionNormal; easing.type: Easing.OutCubic }
@@ -89,6 +105,8 @@ Rectangle {
         id: cardMouseArea
         anchors.fill: parent
         hoverEnabled: true
-        acceptedButtons: Qt.NoButton
+        cursorShape: root.clickable ? Qt.PointingHandCursor : Qt.ArrowCursor
+        acceptedButtons: root.clickable ? Qt.LeftButton : Qt.NoButton
+        onClicked: root.clicked()
     }
 }

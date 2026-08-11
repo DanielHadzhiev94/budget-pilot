@@ -58,6 +58,7 @@ ApplicationWindow {
                             switch (appRoot.currentPage) {
                                 case 0: return dashboardPage
                                 case 1: return transactionsPage
+                                case 2: return expenseCategoriesPage
                                 default: return dashboardPage
                             }
                         }
@@ -81,11 +82,17 @@ ApplicationWindow {
         DashboardPage {
             dialogPopup: addTransactionDialog
             onViewAllTransactionsClicked: appRoot.currentPage = 1
+            onViewAllCategoriesClicked: appRoot.currentPage = 2
         }
     }
 
     Component {
         id: transactionsPage
         TransactionsPage { popup: addTransactionDialog }
+    }
+
+    Component {
+        id: expenseCategoriesPage
+        ExpenseCategoriesPage {}
     }
 }

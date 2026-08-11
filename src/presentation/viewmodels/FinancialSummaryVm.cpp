@@ -33,6 +33,11 @@ namespace budgetpilot::presentation::viewmodels
         return current_balance_;
     }
 
+    QVariantList FinancialSummaryVm::accounts() const
+    {
+        return accounts_;
+    }
+
     void FinancialSummaryVm::set_current_balance(double value)
     {
         if (current_balance_ == value)
@@ -97,14 +102,28 @@ namespace budgetpilot::presentation::viewmodels
     void FinancialSummaryVm::load_account_data()
     {
         const auto account_response = account_service_.load_accounts();
-        set_current_balance(0);
+        double total_balance = 0.0;
+        QVariantList accounts;
+
         if (account_response.is_successful())
+        {
             for (const auto &acc : account_response.data())
             {
-                current_balance_ += acc.amount;
+                total_balance += acc.amount;
+
+                QVariantMap account;
+                account["id"] = static_cast<qlonglong>(acc.id);
+                account["name"] = QString::fromStdString(acc.name);
+                account["balance"] = acc.amount;
+                accounts.append(account);
             }
+        }
+
+        set_current_balance(total_balance);
+        accounts_ = std::move(accounts);
 
         emit current_balance_changed();
+        emit accounts_changed();
     }
 
     void FinancialSummaryVm::load_income_data(int month, int year)
