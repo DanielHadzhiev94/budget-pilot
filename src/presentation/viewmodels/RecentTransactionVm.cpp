@@ -1,11 +1,15 @@
 #include "RecentTransactionVm.hpp"
 
 #include <QDate>
+#include <QDateTime>
 #include <QMap>
 #include <QVariantMap>
 
 #include "src/application/category/CategoryService.hpp"
 #include "src/application/transaction/TransactionService.hpp"
+#include "src/domain/utilities/TimeConverter.hpp"
+
+namespace utilities = budgetpilot::domain::utilities;
 
 namespace budgetpilot::presentation::viewmodels {
     RecentTransactionVm::RecentTransactionVm(
@@ -42,7 +46,11 @@ namespace budgetpilot::presentation::viewmodels {
         if (transaction_response.is_successful()) {
             for (const auto &transaction: transaction_response.data()) {
                 QVariantMap row;
-                row["date"] = QString::fromStdString(transaction.created_at);
+                const auto timestamp = utilities::TimeConverter::convert_to_seconds(
+                    transaction.transaction_date);
+                row["date"] = QDateTime::fromSecsSinceEpoch(timestamp)
+                                  .date()
+                                  .toString("yyyy-MM-dd");
                 row["type"] = transaction.type == enums::Type::Income ? "Income" : "Expense";
                 row["category"] = QString::fromStdString(get_category_name(static_cast<std::int64_t>(transaction.category_id)));
                 row["source"] = QString::fromStdString(transaction.source.value_or(""));
